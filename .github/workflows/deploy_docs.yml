@@ -24,8 +24,8 @@ jobs:
       - name: Build docs
         run: make create_docs
 
-      - name: Copy CNAME files for GitHub Pages
-        run: cp ./CNAME ./docs/_build/html/CNAME
+      - name: Create the CNAME for GitHub Pages
+        run: echo discordhttp.dev > ./docs/_build/html/CNAME
 
       - name: Prevent GitHub Pages Jekyll behaviour
         run: touch ./docs/_build/html/.nojekyll
