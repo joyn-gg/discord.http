@@ -1,0 +1,81 @@
+from typing import TYPE_CHECKING
+
+from .flag import Permissions
+
+if TYPE_CHECKING:
+    from .http import HTTPResponse
+
+__all__ = (
+    "DiscordException",
+    "HTTPException",
+    "NotFound",
+    "Forbidden",
+    "DiscordServerError",
+    "CheckFailed",
+    "UserMissingPermissions",
+    "BotMissingPermissions",
+)
+
+
+class DiscordException(Exception):
+    """ Base exception for discord_http """
+    pass
+
+
+class CheckFailed(DiscordException):
+    """ Raised whenever a check fails """
+    pass
+
+
+class UserMissingPermissions(CheckFailed):
+    """ Raised whenever a user is missing permissions """
+    def __init__(self, perms: Permissions):
+        self.permissions = perms
+        super().__init__(f"Missing permissions: {', '.join(perms.list_names)}")
+
+
+class BotMissingPermissions(CheckFailed):
+    """ Raised whenever a bot is missing permissions """
+    def __init__(self, perms: Permissions):
+        self.permissions = perms
+        super().__init__(f"Bot is missing permissions: {', '.join(perms.list_names)}")
+
+
+class HTTPException(DiscordException):
+    """ Base exception for HTTP requests """
+    def __init__(self, r: "HTTPResponse"):
+        self.request = r
+        self.status: int = r.status
+
+        self.code: int
+        self.text: str
+
+        if isinstance(r.response, dict):
+            self.code = r.response.get("code", 0)
+            self.text = r.response.get("message", "Unknown")
+            if r.response.get("errors", None):
+                self.text += f"\n{r.response['errors']}"
+        else:
+            self.text: str = str(r.response)
+            self.code = 0
+
+        error_text = f"HTTP {self.request.status} > {self.request.reason} (code: {self.code})"
+        if len(self.text):
+            error_text += f": {self.text}"
+
+        super().__init__(error_text)
+
+
+class NotFound(HTTPException):
+    """ Raised whenever a HTTP request returns 404 """
+    pass
+
+
+class Forbidden(HTTPException):
+    """ Raised whenever a HTTP request returns 403 """
+    pass
+
+
+class DiscordServerError(HTTPException):
+    """ Raised whenever an unexpected HTTP error occurs """
+    pass
