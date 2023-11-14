@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.abspath(".."))
 
 project = "discord_http"
-copyright = "2023, AlexFlipnote"
+copyright = "2023, joyn.gg"
 author = "AlexFlipnote"
 release = "0.0.1"
 
