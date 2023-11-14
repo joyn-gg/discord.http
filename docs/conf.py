@@ -37,6 +37,6 @@ source_suffix = {
 
 # Link tree
 extlinks = {
-    "github": ("https://github.com/joyn-gg/discord_http%s", "%s"),
+    "github": ("https://github.com/joyn-gg/discord.http%s", "%s"),
     "discord": ("https://discord.gg/jV2PgM5MHR%s", "%s"),
 }
