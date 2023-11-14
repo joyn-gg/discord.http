@@ -27,6 +27,9 @@ jobs:
       - name: Copy CNAME files for GitHub Pages
         run: cp ./CNAME ./docs/_build/html/CNAME
 
+      - name: Prevent GitHub Pages Jekyll behaviour
+        run: touch ./docs/_build/html/.nojekyll
+
       - name: Deploy docs
         uses: JamesIves/github-pages-deploy-action@4.1.3
         with:
