@@ -115,7 +115,6 @@ class ComponentType(Enum):
 
 class ButtonStyles(Enum):
     primary = 1
-    something = 1
     secondary = 2
     success = 3
     danger = 4
