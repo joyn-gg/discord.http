@@ -2,7 +2,7 @@
 Python library that handles interactions from Discord POST requests.
 
 ## Installing
-> You need **Python >=3.10** to use this library.
+> You need **Python >=3.11** to use this library.
 
 Install by using `pip install discord.http` in the terminal.
 If `pip` does not work, there are other ways to install as well, most commonly:
