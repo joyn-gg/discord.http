@@ -128,7 +128,7 @@ class SelectValues:
                     pass
 
     def _from_data(self, ctx: "Context", data: dict):
-        self._parsed_data["strings"] = data.get("values", [])
+        self._parsed_data["strings"] = data.get("data", {}).get("values", [])
 
         _resolved = data.get("data", {}).get("resolved", {})
         data_to_resolve = ["members", "users", "channels", "roles"]

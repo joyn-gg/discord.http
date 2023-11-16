@@ -77,8 +77,7 @@ class Client:
         self._view_storage: dict[int, InteractionStorage] = {}
         self._default_allowed_mentions = allowed_mentions
 
-        if self.logging_level != logging.INFO:
-            utils.setup_logger(level=self.logging_level)
+        utils.setup_logger(level=self.logging_level)
 
     async def _run_event(
         self,

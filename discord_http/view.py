@@ -142,6 +142,7 @@ class Select(Item):
         max_values: Optional[int] = 1,
         row: Optional[int] = None,
         disabled: bool = False,
+        options: Optional[list[dict]] = None,
         _type: Optional[int] = None
     ):
         super().__init__(
@@ -155,7 +156,7 @@ class Select(Item):
         self.max_values: Optional[int] = max_values
         self.disabled: bool = disabled
 
-        self._options: list[dict] = []
+        self._options: list[dict] = options or []
 
     def __repr__(self) -> str:
         return f"<Select custom_id='{self.custom_id}'>"
