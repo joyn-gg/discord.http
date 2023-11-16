@@ -20,7 +20,7 @@ Requirements
 Python
 ~~~~~~
 First of all you need Python to be installed, you can get `python here <https://www.python.org/downloads/>`_.
-We recommend that you use Python 3.10 or higher, lower versions may not work.
+We recommend that you use Python 3.11 or higher, lower versions may not work.
 
 After that, you need to install the library, you can do so by using ``pip install discord.http`` in the terminal.
 
