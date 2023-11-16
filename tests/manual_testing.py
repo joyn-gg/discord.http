@@ -727,7 +727,10 @@ async def test_interaction_modal_local(ctx: Context):
 @client.interaction("test_select")
 async def test_interaction2(ctx: Context):
     return ctx.response.edit_message(
-        content=f"Select used by {ctx.user} on message by {ctx.author} {ctx.select_values}"
+        content=(
+            f"Select used by {ctx.user} on message by "
+            f"{ctx.author} {ctx.select_values.strings[0]}"
+        )
     )
 
 
