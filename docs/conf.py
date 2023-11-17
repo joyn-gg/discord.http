@@ -2,6 +2,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(".."))
+sys.path.append(os.path.abspath("extensions"))
 
 project = "discord_http"
 copyright = "2023, joyn.gg"
@@ -18,6 +19,7 @@ extensions = [
 
     # Third party extensions
     "myst_parser",
+    "google_analytics",
 ]
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -28,6 +30,10 @@ html_theme = "furo"
 html_title = "discord.http docs"
 html_favicon = "favicon.ico"
 master_doc = "index"
+
+# Google Analytics
+ga_enabled = True
+ga_id = "G-HVZQ2H4TGR"
 
 source_suffix = {
     ".rst": "restructuredtext",

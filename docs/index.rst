@@ -58,6 +58,12 @@ Automatically generated documentation index for your convenience:
 
 .. toctree::
   :hidden:
+  :caption: Advanced
+
+  pages/backend
+
+.. toctree::
+  :hidden:
   :caption: Development
 
   pages/contribute
