@@ -2,7 +2,17 @@
 <html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+    <meta name="color-scheme" content="light dark">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HVZQ2H4TGR"></script>
+    
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-HVZQ2H4TGR');
+    </script>
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>discord_http.backend - discord.http docs</title>
@@ -189,6 +199,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../pages/events.html">Event references</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pages/backend.html">HTTP backend</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../pages/contribute.html">Contributing</a></li>
@@ -293,26 +307,8 @@
 <span class="k">class</span> <span class="nc">DiscordHTTP</span><span class="p">(</span><span class="n">Quart</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="s2">&quot;Client&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The main class for discord.http</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        application_id: `int`</span>
-<span class="sd">            Application ID of the bot (aka. the User ID)</span>
-<span class="sd">        public_key: `str`</span>
-<span class="sd">            Public key of the bot to validate HTTP requests sent by Discord</span>
-<span class="sd">        token: `str`</span>
-<span class="sd">            Bot token to use the Discord API and validate that the bot exists</span>
-<span class="sd">        guild_id: `Optional[int]`</span>
-<span class="sd">            Guild ID to sync commands to, if not provided, it will be global</span>
-<span class="sd">        sync: `bool`</span>
-<span class="sd">            Whether to sync commands on startup or not</span>
-<span class="sd">        loop: `Optional[asyncio.AbstractEventLoop]`</span>
-<span class="sd">            The event loop to use, if not provided, it will use the current running loop</span>
-<span class="sd">        debug_events: `bool`</span>
-<span class="sd">            Whether to log raw events or not</span>
-<span class="sd">        logging_level: `Optional[int]`</span>
-<span class="sd">            Logging level to use, if not provided, it will use INFO</span>
+<span class="sd">        This serves as the fundemental HTTP server for Discord Interactions</span>
+<span class="sd">        We recommend to not touch this class, unless you know what you&#39;re doing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
@@ -409,6 +405,7 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_index_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">BaseResponse</span><span class="p">,</span> <span class="n">QuartResponse</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The main function to handle all HTTP requests sent by Discord</span>
+<span class="sd">        Please do not touch this function, unless you know what you&#39;re doing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_request</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
@@ -586,8 +583,18 @@
         <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
         <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8080</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_ping</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index_interaction</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">disable_default_get_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span>
+                <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">index_ping</span><span class="p">,</span>
+                <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span>
+            <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_index_interaction</span><span class="p">,</span>
+            <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="c1"># Change some of the default settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;JSONIFY_PRETTYPRINT_REGULAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>

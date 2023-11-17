@@ -13,10 +13,10 @@
         gtag('js', new Date());
         gtag('config', 'G-HVZQ2H4TGR');
     </script>
-    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="License" href="license.html" /><link rel="prev" title="HTTP backend" href="backend.html" />
+    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Contributing" href="contribute.html" /><link rel="prev" title="Event references" href="events.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Contributing - discord.http docs</title>
+        <title>HTTP backend - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -201,12 +201,12 @@
 <li class="toctree-l1"><a class="reference internal" href="events.html">Event references</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="backend.html">HTTP backend</a></li>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">HTTP backend</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Contributing</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/joyn-gg/discord.http">GitHub</a></li>
 </ul>
@@ -243,32 +243,63 @@
           </label>
         </div>
         <article role="main">
-          <section id="contributing">
-<h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h1>
-<p>We welcome contributions to discord.http!
-Before you get started, please take a moment to review the following guidelines:</p>
-<section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
-<p>Before submitting a pull request, ensure that your code changes have been thoroughly tested.
-Include relevant test cases and make sure that all existing tests pass.</p>
+          <section id="http-backend">
+<h1>HTTP backend<a class="headerlink" href="#http-backend" title="Link to this heading">#</a></h1>
+<p>The HTTP backend is a simple HTTP server that listens for incoming requests and
+manages all the communication received by Discord HTTP POST requests.
+However since this is essentially based on Quart, you are free to intervean and
+add your own componenets to the server.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">discord_http</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Client</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span>
+    <span class="n">token</span><span class="o">=</span><span class="s2">&quot;Your bot token here&quot;</span><span class="p">,</span>
+    <span class="n">application_id</span><span class="o">=</span><span class="s2">&quot;Bot application ID&quot;</span><span class="p">,</span>
+    <span class="n">public_key</span><span class="o">=</span><span class="s2">&quot;Bot public key&quot;</span><span class="p">,</span>
+    <span class="n">sync</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>With this simple code, you have the ability to interact with Quart API using <code class="docutils literal notranslate"><span class="pre">client.backend</span></code>.
+If you need help with Quart, please refer to the <a class="reference external" href="https://pgjones.gitlab.io/quart/">Quart documentation</a>.
+Essentially you are able to add your very own paths to the server.</p>
+<p>By default, the library adds a GET and POST listener to <code class="docutils literal notranslate"><span class="pre">/</span></code> of the domain` (aka. the root of the domain).
+The <code class="docutils literal notranslate"><span class="pre">POST</span></code> is responsible for handling all the incoming requests from Discord
+(We <strong>STRONGLY</strong> recommend you do not change the default behaviour of this, unless you know what you are doing).
+<code class="docutils literal notranslate"><span class="pre">GET</span></code> is used for you to verify that the bot is online and working, which shows a simple
+debug information about your bot and nothing more.</p>
+<section id="get-path">
+<h2>GET Path<a class="headerlink" href="#get-path" title="Link to this heading">#</a></h2>
+<p>By default, the library provides you with a debug GET path that you can use to verify that the bot is online.
+It should something like this when accessing it through your browser or any other tools:</p>
+<img alt="../_images/get_path.png" src="../_images/get_path.png" />
+<p>If you want to as well, you could theoretically make this a way to show your bot being online,
+by having your main website ping this source and then be able to see if the bot is online or not.</p>
+<p>Don’t like the default behaviour, you can simply change it by doing the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span>
+    <span class="o">...</span>
+    <span class="n">disable_default_get_path</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Instead of then showing the default JSON value in there, it will then instead return <code class="docutils literal notranslate"><span class="pre">HTTP</span> <span class="pre">405:</span> <span class="pre">Method</span> <span class="pre">not</span> <span class="pre">allowed</span></code>.</p>
 </section>
-<section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
-<p>Please update the documentation to reflect any changes you introduce.
-This includes code comments, docstrings, and README files.</p>
-</section>
-<section id="reporting-issues">
-<h2>Reporting Issues<a class="headerlink" href="#reporting-issues" title="Link to this heading">#</a></h2>
-<p>If you encounter any issues with discord.http,
-please open a GitHub issue and provide detailed information about
-the problem, including steps to reproduce it.</p>
-</section>
-<section id="pull-request-process">
-<h2>Pull Request Process<a class="headerlink" href="#pull-request-process" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p>Fork the repository and create a new branch for your feature or bug fix.</p></li>
-<li><p>Submit a pull request, filling in the template with a brief description of your changes.</p></li>
-</ol>
+<section id="adding-paths">
+<h2>Adding paths<a class="headerlink" href="#adding-paths" title="Link to this heading">#</a></h2>
+<p>A very simplified example of how you can add your own paths to the server.
+Keep in mind that there are many more methods, but this is just a simple example.
+Code example will be taking the code above as an expantion of the code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">simple_test</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;hello&quot;</span><span class="p">:</span> <span class="s2">&quot;world&quot;</span><span class="p">}</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span>
+    <span class="s2">&quot;/test&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="n">simple_test</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This code would essentially add a new path to the server called <code class="docutils literal notranslate"><span class="pre">/test</span></code> that
+returns a JSON response with the key <code class="docutils literal notranslate"><span class="pre">hello</span></code> and the value <code class="docutils literal notranslate"><span class="pre">world</span></code>.
+Of course you can do much more than this, but this is more of an idea of what you could do.</p>
 </section>
 </section>
 
@@ -277,23 +308,23 @@ the problem, including steps to reproduce it.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="license.html">
+          <a class="next-page" href="contribute.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">License</div>
+                <div class="title">Contributing</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="backend.html">
+          <a class="prev-page" href="events.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">HTTP backend</div>
+                <div class="title">Event references</div>
                 
               </div>
             </a>
@@ -327,11 +358,9 @@ the problem, including steps to reproduce it.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Contributing</a><ul>
-<li><a class="reference internal" href="#testing">Testing</a></li>
-<li><a class="reference internal" href="#documentation">Documentation</a></li>
-<li><a class="reference internal" href="#reporting-issues">Reporting Issues</a></li>
-<li><a class="reference internal" href="#pull-request-process">Pull Request Process</a></li>
+<li><a class="reference internal" href="#">HTTP backend</a><ul>
+<li><a class="reference internal" href="#get-path">GET Path</a></li>
+<li><a class="reference internal" href="#adding-paths">Adding paths</a></li>
 </ul>
 </li>
 </ul>

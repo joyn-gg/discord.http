@@ -2,7 +2,17 @@
 <html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+    <meta name="color-scheme" content="light dark">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HVZQ2H4TGR"></script>
+    
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-HVZQ2H4TGR');
+    </script>
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>discord_http.client - discord.http docs</title>
@@ -189,6 +199,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../pages/events.html">Event references</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pages/backend.html">HTTP backend</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../pages/contribute.html">Contributing</a></li>
@@ -275,8 +289,39 @@
         <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">allowed_mentions</span><span class="p">:</span> <span class="n">AllowedMentions</span> <span class="o">=</span> <span class="n">AllowedMentions</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
         <span class="n">logging_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+        <span class="n">disable_default_get_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">debug_events</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The main client class for discord.http</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        token: `str`</span>
+<span class="sd">            Discord bot token</span>
+<span class="sd">        application_id: `Optional[int]`</span>
+<span class="sd">            Application ID of the bot, not the User ID</span>
+<span class="sd">        public_key: `Optional[str]`</span>
+<span class="sd">            Public key of the bot, used for validating interactions</span>
+<span class="sd">        guild_id: `Optional[int]`</span>
+<span class="sd">            Guild ID to sync commands to, if not provided, it will sync to global</span>
+<span class="sd">        sync: `bool`</span>
+<span class="sd">            Whether to sync commands on boot or not</span>
+<span class="sd">        api_version: `Optional[int]`</span>
+<span class="sd">            API version to use, if not provided, it will use the default (10)</span>
+<span class="sd">        loop: `Optional[asyncio.AbstractEventLoop]`</span>
+<span class="sd">            Event loop to use, if not provided, it will use `asyncio.get_running_loop()`</span>
+<span class="sd">        allowed_mentions: `AllowedMentions`</span>
+<span class="sd">            Allowed mentions to use, if not provided, it will use `AllowedMentions.all()`</span>
+<span class="sd">        logging_level: `int`</span>
+<span class="sd">            Logging level to use, if not provided, it will use `logging.INFO`</span>
+<span class="sd">        debug_events: `bool`</span>
+<span class="sd">            Whether to log events or not, if not provided, `on_raw_*` events will not be useable</span>
+<span class="sd">        disable_default_get_path: `bool`</span>
+<span class="sd">            Whether to disable the default GET path or not, if not provided, it will use `False`.</span>
+<span class="sd">            The default GET path only provides information about the bot and when it was last rebooted.</span>
+<span class="sd">            Usually a great tool to just validate that your bot is online.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">application_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">public_key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">token</span>
@@ -285,6 +330,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">sync</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logging_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_events</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">debug_events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disable_default_get_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">disable_default_get_path</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span> <span class="o">=</span> <span class="n">loop</span> <span class="ow">or</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>

@@ -59,11 +59,35 @@ in to your `bot's application page <https://discord.com/developers/applications>
 Inside the bot configuration page, you will see a section called "Interactions Endpoint URL",
 paste your URL there and save the settings.
 
+The URL you past in there is the root URL, there's no need to add ``/interactions`` or similar to the end of it.
+So if your domain is ``example.com``, you put that inside the bot's interaction URL setting.
+
+.. image:: ../_static/images/getting_started/interaction_url.png
+
 .. note::
   If the page refuses to save, it means that your bot is not exposed to the correct URL.
+  Discord attempts to ping with the URL you provided, and if it fails, it will not save.
 
-If the Discord developer page saved successfully, you should see your bot printed a ``[ INFO ]`` message
-telling what has happened. This simply means that you did it all correctly and can now start using the bot.
+  If the Discord developer page saved successfully, you should see your bot printed an ``[ INFO ]`` message
+  telling what has happened. This simply means that you did it all correctly and can now start using the bot.
+
+3rd-party tools
+----------------
+
+gunicorn
+~~~~~~~~
+Planning to scale your bot to multiple workers? You can use `gunicorn <https://gunicorn.org/>`_.
+Since this library is built on top of ``Quart``, which is essentially ``Flask``, but with async, you can use gunicorn.
+
+If we take the example bot code above, you can start doing so by using the following command:
+
+.. code-block:: bash
+
+  gunicorn filename:client.backend
+
+Remember to replace ``filename`` with whatever your root file is called. It could be ``main.py``, ``bot.py`` or similar.
+In those two cases, you would use ``gunicorn main:client.backend`` and ``gunicorn bot:client.backend`` respectively.
+
 
 Hosting examples
 --------------------
