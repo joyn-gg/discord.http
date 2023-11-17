@@ -43,8 +43,39 @@ class Client:
         loop: Optional[asyncio.AbstractEventLoop] = None,
         allowed_mentions: AllowedMentions = AllowedMentions.all(),
         logging_level: int = logging.INFO,
+        disable_default_get_path: bool = False,
         debug_events: bool = False
     ):
+        """
+        The main client class for discord.http
+
+        Parameters
+        ----------
+        token: `str`
+            Discord bot token
+        application_id: `Optional[int]`
+            Application ID of the bot, not the User ID
+        public_key: `Optional[str]`
+            Public key of the bot, used for validating interactions
+        guild_id: `Optional[int]`
+            Guild ID to sync commands to, if not provided, it will sync to global
+        sync: `bool`
+            Whether to sync commands on boot or not
+        api_version: `Optional[int]`
+            API version to use, if not provided, it will use the default (10)
+        loop: `Optional[asyncio.AbstractEventLoop]`
+            Event loop to use, if not provided, it will use `asyncio.get_running_loop()`
+        allowed_mentions: `AllowedMentions`
+            Allowed mentions to use, if not provided, it will use `AllowedMentions.all()`
+        logging_level: `int`
+            Logging level to use, if not provided, it will use `logging.INFO`
+        debug_events: `bool`
+            Whether to log events or not, if not provided, `on_raw_*` events will not be useable
+        disable_default_get_path: `bool`
+            Whether to disable the default GET path or not, if not provided, it will use `False`.
+            The default GET path only provides information about the bot and when it was last rebooted.
+            Usually a great tool to just validate that your bot is online.
+        """
         self.application_id: Optional[int] = application_id
         self.public_key: Optional[str] = public_key
         self.token: str = token
@@ -53,6 +84,7 @@ class Client:
         self.sync: bool = sync
         self.logging_level: int = logging_level
         self.debug_events: bool = debug_events
+        self.disable_default_get_path: bool = disable_default_get_path
 
         try:
             self.loop: asyncio.AbstractEventLoop = loop or asyncio.get_running_loop()

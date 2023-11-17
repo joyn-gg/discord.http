@@ -61,26 +61,8 @@ def _cancel_all_tasks(loop: asyncio.AbstractEventLoop) -> None:
 class DiscordHTTP(Quart):
     def __init__(self, *, client: "Client"):
         """
-        The main class for discord.http
-
-        Parameters
-        ----------
-        application_id: `int`
-            Application ID of the bot (aka. the User ID)
-        public_key: `str`
-            Public key of the bot to validate HTTP requests sent by Discord
-        token: `str`
-            Bot token to use the Discord API and validate that the bot exists
-        guild_id: `Optional[int]`
-            Guild ID to sync commands to, if not provided, it will be global
-        sync: `bool`
-            Whether to sync commands on startup or not
-        loop: `Optional[asyncio.AbstractEventLoop]`
-            The event loop to use, if not provided, it will use the current running loop
-        debug_events: `bool`
-            Whether to log raw events or not
-        logging_level: `Optional[int]`
-            Logging level to use, if not provided, it will use INFO
+        This serves as the fundemental HTTP server for Discord Interactions
+        We recommend to not touch this class, unless you know what you're doing
         """
         self.uptime: datetime = datetime.now()
 
@@ -171,6 +153,7 @@ class DiscordHTTP(Quart):
     async def _index_interaction(self) -> Union[BaseResponse, QuartResponse, dict]:
         """
         The main function to handle all HTTP requests sent by Discord
+        Please do not touch this function, unless you know what you're doing
         """
         await self.validate_request()
         data = await request.json
@@ -343,8 +326,18 @@ class DiscordHTTP(Quart):
         host: str = "127.0.0.1",
         port: int = 8080
     ) -> None:
-        self.add_url_rule("/", "ping", self.index_ping, methods=["GET"])
-        self.add_url_rule("/", "index", self._index_interaction, methods=["POST"])
+        if not self.bot.disable_default_get_path:
+            self.add_url_rule(
+                "/", "ping",
+                self.index_ping,
+                methods=["GET"]
+            )
+
+        self.add_url_rule(
+            "/", "index",
+            self._index_interaction,
+            methods=["POST"]
+        )
 
         # Change some of the default settings
         self.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
