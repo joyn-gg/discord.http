@@ -310,7 +310,7 @@ class PartialChannel(PartialBase):
         )
 
     @classmethod
-    def from_dict(cls, *, state: "DiscordAPI", data: dict) -> "BaseChannel":
+    def from_dict(cls, *, state: "DiscordAPI", data: dict) -> Self:
         """
         Create a channel object from a dictionary
         Requires the state to be set
@@ -332,6 +332,7 @@ class PartialChannel(PartialBase):
             channel_id=int(data["id"]),
             guild_id=utils.get_int(data, "guild_id")
         )
+
         return temp_class._class_to_return(data=data, state=state)
 
     async def fetch(self) -> "BaseChannel":

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Union, Self
 
 from .asset import Asset
 from .colour import Colour
@@ -54,7 +54,7 @@ class Embed:
         *,
         text: Optional[str] = None,
         icon_url: Optional[Union[Asset, str]] = None
-    ) -> "Embed":
+    ) -> Self:
         """
         Set the footer of the embed
 
@@ -80,7 +80,7 @@ class Embed:
 
         return self
 
-    def remove_footer(self) -> "Embed":
+    def remove_footer(self) -> Self:
         """
         Remove the footer from the embed
 
@@ -98,7 +98,7 @@ class Embed:
         name: str,
         url: Optional[str] = None,
         icon_url: Optional[Union[Asset, str]] = None
-    ) -> "Embed":
+    ) -> Self:
         """
         Set the author of the embed
 
@@ -125,7 +125,7 @@ class Embed:
 
         return self
 
-    def remove_author(self) -> "Embed":
+    def remove_author(self) -> Self:
         """
         Remove the author from the embed
 
@@ -141,7 +141,7 @@ class Embed:
         self,
         *,
         url: Optional[Union[Asset, str]] = None
-    ) -> "Embed":
+    ) -> Self:
         """
         Set the image of the embed
 
@@ -162,7 +162,7 @@ class Embed:
 
         return self
 
-    def remove_image(self) -> "Embed":
+    def remove_image(self) -> Self:
         """
         Remove the image from the embed
 
@@ -178,7 +178,7 @@ class Embed:
         self,
         *,
         url: Optional[Union[Asset, str]] = None
-    ) -> "Embed":
+    ) -> Self:
         """
         Set the thumbnail of the embed
 
@@ -199,7 +199,7 @@ class Embed:
 
         return self
 
-    def remove_thumbnail(self) -> "Embed":
+    def remove_thumbnail(self) -> Self:
         """
         Remove the thumbnail from the embed
 
@@ -217,7 +217,7 @@ class Embed:
         name: str,
         value: str,
         inline: bool = True
-    ) -> "Embed":
+    ) -> Self:
         """
         Add a field to the embed
 
@@ -243,7 +243,7 @@ class Embed:
 
         return self
 
-    def remove_field(self, index: int) -> "Embed":
+    def remove_field(self, index: int) -> Self:
         """
         Remove a field from the embed
 
@@ -265,7 +265,7 @@ class Embed:
         return self
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Embed":
+    def from_dict(cls, data: dict) -> Self:
         """
         Create an embed from a dictionary
 

@@ -4,7 +4,7 @@ import time
 import logging
 import inspect
 
-from typing import Union, Optional, TYPE_CHECKING, Callable
+from typing import Union, Optional, TYPE_CHECKING, Callable, Self
 
 from .enums import ButtonStyles, ComponentType, TextStyles, ChannelType
 from .emoji import PartialEmoji
@@ -526,7 +526,7 @@ class View(InteractionStorage):
         return self._payload
 
     @classmethod
-    def from_dict(cls, data: dict) -> "View":
+    def from_dict(cls, data: dict) -> Self:
         """ `View`: Returns a view from a dict provided by Discord """
         items = []
         if not data.get("components", None):

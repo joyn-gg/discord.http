@@ -29,7 +29,13 @@ __all__ = (
 
 
 class PartialMember(PartialBase):
-    def __init__(self, *, state: "DiscordAPI", guild_id: int, user_id: int):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        guild_id: int,
+        user_id: int
+    ):
         super().__init__(id=int(user_id))
         self._state = state
 
@@ -365,7 +371,13 @@ class ThreadMember(PartialBase):
 
 
 class Member(PartialMember):
-    def __init__(self, *, state: "DiscordAPI", guild: PartialGuild, data: dict):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        guild: PartialGuild,
+        data: dict
+    ):
         super().__init__(
             state=state,
             guild_id=guild.id,

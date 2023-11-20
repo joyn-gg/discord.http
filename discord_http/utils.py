@@ -15,9 +15,12 @@ from .file import File
 
 DISCORD_EPOCH = 1420070400000
 
+# RegEx patterns
 re_channel: re.Pattern = re.compile(r"<#([0-9]{15,20})>")
 re_role: re.Pattern = re.compile(r"<@&([0-9]{15,20})>")
 re_mention: re.Pattern = re.compile(r"<@!?([0-9]{15,20})>")
+re_emoji: re.Pattern = re.compile(r"<(a)?:([a-zA-Z0-9_]+):(\d+)>")
+re_hex = re.compile(r"^(?:#)?(?:[0-9a-fA-F]{3}){1,2}$")
 re_jump_url: re.Pattern = re.compile(
     r"https:\/\/(?:.*\.)?discord\.com\/channels\/([0-9]{15,20}|@me)\/([0-9]{15,20})(?:\/([0-9]{15,20}))?"
 )

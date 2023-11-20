@@ -24,7 +24,12 @@ __all__ = (
 
 
 class Ping:
-    def __init__(self, *, state: "DiscordAPI", data: dict):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        data: dict
+    ):
         self._state = state
         self._raw_user = data["user"]
 
@@ -65,7 +70,12 @@ class BaseResponse:
 
 
 class DeferResponse(BaseResponse):
-    def __init__(self, *, ephemeral: bool = False, thinking: bool = False):
+    def __init__(
+        self,
+        *,
+        ephemeral: bool = False,
+        thinking: bool = False
+    ):
         self.ephemeral = ephemeral
         self.thinking = thinking
 

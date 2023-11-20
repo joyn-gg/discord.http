@@ -1,7 +1,7 @@
 import inspect
 import logging
 
-from typing import TYPE_CHECKING, Callable, Union, Optional, Any
+from typing import TYPE_CHECKING, Callable, Union, Optional, Any, Self
 from datetime import datetime, timedelta
 
 from . import utils
@@ -71,7 +71,7 @@ class SelectValues:
         self._from_data(ctx, data)
 
     @classmethod
-    def none(cls, ctx: "Context") -> "SelectValues":
+    def none(cls, ctx: "Context") -> Self:
         """ `SelectValues` with no values """
         return cls(ctx, {})
 

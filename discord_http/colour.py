@@ -1,9 +1,8 @@
-import re
 import random
 
-from typing import Optional, Any
+from typing import Optional, Any, Self
 
-re_hex = re.compile(r"^(?:#)?(?:[0-9a-fA-F]{3}){1,2}$")
+from . import utils
 
 __all__ = (
     "Colour",
@@ -49,7 +48,7 @@ class Colour:
         return self._get_byte(0)
 
     @classmethod
-    def from_rgb(cls, r: int, g: int, b: int) -> "Colour":
+    def from_rgb(cls, r: int, g: int, b: int) -> Self:
         """
         Creates a Colour object from RGB values
 
@@ -74,7 +73,7 @@ class Colour:
         return (self.r, self.g, self.b)
 
     @classmethod
-    def from_hex(cls, hex: str) -> "Colour":
+    def from_hex(cls, hex: str) -> Self:
         """
         Creates a Colour object from a hex string
 
@@ -93,7 +92,7 @@ class Colour:
         `ValueError`
             Invalid hex colour
         """
-        find_hex = re_hex.search(hex)
+        find_hex = utils.re_hex.search(hex)
         if not find_hex:
             raise ValueError(f"Invalid hex colour {hex!r}")
 
@@ -109,12 +108,12 @@ class Colour:
         return f"#{self.value:06x}"
 
     @classmethod
-    def default(cls) -> "Colour":
+    def default(cls) -> Self:
         """ `Colour`: Returns the default colour (#000000, Black) """
         return cls(0)
 
     @classmethod
-    def random(cls, *, seed: Optional[Any] = None) -> "Colour":
+    def random(cls, *, seed: Optional[Any] = None) -> Self:
         """
         Creates a random colour
 

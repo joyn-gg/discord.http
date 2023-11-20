@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, Self
 
 from . import utils
 
@@ -21,12 +21,12 @@ class AllowedMentions:
         self.reply_user: bool = replied_user
 
     @classmethod
-    def all(cls) -> "AllowedMentions":
+    def all(cls) -> Self:
         """ `AllowedMentions` Preset to allow all mentions """
         return cls(everyone=True, roles=True, users=True, replied_user=True)
 
     @classmethod
-    def none(cls) -> "AllowedMentions":
+    def none(cls) -> Self:
         """ `AllowedMentions` Preset to deny any mentions """
         return cls(everyone=False, roles=False, users=False, replied_user=False)
 

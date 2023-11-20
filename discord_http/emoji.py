@@ -10,8 +10,6 @@ if TYPE_CHECKING:
     from .guild import PartialGuild, Guild
     from .http import DiscordAPI
 
-RE_EMOJI = re.compile(r"<(a)?:([a-zA-Z0-9_]+):(\d+)>")
-
 __all__ = (
     "PartialEmoji",
     "Emoji",
@@ -26,7 +24,7 @@ class PartialEmoji:
         self.animated: bool = False
         self.discord_emoji: bool = False
 
-        is_custom: Optional[re.Match] = RE_EMOJI.search(emoji)
+        is_custom: Optional[re.Match] = utils.re_emoji.search(emoji)
 
         if is_custom:
             _animated, _name, _id = is_custom.groups()

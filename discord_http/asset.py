@@ -102,7 +102,11 @@ class Asset:
         return self._animated
 
     @classmethod
-    def _from_avatar(cls, user_id: int, avatar: str) -> Self:
+    def _from_avatar(
+        cls,
+        user_id: int,
+        avatar: str
+    ) -> Self:
         animated = avatar.startswith("a_")
         format = "gif" if animated else "png"
         return cls(
@@ -112,7 +116,12 @@ class Asset:
         )
 
     @classmethod
-    def _from_guild_avatar(cls, guild_id: int, member_id: int, avatar: str) -> Self:
+    def _from_guild_avatar(
+        cls,
+        guild_id: int,
+        member_id: int,
+        avatar: str
+    ) -> Self:
         animated = avatar.startswith("a_")
         format = "gif" if animated else "png"
         return cls(
@@ -122,7 +131,11 @@ class Asset:
         )
 
     @classmethod
-    def _from_guild_icon(cls, guild_id: int, icon_hash: str) -> Self:
+    def _from_guild_icon(
+        cls,
+        guild_id: int,
+        icon_hash: str
+    ) -> Self:
         animated = icon_hash.startswith('a_')
         format = 'gif' if animated else 'png'
         return cls(
@@ -132,7 +145,10 @@ class Asset:
         )
 
     @classmethod
-    def _from_avatar_decoration(cls, decoration: str) -> Self:
+    def _from_avatar_decoration(
+        cls,
+        decoration: str
+    ) -> Self:
         animated = decoration.startswith("v2_a_")
         return cls(
             url=f"{cls.BASE}/avatar-decoration-presets/{decoration}.png?size=96&passthrough=true",
@@ -141,7 +157,11 @@ class Asset:
         )
 
     @classmethod
-    def _from_banner(cls, user_id: int, banner: str) -> Self:
+    def _from_banner(
+        cls,
+        user_id: int,
+        banner: str
+    ) -> Self:
         animated = banner.startswith("a_")
         format = "gif" if animated else "png"
         return cls(
