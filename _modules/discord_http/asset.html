@@ -354,7 +354,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_animated</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_avatar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">avatar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_from_avatar</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">avatar</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
         <span class="n">animated</span> <span class="o">=</span> <span class="n">avatar</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;a_&quot;</span><span class="p">)</span>
         <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;gif&quot;</span> <span class="k">if</span> <span class="n">animated</span> <span class="k">else</span> <span class="s2">&quot;png&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -364,7 +368,12 @@
         <span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_guild_avatar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">member_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">avatar</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_from_guild_avatar</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">member_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">avatar</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
         <span class="n">animated</span> <span class="o">=</span> <span class="n">avatar</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;a_&quot;</span><span class="p">)</span>
         <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;gif&quot;</span> <span class="k">if</span> <span class="n">animated</span> <span class="k">else</span> <span class="s2">&quot;png&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -374,7 +383,11 @@
         <span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_guild_icon</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">icon_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_from_guild_icon</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">icon_hash</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
         <span class="n">animated</span> <span class="o">=</span> <span class="n">icon_hash</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;a_&#39;</span><span class="p">)</span>
         <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;gif&#39;</span> <span class="k">if</span> <span class="n">animated</span> <span class="k">else</span> <span class="s1">&#39;png&#39;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -384,7 +397,10 @@
         <span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_avatar_decoration</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">decoration</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_from_avatar_decoration</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">decoration</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
         <span class="n">animated</span> <span class="o">=</span> <span class="n">decoration</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v2_a_&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">BASE</span><span class="si">}</span><span class="s2">/avatar-decoration-presets/</span><span class="si">{</span><span class="n">decoration</span><span class="si">}</span><span class="s2">.png?size=96&amp;passthrough=true&quot;</span><span class="p">,</span>
@@ -393,7 +409,11 @@
         <span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_from_banner</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">banner</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_from_banner</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">banner</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
         <span class="n">animated</span> <span class="o">=</span> <span class="n">banner</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;a_&quot;</span><span class="p">)</span>
         <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;gif&quot;</span> <span class="k">if</span> <span class="n">animated</span> <span class="k">else</span> <span class="s2">&quot;png&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>

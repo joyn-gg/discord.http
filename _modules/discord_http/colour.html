@@ -242,12 +242,11 @@
         </div>
         <article role="main">
           <h1>Source code for discord_http.colour</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">random</span>
+<span></span><span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span>
 
-<span class="n">re_hex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(?:#)?(?:[0-9a-fA-F]</span><span class="si">{3}</span><span class="s2">){1,2}$&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;Colour&quot;</span><span class="p">,</span>
@@ -297,7 +296,7 @@
 <div class="viewcode-block" id="Colour.from_rgb">
 <a class="viewcode-back" href="../../api/colour.html#discord_http.colour.Colour.from_rgb">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_rgb</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Colour&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_rgb</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a Colour object from RGB values</span>
 
@@ -328,7 +327,7 @@
 <div class="viewcode-block" id="Colour.from_hex">
 <a class="viewcode-back" href="../../api/colour.html#discord_http.colour.Colour.from_hex">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Colour&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a Colour object from a hex string</span>
 
@@ -347,7 +346,7 @@
 <span class="sd">        `ValueError`</span>
 <span class="sd">            Invalid hex colour</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">find_hex</span> <span class="o">=</span> <span class="n">re_hex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">hex</span><span class="p">)</span>
+        <span class="n">find_hex</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">re_hex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">hex</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">find_hex</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid hex colour </span><span class="si">{</span><span class="nb">hex</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -369,7 +368,7 @@
 <div class="viewcode-block" id="Colour.default">
 <a class="viewcode-back" href="../../api/colour.html#discord_http.colour.Colour.default">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Colour&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `Colour`: Returns the default colour (#000000, Black) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
@@ -377,7 +376,7 @@
 <div class="viewcode-block" id="Colour.random">
 <a class="viewcode-back" href="../../api/colour.html#discord_http.colour.Colour.random">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Colour&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">random</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a random colour</span>
 

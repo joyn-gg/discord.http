@@ -68,25 +68,29 @@ So if your domain is ``example.com``, you put that inside the bot's interaction 
   If the page refuses to save, it means that your bot is not exposed to the correct URL.
   Discord attempts to ping with the URL you provided, and if it fails, it will not save.
 
-  If the Discord developer page saved successfully, you should see your bot printed an ``[ INFO ]`` message
+  If the Discord developer page saved successfully, you should see your bot printed an ``[  INFO ]`` message
   telling what has happened. This simply means that you did it all correctly and can now start using the bot.
 
 3rd-party tools
 ----------------
 
-gunicorn
-~~~~~~~~
-Planning to scale your bot to multiple workers? You can use `gunicorn <https://gunicorn.org/>`_.
-Since this library is built on top of ``Quart``, which is essentially ``Flask``, but with async, you can use gunicorn.
+hypercorn
+~~~~~~~~~
+If you're aiming to enhance your bot's scalability with asynchronous capabilities, consider employing `hypercorn <https://gitlab.com/pgjones/hypercorn>`_.
+Given that this library aligns with the asynchronous nature of ``Quart``, much like ``Flask``, hypercorn becomes a suitable choice.
 
-If we take the example bot code above, you can start doing so by using the following command:
+.. note::
+  Gunicorn is not recommended for use with this library, as it is not asynchronous and will not work with Quart.
+  Hypercorn is essentially the asynchronous version of Gunicorn, and is the recommended choice for this library.
+
+To apply this to the provided bot code example, initiate the process with the following command:
 
 .. code-block:: bash
 
-  gunicorn filename:client.backend
+  hypercorn filename:client.backend
 
-Remember to replace ``filename`` with whatever your root file is called. It could be ``main.py``, ``bot.py`` or similar.
-In those two cases, you would use ``gunicorn main:client.backend`` and ``gunicorn bot:client.backend`` respectively.
+Ensure to replace ``filename`` with the actual name of your root file, such as ``main.py``, ``bot.py``, or a similar identifier.
+In these cases, you would utilize ``hypercorn main:client.backend`` and ``hypercorn bot:client.backend`` respectively.
 
 
 Hosting examples

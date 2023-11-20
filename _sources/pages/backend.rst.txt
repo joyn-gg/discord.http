@@ -29,7 +29,7 @@ debug information about your bot and nothing more.
 GET Path
 --------
 By default, the library provides you with a debug GET path that you can use to verify that the bot is online.
-It should something like this when accessing it through your browser or any other tools:
+It shows something like this when accessing it through your browser or any other tools:
 
 .. image:: ../_static/images/backend/get_path.png
 

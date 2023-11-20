@@ -319,22 +319,27 @@ So if your domain is <code class="docutils literal notranslate"><span class="pre
 <p class="admonition-title">Note</p>
 <p>If the page refuses to save, it means that your bot is not exposed to the correct URL.
 Discord attempts to ping with the URL you provided, and if it fails, it will not save.</p>
-<p>If the Discord developer page saved successfully, you should see your bot printed an <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">INFO</span> <span class="pre">]</span></code> message
+<p>If the Discord developer page saved successfully, you should see your bot printed an <code class="docutils literal notranslate"><span class="pre">[</span>&#160; <span class="pre">INFO</span> <span class="pre">]</span></code> message
 telling what has happened. This simply means that you did it all correctly and can now start using the bot.</p>
 </div>
 </section>
 <section id="rd-party-tools">
 <h2>3rd-party tools<a class="headerlink" href="#rd-party-tools" title="Link to this heading">#</a></h2>
-<section id="gunicorn">
-<h3>gunicorn<a class="headerlink" href="#gunicorn" title="Link to this heading">#</a></h3>
-<p>Planning to scale your bot to multiple workers? You can use <a class="reference external" href="https://gunicorn.org/">gunicorn</a>.
-Since this library is built on top of <code class="docutils literal notranslate"><span class="pre">Quart</span></code>, which is essentially <code class="docutils literal notranslate"><span class="pre">Flask</span></code>, but with async, you can use gunicorn.</p>
-<p>If we take the example bot code above, you can start doing so by using the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gunicorn<span class="w"> </span>filename:client.backend
+<section id="hypercorn">
+<h3>hypercorn<a class="headerlink" href="#hypercorn" title="Link to this heading">#</a></h3>
+<p>If you’re aiming to enhance your bot’s scalability with asynchronous capabilities, consider employing <a class="reference external" href="https://gitlab.com/pgjones/hypercorn">hypercorn</a>.
+Given that this library aligns with the asynchronous nature of <code class="docutils literal notranslate"><span class="pre">Quart</span></code>, much like <code class="docutils literal notranslate"><span class="pre">Flask</span></code>, hypercorn becomes a suitable choice.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Gunicorn is not recommended for use with this library, as it is not asynchronous and will not work with Quart.
+Hypercorn is essentially the asynchronous version of Gunicorn, and is the recommended choice for this library.</p>
+</div>
+<p>To apply this to the provided bot code example, initiate the process with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hypercorn<span class="w"> </span>filename:client.backend
 </pre></div>
 </div>
-<p>Remember to replace <code class="docutils literal notranslate"><span class="pre">filename</span></code> with whatever your root file is called. It could be <code class="docutils literal notranslate"><span class="pre">main.py</span></code>, <code class="docutils literal notranslate"><span class="pre">bot.py</span></code> or similar.
-In those two cases, you would use <code class="docutils literal notranslate"><span class="pre">gunicorn</span> <span class="pre">main:client.backend</span></code> and <code class="docutils literal notranslate"><span class="pre">gunicorn</span> <span class="pre">bot:client.backend</span></code> respectively.</p>
+<p>Ensure to replace <code class="docutils literal notranslate"><span class="pre">filename</span></code> with the actual name of your root file, such as <code class="docutils literal notranslate"><span class="pre">main.py</span></code>, <code class="docutils literal notranslate"><span class="pre">bot.py</span></code>, or a similar identifier.
+In these cases, you would utilize <code class="docutils literal notranslate"><span class="pre">hypercorn</span> <span class="pre">main:client.backend</span></code> and <code class="docutils literal notranslate"><span class="pre">hypercorn</span> <span class="pre">bot:client.backend</span></code> respectively.</p>
 </section>
 </section>
 <section id="hosting-examples">
@@ -515,7 +520,7 @@ the port in the command mentioned earlier.</p>
 </li>
 <li><a class="reference internal" href="#quick-example">Quick example</a></li>
 <li><a class="reference internal" href="#rd-party-tools">3rd-party tools</a><ul>
-<li><a class="reference internal" href="#gunicorn">gunicorn</a></li>
+<li><a class="reference internal" href="#hypercorn">hypercorn</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#hosting-examples">Hosting examples</a><ul>
