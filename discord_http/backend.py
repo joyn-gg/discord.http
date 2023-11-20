@@ -362,11 +362,13 @@ class DiscordHTTP(Quart):
         def _signal_handler(*_: Any) -> None:
             shutdown_event.set()
 
-        try:
-            loop.add_signal_handler(signal.SIGTERM, _signal_handler)
-            loop.add_signal_handler(signal.SIGINT, _signal_handler)
-        except (AttributeError, NotImplementedError):
-            pass
+        for signal_name in {"SIGINT", "SIGTERM", "SIGBREAK"}:
+            if hasattr(signal, signal_name):
+                try:
+                    loop.add_signal_handler(getattr(signal, signal_name), _signal_handler)
+                except NotImplementedError:
+                    # Add signal handler may not be implemented on Windows
+                    signal.signal(getattr(signal, signal_name), _signal_handler)
 
         server_name = self.config.get("SERVER_NAME")
         sn_host = None
