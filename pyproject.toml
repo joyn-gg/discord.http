@@ -14,8 +14,8 @@ license = {text = "MIT"}
 
 dynamic = ["version"]
 readme = "README.md"
-authors = [{name = "AlexFlipnote", email = "root@alexflipnote.dev"}]
 keywords = ["discord", "http", "api", "interaction", "quart", "webhook", "slash"]
+authors = [{name = "AlexFlipnote", email = "root@alexflipnote.dev"}]
 
 dependencies = [
   "quart>=0.18.4",
@@ -24,23 +24,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [
-  "pyright",
-  "flake8",
-  "toml",
-]
-
-docs = [
-  "sphinx",
-  "furo",
-  "myst-parser",
-]
-
-maintainer = [
-  "twine",
-  "wheel",
-  "build",
-]
+dev = ["pyright", "flake8", "toml"]
+docs = ["sphinx", "furo", "myst-parser"]
+maintainer = ["twine", "wheel", "build"]
 
 [tool.setuptools]
 packages = ["discord_http"]

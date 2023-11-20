@@ -37,7 +37,7 @@ flake8:  ## Run flake8 on the package
 	@echo -e "\033[0;32mNo errors found.\033[0m"
 
 type:  ## Run pyright on the package
-	@pyright discord_http
+	@pyright discord_http --pythonversion 3.11
 
 # Maintainer-only commands
 upload_pypi:  ## Maintainer only - Upload latest version to PyPi
