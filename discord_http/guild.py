@@ -908,7 +908,10 @@ class Guild(PartialGuild):
             Sticker(state=self._state, guild=self, data=s)
             for s in data.get("stickers", [])
         ]
+
         self._icon = data.get("icon", None)
+        self._banner = data.get("banner", None)
+
         self.explicit_content_filter: int = data.get("explicit_content_filter", 0)
         self.features: list[str] = data.get("features", [])
         self.latest_onboarding_question_id: Optional[int] = utils.get_int(data, "latest_onboarding_question_id")
@@ -950,6 +953,13 @@ class Guild(PartialGuild):
         if self._icon is None:
             return None
         return Asset._from_guild_icon(self.id, self._icon)
+
+    @property
+    def banner(self) -> Optional[Asset]:
+        """ `Optional[Asset]`: The guild's banner """
+        if self._banner is None:
+            return None
+        return Asset._from_guild_banner(self.id, self._banner)
 
     def get_role(self, role_id: int) -> Optional[Role]:
         """

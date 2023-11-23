@@ -42,12 +42,12 @@ class PartialSticker(PartialBase):
 
         return Sticker(
             state=self._state,
-            guild=self.guild,
+            guild=self.partial_guild,
             data=r.response,
         )
 
     @property
-    def guild(self) -> "PartialGuild":
+    def partial_guild(self) -> "PartialGuild":
         """
         Returns the guild this sticker is in
 
@@ -123,7 +123,7 @@ class PartialSticker(PartialBase):
         return Sticker(
             state=self._state,
             data=r.response,
-            guild=self.guild
+            guild=self.partial_guild
         )
 
     async def delete(self, *, guild_id: Optional[int] = None) -> None:

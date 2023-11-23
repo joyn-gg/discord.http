@@ -145,6 +145,20 @@ class Asset:
         )
 
     @classmethod
+    def _from_guild_banner(
+        cls,
+        guild_id: int,
+        banner_hash: str
+    ) -> Self:
+        animated = banner_hash.startswith('a_')
+        format = 'gif' if animated else 'png'
+        return cls(
+            url=f'{cls.BASE}/banners/{guild_id}/{banner_hash}.{format}?size=1024',
+            key=banner_hash,
+            animated=animated,
+        )
+
+    @classmethod
     def _from_avatar_decoration(
         cls,
         decoration: str
