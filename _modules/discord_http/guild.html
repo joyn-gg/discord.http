@@ -1223,7 +1223,10 @@
             <span class="n">Sticker</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">guild</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stickers&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="p">]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;icon&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_banner</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;banner&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">explicit_content_filter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;explicit_content_filter&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latest_onboarding_question_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;latest_onboarding_question_id&quot;</span><span class="p">)</span>
@@ -1265,6 +1268,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">Asset</span><span class="o">.</span><span class="n">_from_guild_icon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_icon</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">banner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: The guild&#39;s banner &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_banner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">Asset</span><span class="o">.</span><span class="n">_from_guild_banner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_banner</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Guild.get_role">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.Guild.get_role">[docs]</a>
