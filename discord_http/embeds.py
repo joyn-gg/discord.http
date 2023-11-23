@@ -310,7 +310,7 @@ class Embed:
         if self.author:
             embed["author"] = self.author
         if self.colour:
-            embed["color"] = self.colour
+            embed["color"] = int(self.colour)
         if self.footer:
             embed["footer"] = self.footer
         if self.image:
