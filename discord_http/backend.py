@@ -238,7 +238,11 @@ class DiscordHTTP(Quart):
                             status=404
                         )
 
-                    return await intreact.run(context)
+                    payload = await intreact.run(context)
+                    return QuartResponse(
+                        payload.to_multipart(),
+                        content_type=payload.content_type
+                    )
                 except Exception as e:
                     if self.bot.has_any_dispatch("interaction_error"):
                         self.bot.dispatch("interaction_error", context, e)

@@ -660,7 +660,7 @@ class Interaction:
             f"is_regex={self.is_regex}>"
         )
 
-    async def run(self, context: "Context") -> dict:
+    async def run(self, context: "Context") -> BaseResponse:
         """
         Runs the interaction.
 
@@ -687,7 +687,7 @@ class Interaction:
         if not isinstance(result, BaseResponse):
             raise TypeError("Interaction must be a Response object")
 
-        return result.to_dict()
+        return result
 
 
 class Listener:

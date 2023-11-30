@@ -671,7 +671,8 @@ async def test_decoration(ctx: Context):
 async def test_interaction(ctx: Context):
     print(ctx.bot.listeners)
     return ctx.response.edit_message(
-        content=f"Button pressed by {ctx.user} on message by {ctx.author}"
+        content=f"Button pressed by {ctx.user} on message by {ctx.author}",
+        attachments=[File("./images/boomer.png", filename="test.png")]
     )
 
 
