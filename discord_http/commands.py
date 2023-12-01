@@ -156,7 +156,7 @@ class Command:
         name: str,
         description: Optional[str] = None,
         guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
-        type: ApplicationCommandType = ApplicationCommandType.chat_input
+        type: ApplicationCommandType = ApplicationCommandType.chat_input,
     ):
         self.id: Optional[int] = None
         self.command = command
@@ -295,13 +295,13 @@ class Command:
 
         result = await self.run(context, *args, **kwargs)
 
-        if isinstance(result, BaseResponse):
-            return result
+        if not isinstance(result, BaseResponse):
+            raise TypeError(
+                f"Command {self.name} must return a "
+                f"Response object, not {type(result)}."
+            )
 
-        raise TypeError(
-            f"Command {self.name} must return a "
-            f"Response object, not {type(result)}."
-        )
+        return result
 
     def _has_permissions(self, ctx: "Context") -> Permissions:
         _perms: Optional[Permissions] = getattr(
@@ -448,8 +448,6 @@ class Command:
         _extra_locale = getattr(self.command, "__locales__", {})
         _extra_params = getattr(self.command, "__describe_params__", {})
         _extra_choices = getattr(self.command, "__choices_params__", {})
-        _dm_permission = getattr(self.command, "__dm_permission__", True)
-        _nsfw = getattr(self.command, "__nsfw__", False)
         _default_permissions = getattr(self.command, "__default_permissions__", None)
 
         # Types
@@ -461,10 +459,10 @@ class Command:
             "description": self.description,
             "options": self.options,
             "default_permission": True,
-            "dm_permission": _dm_permission,
+            "dm_permission": getattr(self.command, "__dm_permission__", True),
+            "nsfw": getattr(self.command, "__nsfw__", False),
             "name_localizations": {},
             "description_localizations": {},
-            "nsfw": _nsfw,
         }
 
         for key, value in _extra_locale.items():
@@ -542,7 +540,12 @@ class SubCommand(Command):
         description: Optional[str] = None,
         guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None
     ):
-        super().__init__(func, name, description, guild_ids)
+        super().__init__(
+            func,
+            name=name,
+            description=description,
+            guild_ids=guild_ids
+        )
 
     def __repr__(self) -> str:
         return f"<SubCommand name='{self.name}'>"
@@ -571,7 +574,7 @@ class SubGroup(Command):
         self,
         name: Optional[str] = None,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None
+        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
     ):
         """
         Decorator to add a subcommand to a subcommand group
@@ -582,13 +585,15 @@ class SubGroup(Command):
             Name of the command (defaults to the function name)
         description: `Optional[str]`
             Description of the command (defaults to the function docstring)
+        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+            List of guild IDs to register the command in
         """
         def decorator(func):
             subcommand = SubCommand(
                 func,
                 name=name or func.__name__,
                 description=description,
-                guild_ids=guild_ids
+                guild_ids=guild_ids,
             )
             self.subcommands[subcommand.name] = subcommand
             return subcommand
@@ -794,7 +799,8 @@ class Range:
 def command(
     name: Optional[str] = None,
     *,
-    description: Optional[str] = None
+    description: Optional[str] = None,
+    guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
 ):
     """
     Decorator to register a command.
@@ -805,48 +811,81 @@ def command(
         Name of the command (defaults to the function name)
     description: `Optional[str]`
         Description of the command (defaults to the function docstring)
+    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        List of guild IDs to register the command in
     """
     def decorator(func):
         return Command(
             func,
             name=name or func.__name__,
-            description=description
+            description=description,
+            guild_ids=guild_ids,
         )
     return decorator
 
 
-def user_command(name: Optional[str] = None):
+def user_command(
+    name: Optional[str] = None,
+    *,
+    guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+):
     """
     Decorator to register a user command.
 
+    Example usage
+
+    .. code-block:: python
+
+        @user_command()
+        async def content(ctx, user: Union[Member, User]):
+            await ctx.send(f"Target: {user.name}")
+
     Parameters
     ----------
     name: `Optional[str]`
         Name of the command (defaults to the function name)
+    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        List of guild IDs to register the command in
     """
     def decorator(func):
         return Command(
             func,
             name=name or func.__name__,
-            type=ApplicationCommandType.user
+            type=ApplicationCommandType.user,
+            guild_ids=guild_ids,
         )
     return decorator
 
 
-def message_command(name: Optional[str] = None):
+def message_command(
+    name: Optional[str] = None,
+    *,
+    guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+):
     """
     Decorator to register a message command.
+
+    Example usage
+
+    .. code-block:: python
+
+        @message_command()
+        async def content(ctx, msg: Message):
+            await ctx.send(f"Content: {msg.content}")
 
     Parameters
     ----------
     name: `Optional[str]`
         Name of the command (defaults to the function name)
+    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        List of guild IDs to register the command in
     """
     def decorator(func):
         return Command(
             func,
             name=name or func.__name__,
-            type=ApplicationCommandType.message
+            type=ApplicationCommandType.message,
+            guild_ids=guild_ids
         )
     return decorator
 

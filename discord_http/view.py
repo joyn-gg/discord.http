@@ -4,12 +4,13 @@ import time
 import logging
 import inspect
 
-from typing import Union, Optional, TYPE_CHECKING, Callable, Self
+from typing import Union, Optional, TYPE_CHECKING, Callable
 
 from .enums import ButtonStyles, ComponentType, TextStyles, ChannelType
 from .emoji import PartialEmoji
 
 if TYPE_CHECKING:
+    from . import Snowflake
     from .response import BaseResponse
     from .channel import BaseChannel
     from .context import Context
@@ -338,6 +339,7 @@ class InteractionStorage:
 
         self.loop = asyncio.get_running_loop()
         self._call_after: Optional[Callable] = None
+        self._users: list["Snowflake"] = []
         self._timeout_bool = False
         self._timeout: Optional[float] = None
         self._timeout_expiry: Optional[float] = None
@@ -393,8 +395,14 @@ class InteractionStorage:
 
     async def callback(self, ctx: "Context") -> Optional["BaseResponse"]:
         """ Called when the view is interacted with """
-        if self._call_after is None:
+        if not self._call_after:
             return None
+
+        if self._users and ctx.user.id not in [g.id for g in self._users]:
+            return ctx.response.send_message(
+                "You are not allowed to interact with this message",
+                ephemeral=True
+            )
 
         self._store_interaction = ctx
         self._update_event(True)
@@ -405,6 +413,7 @@ class InteractionStorage:
         ctx: "Context",
         *,
         call_after: Callable,
+        users: Optional[list["Snowflake"]] = [],
         timeout: float = 60,
     ) -> Optional["Context"]:
         """
@@ -439,6 +448,9 @@ class InteractionStorage:
         if not inspect.iscoroutinefunction(call_after):
             _log.warn("call_after is not a coroutine function, ignoring...")
             return None
+
+        if users and isinstance(users, list):
+            self._users = [g for g in users if getattr(g, "id", None)]
 
         self._call_after = call_after
         self._timeout = timeout
@@ -526,7 +538,7 @@ class View(InteractionStorage):
         return self._payload
 
     @classmethod
-    def from_dict(cls, data: dict) -> Self:
+    def from_dict(cls, data: dict) -> "View":
         """ `View`: Returns a view from a dict provided by Discord """
         items = []
         if not data.get("components", None):

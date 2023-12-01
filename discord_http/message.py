@@ -567,7 +567,7 @@ class Message(PartialMessage):
     def user_mentions(self) -> list[PartialUser]:
         """ `list[PartialUser]`: Returns the user mentions in the message """
         return [
-            PartialUser(state=self._state, user_id=int(user_id))
+            PartialUser(state=self._state, id=int(user_id))
             for user_id in utils.re_mention.findall(self.content)
         ]
 

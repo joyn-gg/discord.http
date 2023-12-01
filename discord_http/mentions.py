@@ -22,17 +22,17 @@ class AllowedMentions:
 
     @classmethod
     def all(cls) -> Self:
-        """ `AllowedMentions` Preset to allow all mentions """
+        """ `AllowedMentions`: Preset to allow all mentions """
         return cls(everyone=True, roles=True, users=True, replied_user=True)
 
     @classmethod
     def none(cls) -> Self:
-        """ `AllowedMentions` Preset to deny any mentions """
+        """ `AllowedMentions`: Preset to deny any mentions """
         return cls(everyone=False, roles=False, users=False, replied_user=False)
 
     def to_dict(self) -> dict:
         """
-        `dict` Representation of the `AllowedMentions`
+        `dict`: Representation of the `AllowedMentions`
         that is Discord API friendly
         """
         parse = []

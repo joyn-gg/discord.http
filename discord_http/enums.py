@@ -14,7 +14,13 @@ __all__ = (
     "DefaultNotificationLevel",
     "MFALevel",
     "ContentFilterLevel",
+    "IntegrationType",
 )
+
+
+class IntegrationType(Enum):
+    guild = 0
+    user = 1
 
 
 class InviteType(Enum):

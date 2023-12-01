@@ -912,16 +912,31 @@ class DMChannel(BaseChannel):
     def __init__(self, *, state: "DiscordAPI", data: dict):
         super().__init__(state=state, data=data)
 
+        self.name: Optional[str] = None
         self.user: Optional["User"] = None
+        self.last_message: Optional["PartialMessage"] = None
+
         self._from_data(data)
 
     def __repr__(self) -> str:
         return f"<DMChannel id={self.id} name='{self.user}'>"
 
     def _from_data(self, data: dict):
-        from .user import User
-        self.user = User(state=self._state, data=data["recipients"][0])
-        self.name = self.user.name
+        if data.get("recipients", None):
+            from .user import User
+            self.user = User(state=self._state, data=data["recipients"][0])
+            self.name = self.user.name
+
+        if data.get("last_message_id", None):
+            from .message import PartialMessage
+            self.last_message = PartialMessage(
+                state=self._state,
+                channel_id=self.id,
+                id=int(data["last_message_id"])
+            )
+
+        if data.get("last_pin_timestamp", None):
+            self.last_pin_timestamp = utils.parse_time(data["last_pin_timestamp"])
 
     @property
     def type(self) -> ChannelType:
@@ -1052,7 +1067,7 @@ class PublicThread(BaseChannel):
     def owner(self) -> "PartialUser":
         """ `PartialUser`: Returns a partial user object """
         from .user import PartialUser
-        return PartialUser(state=self._state, user_id=self.owner_id)
+        return PartialUser(state=self._state, id=self.owner_id)
 
     @property
     def last_message(self) -> Optional["PartialMessage"]:

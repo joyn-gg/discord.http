@@ -227,8 +227,11 @@ class DiscordHTTP(Quart):
                             None
                         )
                         if local_view:
-                            run_view = await local_view.callback(context)
-                            return run_view.to_dict()
+                            payload = await local_view.callback(context)
+                            return QuartResponse(
+                                payload.to_multipart(),
+                                content_type=payload.content_type
+                            )
 
                     intreact = self.bot.find_interaction(_custom_id)
                     if not intreact:
@@ -348,7 +351,7 @@ class DiscordHTTP(Quart):
         self.config["JSON_SORT_KEYS"] = False
 
         try:
-            _log.info(f"Serving on http://{host}:{port}")
+            _log.info(f"🌍 Serving on http://{host}:{port}")
             self.run(host=host, port=port, loop=self.loop)
         except KeyboardInterrupt:
             pass  # Just don't bother showing errors...

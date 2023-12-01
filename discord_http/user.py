@@ -25,8 +25,8 @@ __all__ = (
 
 
 class PartialUser(PartialBase):
-    def __init__(self, *, state: "DiscordAPI", user_id: int):
-        super().__init__(id=int(user_id))
+    def __init__(self, *, state: "DiscordAPI", id: int):
+        super().__init__(id=int(id))
         self._state = state
 
     def __repr__(self) -> str:
@@ -145,7 +145,7 @@ class User(PartialUser):
         state: "DiscordAPI",
         data: dict
     ):
-        super().__init__(state=state, user_id=int(data["id"]))
+        super().__init__(state=state, id=int(data["id"]))
 
         self.avatar: Optional[Asset] = None
         self.banner: Optional[Asset] = None

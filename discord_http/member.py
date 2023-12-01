@@ -39,7 +39,7 @@ class PartialMember(PartialBase):
         super().__init__(id=int(user_id))
         self._state = state
 
-        self._user = PartialUser(state=state, user_id=self.id)
+        self._user = PartialUser(state=state, id=self.id)
         self.guild_id: int = int(guild_id)
 
     def __str__(self) -> str:

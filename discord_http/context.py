@@ -72,32 +72,32 @@ class SelectValues:
 
     @classmethod
     def none(cls, ctx: "Context") -> Self:
-        """ `SelectValues` with no values """
+        """ `SelectValues`: with no values """
         return cls(ctx, {})
 
     @property
     def members(self) -> list[Member]:
-        """ `List[Member]` of members selected """
+        """ `List[Member]`: of members selected """
         return self._parsed_data["members"]
 
     @property
     def users(self) -> list[User]:
-        """ `List[User]` of users selected """
+        """ `List[User]`: of users selected """
         return self._parsed_data["users"]
 
     @property
     def channels(self) -> list[BaseChannel]:
-        """ `List[BaseChannel]` of channels selected """
+        """ `List[BaseChannel]`: of channels selected """
         return self._parsed_data["channels"]
 
     @property
     def roles(self) -> list[Role]:
-        """ `List[Role]` of roles selected """
+        """ `List[Role]`: of roles selected """
         return self._parsed_data["roles"]
 
     @property
     def strings(self) -> list[str]:
-        """ `List[str]` of strings selected """
+        """ `List[str]`: of strings selected """
         return self._parsed_data["strings"]
 
     def _parse_resolved(self, ctx: "Context", key: str, data: dict):

@@ -453,7 +453,13 @@ class DiscordAPI:
         if guild_id:
             url = f"/applications/{self.application_id}/guilds/{guild_id}/commands"
 
-        r = await self.query(method, url, **kwargs)
+        r = await self.query(method, url, res_method="json", **kwargs)
+        target = f"for Guild:{guild_id}" if guild_id else "globally"
+
+        if r.status >= 200 and r.status <= 299:
+            _log.info(f"🔁 Successfully synced commands {target}")
+        else:
+            _log.warn(f"🔁 Failed to sync global {target}: {r.response}")
 
         return r.response
 

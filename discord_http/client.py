@@ -174,7 +174,7 @@ class Client:
         if self.has_any_dispatch("ready"):
             self.dispatch("ready", client_object)
         else:
-            _log.info("✔️ discord.http is now ready")
+            _log.info("✅ discord.http is now ready")
 
     async def setup_hook(self) -> None:
         """
@@ -378,51 +378,85 @@ class Client:
             Name of the command, if not provided, it will use the function name
         description: `Optional[str]`
             Description of the command, if not provided, it will use the function docstring
+        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+            List of guild IDs to register the command in
         """
         def decorator(func):
             command = Command(
                 func,
                 name=name or func.__name__,
                 description=description,
-                guild_ids=guild_ids
+                guild_ids=guild_ids,
             )
             self.add_command(command)
             return command
         return decorator
 
-    def user_command(self, name: Optional[str] = None):
+    def user_command(
+        self,
+        name: Optional[str] = None,
+        *,
+        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+    ):
         """
         Used to register a user command
 
+        Example usage
+
+        .. code-block:: python
+
+            @user_command()
+            async def content(ctx, user: Union[Member, User]):
+                await ctx.send(f"Target: {user.name}")
+
         Parameters
         ----------
         name: `Optional[str]`
             Name of the command, if not provided, it will use the function name
+        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+            List of guild IDs to register the command in
         """
         def decorator(func):
             command = Command(
                 func,
                 name=name or func.__name__,
-                type=ApplicationCommandType.user
+                type=ApplicationCommandType.user,
+                guild_ids=guild_ids,
             )
             self.add_command(command)
             return command
         return decorator
 
-    def message_command(self, name: Optional[str] = None):
+    def message_command(
+        self,
+        name: Optional[str] = None,
+        *,
+        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+    ):
         """
         Used to register a message command
+
+        Example usage
+
+        .. code-block:: python
+
+            @message_command()
+            async def content(ctx, msg: Message):
+                await ctx.send(f"Content: {msg.content}")
 
         Parameters
         ----------
         name: `Optional[str]`
             Name of the command, if not provided, it will use the function name
+        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+            List of guild IDs to register the command in
         """
         def decorator(func):
             command = Command(
                 func,
                 name=name or func.__name__,
-                type=ApplicationCommandType.message
+                type=ApplicationCommandType.message,
+                guild_ids=guild_ids,
             )
             self.add_command(command)
             return command
@@ -737,7 +771,7 @@ class Client:
         """
         return PartialUser(
             state=self.state,
-            user_id=user_id
+            id=user_id
         )
 
     async def fetch_user(

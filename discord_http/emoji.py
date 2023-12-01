@@ -83,13 +83,6 @@ class Emoji:
             for r in data["roles"]
         ]
 
-    async def delete(self) -> None:
-        await self._state.query(
-            "DELETE",
-            f"/guilds/{self.guild.id}/emojis/{self.id}",
-            res_method="text"
-        )
-
     def __repr__(self) -> str:
         return f"<Emoji id={self.id} name='{self.name}' animated={self.animated}>"
 
@@ -98,3 +91,11 @@ class Emoji:
 
     def __int__(self) -> int:
         return self.id
+
+    async def delete(self) -> None:
+        """ Deletes the emoji from the guild """
+        await self._state.query(
+            "DELETE",
+            f"/guilds/{self.guild.id}/emojis/{self.id}",
+            res_method="text"
+        )
