@@ -333,6 +333,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p></li>
 <li><p><strong>description</strong> (<cite>Optional[str]</cite>) – Description of the command, if not provided, it will use the function docstring</p></li>
+<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[utils.Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
 </ul>
 </dd>
 </dl>
@@ -736,11 +737,20 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.message_command">
-<span class="sig-name descname"><span class="pre">message_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.message_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.message_command" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">message_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.message_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.message_command" title="Link to this definition">#</a></dt>
 <dd><p>Used to register a message command</p>
+<p>Example usage</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@message_command</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Content: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p></li>
+<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[utils.Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -790,11 +800,20 @@ You can overwrite this function to do your own setup</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.user_command">
-<span class="sig-name descname"><span class="pre">user_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.user_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.user_command" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">user_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.user_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.user_command" title="Link to this definition">#</a></dt>
 <dd><p>Used to register a user command</p>
+<p>Example usage</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@user_command</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">User</span><span class="p">]):</span>
+    <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Target: </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p></li>
+<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[utils.Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

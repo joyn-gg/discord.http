@@ -426,7 +426,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;ready&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;ready&quot;</span><span class="p">,</span> <span class="n">client_object</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✔️ discord.http is now ready&quot;</span><span class="p">)</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✅ discord.http is now ready&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Client.setup_hook">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.setup_hook">[docs]</a>
@@ -653,13 +653,15 @@
 <span class="sd">            Name of the command, if not provided, it will use the function name</span>
 <span class="sd">        description: `Optional[str]`</span>
 <span class="sd">            Description of the command, if not provided, it will use the function docstring</span>
+<span class="sd">        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">            List of guild IDs to register the command in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span>
                 <span class="n">func</span><span class="p">,</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
-                <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span>
+                <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">command</span>
@@ -668,20 +670,36 @@
 
 <div class="viewcode-block" id="Client.user_command">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.user_command">[docs]</a>
-    <span class="k">def</span> <span class="nf">user_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">user_command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register a user command</span>
+
+<span class="sd">        Example usage</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            @user_command()</span>
+<span class="sd">            async def content(ctx, user: Union[Member, User]):</span>
+<span class="sd">                await ctx.send(f&quot;Target: {user.name}&quot;)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name: `Optional[str]`</span>
 <span class="sd">            Name of the command, if not provided, it will use the function name</span>
+<span class="sd">        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">            List of guild IDs to register the command in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span>
                 <span class="n">func</span><span class="p">,</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">user</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">command</span>
@@ -690,20 +708,36 @@
 
 <div class="viewcode-block" id="Client.message_command">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.message_command">[docs]</a>
-    <span class="k">def</span> <span class="nf">message_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">message_command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register a message command</span>
+
+<span class="sd">        Example usage</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            @message_command()</span>
+<span class="sd">            async def content(ctx, msg: Message):</span>
+<span class="sd">                await ctx.send(f&quot;Content: {msg.content}&quot;)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name: `Optional[str]`</span>
 <span class="sd">            Name of the command, if not provided, it will use the function name</span>
+<span class="sd">        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">            List of guild IDs to register the command in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span>
                 <span class="n">func</span><span class="p">,</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">message</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
+                <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">command</span>
@@ -1057,7 +1091,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PartialUser</span><span class="p">(</span>
             <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
-            <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span>
         <span class="p">)</span></div>
 
 

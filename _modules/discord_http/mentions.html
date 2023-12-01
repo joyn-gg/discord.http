@@ -270,7 +270,7 @@
 <a class="viewcode-back" href="../../api/mentions.html#discord_http.mentions.AllowedMentions.all">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; `AllowedMentions` Preset to allow all mentions &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `AllowedMentions`: Preset to allow all mentions &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">everyone</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">users</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">replied_user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
@@ -278,7 +278,7 @@
 <a class="viewcode-back" href="../../api/mentions.html#discord_http.mentions.AllowedMentions.none">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">none</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; `AllowedMentions` Preset to deny any mentions &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `AllowedMentions`: Preset to deny any mentions &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">everyone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">roles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">users</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">replied_user</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
@@ -286,7 +286,7 @@
 <a class="viewcode-back" href="../../api/mentions.html#discord_http.mentions.AllowedMentions.to_dict">[docs]</a>
     <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        `dict` Representation of the `AllowedMentions`</span>
+<span class="sd">        `dict`: Representation of the `AllowedMentions`</span>
 <span class="sd">        that is Discord API friendly</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parse</span> <span class="o">=</span> <span class="p">[]</span>

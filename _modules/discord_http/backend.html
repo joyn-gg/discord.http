@@ -479,8 +479,11 @@
                             <span class="kc">None</span>
                         <span class="p">)</span>
                         <span class="k">if</span> <span class="n">local_view</span><span class="p">:</span>
-                            <span class="n">run_view</span> <span class="o">=</span> <span class="k">await</span> <span class="n">local_view</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">run_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+                            <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">local_view</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                                <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
+                                <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
+                            <span class="p">)</span>
 
                     <span class="n">intreact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">find_interaction</span><span class="p">(</span><span class="n">_custom_id</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">intreact</span><span class="p">:</span>
@@ -605,7 +608,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;JSON_SORT_KEYS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Serving on http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🌍 Serving on http://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
             <span class="k">pass</span>  <span class="c1"># Just don&#39;t bother showing errors...</span></div>
