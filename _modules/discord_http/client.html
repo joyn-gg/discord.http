@@ -395,7 +395,11 @@
 
 <div class="viewcode-block" id="Client.set_context">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.set_context">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="bp">cls</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_context</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="bp">cls</span><span class="p">:</span> <span class="n">Callable</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the context for a command, while allowing custom context as well</span>
 
@@ -513,7 +517,13 @@
 
 <div class="viewcode-block" id="Client.dispatch">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.dispatch">[docs]</a>
-    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Dispatches an event to all listeners of that event.</span>
 
@@ -539,7 +549,10 @@
 
 <div class="viewcode-block" id="Client.has_any_dispatch">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.has_any_dispatch">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_any_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">has_any_dispatch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the bot has any listeners for the event.</span>
 
@@ -563,7 +576,10 @@
 
 <div class="viewcode-block" id="Client.load_extension">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.load_extension">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">load_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">load_extension</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">package</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads an extension.</span>
 
@@ -794,7 +810,12 @@
 
 <div class="viewcode-block" id="Client.interaction">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.interaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">interaction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register an interaction</span>
 
@@ -817,7 +838,10 @@
 
 <div class="viewcode-block" id="Client.listener">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.listener">[docs]</a>
-    <span class="k">def</span> <span class="nf">listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">listener</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register a listener</span>
 
@@ -1175,7 +1199,10 @@
 
 <div class="viewcode-block" id="Client.get_partial_guild">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.get_partial_guild">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_partial_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialGuild</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_partial_guild</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialGuild</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a partial guild object.</span>
 
@@ -1197,7 +1224,10 @@
 
 <div class="viewcode-block" id="Client.fetch_guild">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.fetch_guild">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Guild</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_guild</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Guild</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fetches a guild object.</span>
 
@@ -1246,7 +1276,10 @@
 
 <div class="viewcode-block" id="Client.find_interaction">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.find_interaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Interaction&quot;</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">find_interaction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Interaction&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Finds an interaction by its Custom ID.</span>
 
