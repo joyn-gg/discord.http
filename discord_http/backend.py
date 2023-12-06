@@ -102,7 +102,11 @@ class DiscordHTTP(Quart):
         except Exception:
             abort(400, "invalid request body")
 
-    def error_messages(self, ctx: "Context", e: Exception) -> Optional[MessageResponse]:
+    def error_messages(
+        self,
+        ctx: "Context",
+        e: Exception
+    ) -> Optional[MessageResponse]:
         """
         Used to return error messages to Discord
 
@@ -124,7 +128,11 @@ class DiscordHTTP(Quart):
                 ephemeral=True
             )
 
-    def _dig_subcommand(self, cmd: Union[Command, SubGroup], data: dict) -> tuple[Optional[Command], list[dict]]:
+    def _dig_subcommand(
+        self,
+        cmd: Union[Command, SubGroup],
+        data: dict
+    ) -> tuple[Optional[Command], list[dict]]:
         """ Used to dig through subcommands to execute correct command/autocomplete """
         data_options: list[dict] = data["data"].get("options", [])
 
@@ -235,7 +243,10 @@ class DiscordHTTP(Quart):
 
                     intreact = self.bot.find_interaction(_custom_id)
                     if not intreact:
-                        _log.debug(f"Unhandled interaction recieved (custom_id: {_custom_id})")
+                        _log.debug(
+                            "Unhandled interaction recieved "
+                            f"(custom_id: {_custom_id})"
+                        )
                         return QuartResponse(
                             "interaction not found",
                             status=404

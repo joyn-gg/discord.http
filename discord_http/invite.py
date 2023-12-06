@@ -48,7 +48,11 @@ class PartialInvite:
             data=r.response
         )
 
-    async def delete(self, *, reason: Optional[str] = None) -> "Invite":
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> "Invite":
         """
         Deletes the invite
 

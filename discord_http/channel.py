@@ -440,7 +440,11 @@ class PartialChannel(PartialBase):
             data=r.response
         )
 
-    async def delete(self, *, reason: Optional[str] = None) -> None:
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
         """
         Delete the channel
 
@@ -707,7 +711,10 @@ class PartialChannel(PartialBase):
             res_method="text"
         )
 
-    async def add_thread_member(self, user_id: int) -> None:
+    async def add_thread_member(
+        self,
+        user_id: int
+    ) -> None:
         """
         Add a thread member
 
@@ -722,7 +729,10 @@ class PartialChannel(PartialBase):
             res_method="text"
         )
 
-    async def remove_thread_member(self, user_id: int) -> None:
+    async def remove_thread_member(
+        self,
+        user_id: int
+    ) -> None:
         """
         Remove a thread member
 

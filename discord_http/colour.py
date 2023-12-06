@@ -113,7 +113,11 @@ class Colour:
         return cls(0)
 
     @classmethod
-    def random(cls, *, seed: Optional[Any] = None) -> Self:
+    def random(
+        cls,
+        *,
+        seed: Optional[Any] = None
+    ) -> Self:
         """
         Creates a random colour
 

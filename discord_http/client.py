@@ -144,7 +144,11 @@ class Client:
             self._ready.is_set()
         )
 
-    def set_context(self, *, cls: Callable) -> None:
+    def set_context(
+        self,
+        *,
+        cls: Callable
+    ) -> None:
         """
         Get the context for a command, while allowing custom context as well
 
@@ -250,7 +254,13 @@ class Client:
             wrapped, name=f"discord.quart: {event_name}"
         )
 
-    def dispatch(self, event_name: str, /, *args: Any, **kwargs: Any):
+    def dispatch(
+        self,
+        event_name: str,
+        /,
+        *args: Any,
+        **kwargs: Any
+    ):
         """
         Dispatches an event to all listeners of that event.
 
@@ -273,7 +283,10 @@ class Client:
                 *args, **kwargs
             )
 
-    def has_any_dispatch(self, event_name: str) -> bool:
+    def has_any_dispatch(
+        self,
+        event_name: str
+    ) -> bool:
         """
         Checks if the bot has any listeners for the event.
 
@@ -294,7 +307,10 @@ class Client:
 
         return event is not None
 
-    async def load_extension(self, package: str) -> None:
+    async def load_extension(
+        self,
+        package: str
+    ) -> None:
         """
         Loads an extension.
 
@@ -504,7 +520,12 @@ class Client:
         self.add_command(subgroup)
         return subgroup
 
-    def interaction(self, custom_id: str, *, regex: bool = False):
+    def interaction(
+        self,
+        custom_id: str,
+        *,
+        regex: bool = False
+    ):
         """
         Used to register an interaction
 
@@ -524,7 +545,10 @@ class Client:
             return command
         return decorator
 
-    def listener(self, name: Optional[str] = None):
+    def listener(
+        self,
+        name: Optional[str] = None
+    ):
         """
         Used to register a listener
 
@@ -843,7 +867,10 @@ class Client:
         member = self.get_partial_member(guild_id, user_id)
         return await member.fetch()
 
-    def get_partial_guild(self, guild_id: int) -> PartialGuild:
+    def get_partial_guild(
+        self,
+        guild_id: int
+    ) -> PartialGuild:
         """
         Creates a partial guild object.
 
@@ -862,7 +889,10 @@ class Client:
             guild_id=guild_id
         )
 
-    async def fetch_guild(self, guild_id: int) -> Guild:
+    async def fetch_guild(
+        self,
+        guild_id: int
+    ) -> Guild:
         """
         Fetches a guild object.
 
@@ -905,7 +935,10 @@ class Client:
             role_id=role_id
         )
 
-    def find_interaction(self, custom_id: str) -> Optional["Interaction"]:
+    def find_interaction(
+        self,
+        custom_id: str
+    ) -> Optional["Interaction"]:
         """
         Finds an interaction by its Custom ID.
 
