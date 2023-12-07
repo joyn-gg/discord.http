@@ -19,7 +19,8 @@ from discord_http import (
     AllowedMentions, Modal,
     errors, Permissions, Colour,
     utils, VoiceChannel, Select,
-    TextStyles, User, UserSelect, tasks, TextChannel
+    TextStyles, User, UserSelect, tasks,
+    TextChannel, Attachment
 )
 
 with open("./config.json") as f:
@@ -118,6 +119,16 @@ async def test_followup(ctx: Context, user: Member):
 async def test_guild(ctx: Context):
     guild = await ctx.guild.fetch()
     return ctx.response.send_message(guild.name)
+
+
+@client.command()
+async def test_create_webhook(ctx: Context, name: str, avatar: Optional[Attachment] = None):
+    """ Test creating webhook """
+    webhook = await ctx.channel.create_webhook(
+        name=name,
+        avatar=await avatar.to_file() if avatar else None
+    )
+    return ctx.response.send_message(f"Webhook: {webhook}")
 
 
 @client.command()

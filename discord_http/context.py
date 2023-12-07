@@ -10,7 +10,7 @@ from .file import File
 from .view import View, Modal
 from .guild import PartialGuild
 from .role import Role
-from .message import Message
+from .message import Message, Attachment
 from .flag import Permissions
 from .webhook import Webhook
 from .user import User
@@ -698,6 +698,12 @@ class Context:
                         kwargs[option["name"]] = channel_types[type_id](
                             state=self.bot.state,
                             data=resolved["channels"][option["value"]]
+                        )
+
+                    case CommandOptionType.attachment:
+                        kwargs[option["name"]] = Attachment(
+                            state=self.bot.state,
+                            data=resolved["attachments"][option["value"]]
                         )
 
                     case CommandOptionType.role:

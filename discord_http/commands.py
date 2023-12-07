@@ -17,6 +17,7 @@ from .member import Member
 from .flag import Permissions
 from .object import PartialBase
 from .user import User
+from .message import Attachment
 from .channel import (
     TextChannel, VoiceChannel,
     CategoryChannel, NewsThread,
@@ -200,6 +201,13 @@ class Command:
 
                 option = {}
 
+                if (
+                    origin in [Union] and
+                    len(parameter.annotation.__args__) == 2
+                ):
+                    # Parsing Optional/Union types
+                    origin = parameter.annotation.__args__[0]
+
                 if origin in [Member, User]:
                     ptype = CommandOptionType.user
                 elif origin in channel_types:
@@ -209,6 +217,8 @@ class Command:
                             int(i) for i in channel_types[origin]
                         ]
                     })
+                elif origin in [Attachment]:
+                    ptype = CommandOptionType.attachment
                 elif origin in [Role]:
                     ptype = CommandOptionType.role
                 elif origin in [Choice]:

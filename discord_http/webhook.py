@@ -190,7 +190,7 @@ class PartialWebhook(PartialBase):
         self,
         *,
         name: Optional[str] = MISSING,
-        avatar: Union[File, bytes, None] = MISSING,
+        avatar: Optional[Union[File, bytes]] = MISSING,
         channel_id: Optional[int] = MISSING,
         reason: Optional[str] = MISSING
     ) -> "Webhook":

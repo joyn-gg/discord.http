@@ -11,6 +11,7 @@ from .embeds import Embed
 from .file import File
 from .view import View
 from .mentions import AllowedMentions
+from .webhook import Webhook
 from . import utils
 
 if TYPE_CHECKING:
@@ -497,6 +498,44 @@ class PartialChannel(PartialBase):
             reason=reason,
             res_method="text"
         )
+
+    async def create_webhook(
+        self,
+        name: str,
+        *,
+        avatar: Optional[Union[File, bytes]] = None,
+        reason: Optional[str] = None
+    ) -> Webhook:
+        """
+        Create a webhook for the channel
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the webhook
+        avatar: `Optional[File]`
+            The avatar of the webhook
+        reason: `Optional[str]`
+            The reason for creating the webhook that appears in audit logs
+
+        Returns
+        -------
+        `Webhook`
+            The webhook object
+        """
+        payload = {"name": name}
+
+        if avatar is not None:
+            payload["avatar"] = utils.bytes_to_base64(avatar)
+
+        r = await self._state.query(
+            "POST",
+            f"/channels/{self.id}/webhooks",
+            json=payload,
+            reason=reason,
+        )
+
+        return Webhook(state=self._state, data=r.response)
 
     async def create_thread(
         self,

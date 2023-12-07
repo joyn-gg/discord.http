@@ -89,7 +89,7 @@ class PartialGuild(PartialBase):
         self,
         *,
         name: str,
-        icon: Optional[File] = None
+        icon: Optional[Union[File, bytes]] = None
     ) -> "Guild":
         """
         Create a guild
@@ -132,7 +132,7 @@ class PartialGuild(PartialBase):
         color: Optional[Union[Colour, Color, int]] = None,
         colour: Optional[Union[Colour, Color, int]] = None,
         unicode_emoji: Optional[str] = None,
-        icon: Optional[File] = None,
+        icon: Optional[Union[File, bytes]] = None,
         hoist: bool = False,
         mentionable: bool = False,
     ) -> Role:
@@ -321,7 +321,7 @@ class PartialGuild(PartialBase):
         self,
         *,
         name: str,
-        image: File
+        image: Union[File, bytes]
     ) -> Emoji:
         """
         Create an emoji
@@ -748,11 +748,11 @@ class PartialGuild(PartialBase):
         explicit_content_filter: Optional[ContentFilterLevel] = MISSING,
         afk_channel_id: Union["VoiceChannel", "PartialChannel", int, None] = MISSING,
         afk_timeout: Optional[int] = MISSING,
-        icon: Optional[File] = MISSING,
+        icon: Optional[Union[File, bytes]] = MISSING,
         owner_id: Union["Member", "PartialMember", int, None] = MISSING,
-        splash: Optional[File] = MISSING,
+        splash: Optional[Union[File, bytes]] = MISSING,
         discovery_splash: Optional[File] = MISSING,
-        banner: Optional[File] = MISSING,
+        banner: Optional[Union[File, bytes]] = MISSING,
         system_channel_id: Union["TextChannel", "PartialChannel", int, None] = MISSING,
         system_channel_flags: Optional[SystemChannelFlags] = MISSING,
         rules_channel_id: Union["TextChannel", "PartialChannel", int, None] = MISSING,

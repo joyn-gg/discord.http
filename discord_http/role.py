@@ -90,7 +90,7 @@ class PartialRole(PartialBase):
         mentionable: Optional[bool] = MISSING,
         positions: Optional[int] = MISSING,
         unicode_emoji: Optional[str] = MISSING,
-        icon: Optional[File] = MISSING,
+        icon: Optional[Union[File, bytes]] = MISSING,
         reason: Optional[str] = None,
     ) -> "Role":
         """

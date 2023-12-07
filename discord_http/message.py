@@ -248,14 +248,14 @@ class Attachment:
         `File`
             The attachment as a File object
         """
-        if filename is not MISSING:
+        if filename is MISSING:
             filename = self.filename
 
         data = await self.fetch()
 
         return File(
             data=BytesIO(data),
-            filename=filename,
+            filename=str(filename),
             spoiler=spoiler,
             description=self.description
         )
