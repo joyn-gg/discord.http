@@ -462,6 +462,27 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.channel.PartialChannel.create_webhook">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_webhook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avatar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="file.html#discord_http.file.File" title="discord_http.file.File"><span class="pre">File</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webhook.html#discord_http.webhook.Webhook" title="discord_http.webhook.Webhook"><span class="pre">Webhook</span></a></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.create_webhook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.create_webhook" title="Link to this definition">#</a></dt>
+<dd><p>Create a webhook for the channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>str</cite>) – The name of the webhook</p></li>
+<li><p><strong>avatar</strong> (<cite>Optional[File]</cite>) – The avatar of the webhook</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for creating the webhook that appears in audit logs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The webhook object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Webhook</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.channel.PartialChannel.delete">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.delete" title="Link to this definition">#</a></dt>
 <dd><p>Delete the channel</p>
@@ -976,6 +997,7 @@ Requires the state to be set</p>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.add_thread_member"><code class="docutils literal notranslate"><span class="pre">PartialChannel.add_thread_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.create_invite"><code class="docutils literal notranslate"><span class="pre">PartialChannel.create_invite()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.create_thread"><code class="docutils literal notranslate"><span class="pre">PartialChannel.create_thread()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.channel.PartialChannel.create_webhook"><code class="docutils literal notranslate"><span class="pre">PartialChannel.create_webhook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.delete"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.delete_messages"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete_messages()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.edit"><code class="docutils literal notranslate"><span class="pre">PartialChannel.edit()</span></code></a></li>

@@ -261,6 +261,7 @@
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span>
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Attachment</span>
 <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TextChannel</span><span class="p">,</span> <span class="n">VoiceChannel</span><span class="p">,</span>
     <span class="n">CategoryChannel</span><span class="p">,</span> <span class="n">NewsThread</span><span class="p">,</span>
@@ -455,6 +456,13 @@
 
                 <span class="n">option</span> <span class="o">=</span> <span class="p">{}</span>
 
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Union</span><span class="p">]</span> <span class="ow">and</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+                <span class="p">):</span>
+                    <span class="c1"># Parsing Optional/Union types</span>
+                    <span class="n">origin</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
                 <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">user</span>
                 <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">:</span>
@@ -464,6 +472,8 @@
                             <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">[</span><span class="n">origin</span><span class="p">]</span>
                         <span class="p">]</span>
                     <span class="p">})</span>
+                <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Attachment</span><span class="p">]:</span>
+                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">attachment</span>
                 <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">role</span>
                 <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Choice</span><span class="p">]:</span>
