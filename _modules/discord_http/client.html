@@ -290,6 +290,7 @@
         <span class="n">allowed_mentions</span><span class="p">:</span> <span class="n">AllowedMentions</span> <span class="o">=</span> <span class="n">AllowedMentions</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
         <span class="n">logging_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
         <span class="n">disable_default_get_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">disable_oauth_hint</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">debug_events</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -321,6 +322,9 @@
 <span class="sd">            Whether to disable the default GET path or not, if not provided, it will use `False`.</span>
 <span class="sd">            The default GET path only provides information about the bot and when it was last rebooted.</span>
 <span class="sd">            Usually a great tool to just validate that your bot is online.</span>
+<span class="sd">        disable_oauth_hint: `bool`</span>
+<span class="sd">            Whether to disable the OAuth2 hint or not on boot.</span>
+<span class="sd">            If not provided, it will use `False`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">application_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">public_key</span>
@@ -330,6 +334,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">sync</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logging_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug_events</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">debug_events</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">disable_oauth_hint</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">disable_oauth_hint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">disable_default_get_path</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">disable_default_get_path</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -428,9 +434,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;ready&quot;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;ready&quot;</span><span class="p">,</span> <span class="n">client_object</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✅ discord.http is now ready&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;ready&quot;</span><span class="p">,</span> <span class="n">client_object</span><span class="p">)</span>
+
+        <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✅ discord.http is now ready&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_oauth_hint</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">application_id</span>
+        <span class="p">):</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;✨ Your bot invite URL: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">utils</span><span class="o">.</span><span class="n">oauth_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
 <div class="viewcode-block" id="Client.setup_hook">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.setup_hook">[docs]</a>
