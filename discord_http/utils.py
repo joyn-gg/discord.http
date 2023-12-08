@@ -140,6 +140,46 @@ def unicode_name(text: str) -> str:
     return text
 
 
+def oauth_url(
+    client_id: Union["Snowflake", int],
+    /,
+    scope: Optional[str] = None,
+    **kwargs: str
+):
+    """
+    Get the oauth url of a user
+
+    Parameters
+    ----------
+    client_id: `Union[Snowflake, int]`
+        Application ID to invite to the server
+    scope: `Optional[str]`
+        Changing the scope of the oauth url, default: `bot+applications.commands`
+    kwargs: `str`
+        The query parameters to add to the url
+
+    Returns
+    -------
+    `str`
+        The oauth url of the user
+    """
+    output = (
+        "https://discord.com/oauth2/authorize"
+        f"?client_id={int(client_id)}"
+        "&scope=bot+applications.commands"
+    )
+
+    if scope is not None:
+        output += f"&scope={scope}"
+    else:
+        output += "&scope=bot+applications.commands"
+
+    for key, value in kwargs.items():
+        output += f"&{key}={value}"
+
+    return output
+
+
 def divide_chunks(array: list[Any], n: int) -> list[list[Any]]:
     """
     Divide a list into chunks

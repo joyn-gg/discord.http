@@ -44,6 +44,7 @@ class Client:
         allowed_mentions: AllowedMentions = AllowedMentions.all(),
         logging_level: int = logging.INFO,
         disable_default_get_path: bool = False,
+        disable_oauth_hint: bool = False,
         debug_events: bool = False
     ):
         """
@@ -75,6 +76,9 @@ class Client:
             Whether to disable the default GET path or not, if not provided, it will use `False`.
             The default GET path only provides information about the bot and when it was last rebooted.
             Usually a great tool to just validate that your bot is online.
+        disable_oauth_hint: `bool`
+            Whether to disable the OAuth2 hint or not on boot.
+            If not provided, it will use `False`.
         """
         self.application_id: Optional[int] = application_id
         self.public_key: Optional[str] = public_key
@@ -84,6 +88,8 @@ class Client:
         self.sync: bool = sync
         self.logging_level: int = logging_level
         self.debug_events: bool = debug_events
+
+        self.disable_oauth_hint: bool = disable_oauth_hint
         self.disable_default_get_path: bool = disable_default_get_path
 
         try:
@@ -176,9 +182,17 @@ class Client:
         self._ready.set()
 
         if self.has_any_dispatch("ready"):
-            self.dispatch("ready", client_object)
-        else:
-            _log.info("✅ discord.http is now ready")
+            return self.dispatch("ready", client_object)
+
+        _log.info("✅ discord.http is now ready")
+        if (
+            not self.disable_oauth_hint and
+            self.application_id
+        ):
+            _log.info(
+                "✨ Your bot invite URL: "
+                f"{utils.oauth_url(self.application_id)}"
+            )
 
     async def setup_hook(self) -> None:
         """
