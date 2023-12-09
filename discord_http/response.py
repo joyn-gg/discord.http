@@ -1,15 +1,16 @@
 from typing import TYPE_CHECKING, Union, Any, Optional
 
+from . import utils
 from .embeds import Embed
 from .enums import ResponseType
-from .view import View, Modal
 from .file import File
-from .multipart import MultipartData
 from .flag import MessageFlags
-from . import utils
 from .mentions import AllowedMentions
+from .multipart import MultipartData
+from .view import View, Modal
 
 if TYPE_CHECKING:
+    from .message import MessageReference
     from .user import User
     from .http import DiscordAPI
 
@@ -162,6 +163,7 @@ class MessageResponse(BaseResponse):
         view: Optional[View] = MISSING,
         tts: Optional[bool] = False,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
+        message_reference: Optional["MessageReference"] = MISSING,
         type: Union[ResponseType, int] = 4,
         ephemeral: Optional[bool] = False,
     ):
@@ -174,6 +176,7 @@ class MessageResponse(BaseResponse):
         self.tts = tts
         self.type = type
         self.allowed_mentions = allowed_mentions
+        self.message_reference = message_reference
 
         if file is not MISSING and files is not MISSING:
             raise TypeError("Cannot pass both file and files")
@@ -232,6 +235,9 @@ class MessageResponse(BaseResponse):
 
         if self.tts:
             output["tts"] = self.tts
+
+        if self.message_reference is not MISSING:
+            output["message_reference"] = self.message_reference.to_dict()
 
         if self.embeds is not MISSING:
             output["embeds"] = [

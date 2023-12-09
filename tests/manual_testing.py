@@ -117,6 +117,29 @@ async def test_followup(ctx: Context, user: Member):
 
 
 @client.command()
+async def test_reply(ctx: Context):
+    async def call_after():
+        msg = await ctx.original_response()
+        await msg.reply("Indeed a nice test")
+
+    return ctx.response.send_message("Nice test", call_after=call_after)
+
+
+@client.command()
+async def test_publish(ctx: Context):
+    async def call_after():
+        msg = await ctx.channel.send("Hi there")
+        test = await msg.publish()
+        print(test)
+
+    return ctx.response.send_message(
+        "Working on it...",
+        ephemeral=True,
+        call_after=call_after
+    )
+
+
+@client.command()
 async def test_guild(ctx: Context):
     guild = await ctx.guild.fetch()
     return ctx.response.send_message(guild.name)

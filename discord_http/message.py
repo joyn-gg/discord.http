@@ -26,6 +26,7 @@ __all__ = (
     "Message",
     "PartialMessage",
     "WebhookMessage",
+    "MessageReference",
     "Attachment",
 )
 
@@ -135,6 +136,71 @@ class JumpURL:
         if self.channel_id and self.message_id:
             return f"https://discord.com/channels/{self.guild_id or '@me'}/{self.channel_id}/{self.message_id}"
         return f"https://discord.com/channels/{self.guild_id or '@me'}/{self.channel_id}"
+
+
+class MessageReference:
+    def __init__(self, *, state: "DiscordAPI", data: dict):
+        self._state = state
+
+        self.guild_id: Optional[int] = utils.get_int(data, "guild_id")
+        self.channel_id: Optional[int] = utils.get_int(data, "channel_id")
+        self.message_id: Optional[int] = utils.get_int(data, "message_id")
+
+    def __repr__(self) -> str:
+        return (
+            f"<MessageReference guild_id={self.guild_id} channel_id={self.channel_id} "
+            f"message_id={self.message_id}>"
+        )
+
+    @property
+    def guild(self) -> Optional["PartialGuild"]:
+        """ `Optional[PartialGuild]`: The guild the message was sent in """
+        if not self.guild_id:
+            return None
+
+        from .guild import PartialGuild
+        return PartialGuild(
+            state=self._state,
+            guild_id=self.guild_id
+        )
+
+    @property
+    def channel(self) -> Optional["PartialChannel"]:
+        """ `Optional[PartialChannel]`: Returns the channel the message was sent in """
+        if not self.channel_id:
+            return None
+
+        from .channel import PartialChannel
+        return PartialChannel(
+            state=self._state,
+            channel_id=self.channel_id,
+            guild_id=self.guild_id
+        )
+
+    @property
+    def message(self) -> Optional["PartialMessage"]:
+        """ `Optional[PartialMessage]`: Returns the message if a message_id and channel_id is available """
+        if not self.channel_id or not self.message_id:
+            return None
+
+        return PartialMessage(
+            state=self._state,
+            channel_id=self.channel_id,
+            id=self.message_id
+        )
+
+    def to_dict(self) -> dict:
+        """ `dict`: Returns the message reference as a dictionary """
+        payload = {}
+
+        if self.guild_id:
+            payload["guild_id"] = self.guild_id
+        if self.channel_id:
+            payload["channel_id"] = self.channel_id
+        if self.message_id:
+            payload["message_id"] = self.message_id
+
+        return payload
 
 
 class Attachment:
@@ -380,16 +446,92 @@ class PartialMessage(PartialBase):
             guild=self.channel.guild
         )
 
-    async def publish(self) -> None:
+    async def publish(self) -> "Message":
         """
         Crosspost the message to another channel.
         """
-        await self._state.query(
+        r = await self._state.query(
             "POST",
             f"/channels/{self.channel.id}/messages/{self.id}/crosspost",
-            res_method="text"
+            res_method="json"
         )
 
+        return Message(
+            state=self._state,
+            data=r.response,
+            guild=self.channel.guild
+        )
+
+    async def reply(
+        self,
+        content: Optional[str] = MISSING,
+        *,
+        embed: Optional[Embed] = MISSING,
+        embeds: Optional[list[Embed]] = MISSING,
+        file: Optional[File] = MISSING,
+        files: Optional[list[File]] = MISSING,
+        view: Optional[View] = MISSING,
+        tts: Optional[bool] = False,
+        allowed_mentions: Optional[AllowedMentions] = MISSING,
+    ) -> "Message":
+        """
+        Sends a reply to a message in a channel.
+
+        Parameters
+        ----------
+        content: `Optional[str]`
+            Cotnent of the message
+        embed: `Optional[Embed]`
+            Includes an embed object
+        embeds: `Optional[list[Embed]]`
+            List of embed objects
+        file: `Optional[File]`
+            A file object
+        files: `Union[list[File], File]`
+            A list of file objects
+        view: `View`
+            Send components to the message
+        tts: `bool`
+            If the message should be sent as a TTS message
+        type: `Optional[ResponseType]`
+            The type of response to the message
+        allowed_mentions: `Optional[AllowedMentions]`
+            The allowed mentions for the message
+
+        Returns
+        -------
+        `Message`
+            The message object
+        """
+        payload = MessageResponse(
+            content,
+            embed=embed,
+            embeds=embeds,
+            file=file,
+            files=files,
+            view=view,
+            tts=tts,
+            allowed_mentions=allowed_mentions,
+            message_reference=MessageReference(
+                state=self._state,
+                data={
+                    "channel_id": self.channel_id,
+                    "message_id": self.id
+                }
+            )
+        )
+
+        r = await self._state.query(
+            "POST",
+            f"/channels/{self.channel_id}/messages",
+            data=payload.to_multipart(is_request=True),
+            headers={"Content-Type": payload.content_type}
+        )
+
+        return Message(
+            state=self._state,
+            data=r.response
+        )
 
     async def pin(self, *, reason: Optional[str] = None) -> None:
         """
@@ -550,15 +692,39 @@ class Message(PartialMessage):
 
         self.author: User = User(state=state, data=data["author"])
         self.content: Optional[str] = data.get("content", None)
+        self.pinned: bool = data.get("pinned", False)
+        self.mention_everyone: bool = data.get("mention_everyone", False)
+
         self.embeds: Optional[list[Embed]] = [
             Embed.from_dict(embed)
             for embed in data.get("embeds", [])
         ]
+
         self.attachments: Optional[list[Attachment]] = [
             Attachment(state=state, data=a)
             for a in data.get("attachments", [])
         ]
+
         self.view: Optional[View] = View.from_dict(data)
+
+        self.message_reference: Optional[MessageReference] = None
+        self.referenced_message: Optional[Message] = None
+
+        self._from_data(data)
+
+    def _from_data(self, data: dict):
+        if data.get("message_reference", None):
+            self.message_reference = MessageReference(
+                state=self._state,
+                data=data["message_reference"]
+            )
+
+        if data.get("referenced_message", None):
+            self.referenced_message = Message(
+                state=self._state,
+                data=data["referenced_message"],
+                guild=self.guild
+            )
 
     def __str__(self) -> str:
         return self.content or ""
