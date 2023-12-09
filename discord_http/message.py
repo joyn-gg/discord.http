@@ -1,23 +1,23 @@
-from typing import Union, TYPE_CHECKING, Optional
 from datetime import timedelta
 from io import BytesIO
+from typing import TYPE_CHECKING, Optional, Union
 
-from .user import User, PartialUser
+from . import http, utils
 from .embeds import Embed
-from .errors import HTTPException
 from .emoji import PartialEmoji
+from .errors import HTTPException
 from .file import File
-from .response import MessageResponse
-from .object import PartialBase
 from .mentions import AllowedMentions
+from .object import PartialBase
+from .response import MessageResponse
 from .role import PartialRole
+from .user import PartialUser, User
 from .view import View
-from . import utils, http
 
 if TYPE_CHECKING:
+    from .channel import BaseChannel, PartialChannel, PublicThread
+    from .guild import Guild, PartialGuild
     from .http import DiscordAPI
-    from .guild import PartialGuild, Guild
-    from .channel import PartialChannel, PublicThread, BaseChannel
 
 MISSING = utils.MISSING
 
@@ -379,6 +379,17 @@ class PartialMessage(PartialBase):
             data=r.response,
             guild=self.channel.guild
         )
+
+    async def publish(self) -> None:
+        """
+        Crosspost the message to another channel.
+        """
+        await self._state.query(
+            "POST",
+            f"/channels/{self.channel.id}/messages/{self.id}/crosspost",
+            res_method="text"
+        )
+
 
     async def pin(self, *, reason: Optional[str] = None) -> None:
         """
