@@ -416,6 +416,25 @@ class Member(PartialMember):
                 self.guild.id, self.id, has_avatar
             )
 
+    def get_role(
+        self,
+        role: Union[utils.Snowflake, int]
+    ) -> Optional[PartialRole]:
+        """
+        Get a role from the member
+
+        Parameters
+        ----------
+        role: `Union[utils.Snowflake, int]`
+            The role to get. Can either be a role object or the Role ID
+
+        Returns
+        -------
+        `Optional[PartialRole]`
+            The role if found, else None
+        """
+        return next((r for r in self.roles if r.id == int(role)), None)
+
     @property
     def resolved_permissions(self) -> Permissions:
         """
