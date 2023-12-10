@@ -445,7 +445,7 @@ class DiscordAPI:
         method: MethodTypes,
         guild_id: Optional[int] = None,
         **kwargs
-    ) -> dict:
+    ) -> HTTPResponse:
         if not self.application_id:
             raise ValueError("application_id is required to sync commands")
 
@@ -454,14 +454,8 @@ class DiscordAPI:
             url = f"/applications/{self.application_id}/guilds/{guild_id}/commands"
 
         r = await self.query(method, url, res_method="json", **kwargs)
-        target = f"for Guild:{guild_id}" if guild_id else "globally"
 
-        if r.status >= 200 and r.status <= 299:
-            _log.info(f"🔁 Successfully synced commands {target}")
-        else:
-            _log.warn(f"🔁 Failed to sync global {target}: {r.response}")
-
-        return r.response
+        return r
 
     async def update_commands(
         self,
@@ -483,13 +477,20 @@ class DiscordAPI:
         `dict`
             The response from the request
         """
-        data = await self._app_command_query(
+        r = await self._app_command_query(
             "PUT",
             guild_id=guild_id,
             json=data
         )
 
-        return data
+        target = f"for Guild:{guild_id}" if guild_id else "globally"
+
+        if r.status >= 200 and r.status <= 299:
+            _log.info(f"🔁 Successfully synced commands {target}")
+        else:
+            _log.warn(f"🔁 Failed to sync global {target}: {r.response}")
+
+        return r.response
 
     async def fetch_commands(
         self,
@@ -508,9 +509,9 @@ class DiscordAPI:
         `dict`
             The response from the request
         """
-        data = await self._app_command_query(
+        r = await self._app_command_query(
             "GET",
             guild_id=guild_id
         )
 
-        return data
+        return r.response
