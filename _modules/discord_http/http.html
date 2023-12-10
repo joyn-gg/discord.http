@@ -703,7 +703,7 @@
         <span class="n">method</span><span class="p">:</span> <span class="n">MethodTypes</span><span class="p">,</span>
         <span class="n">guild_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HTTPResponse</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;application_id is required to sync commands&quot;</span><span class="p">)</span>
 
@@ -712,14 +712,8 @@
             <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/applications/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="si">}</span><span class="s2">/guilds/</span><span class="si">{</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">/commands&quot;</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">res_method</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;for Guild:</span><span class="si">{</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">guild_id</span> <span class="k">else</span> <span class="s2">&quot;globally&quot;</span>
 
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">&lt;=</span> <span class="mi">299</span><span class="p">:</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔁 Successfully synced commands </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔁 Failed to sync global </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="k">return</span> <span class="n">r</span>
 
 <div class="viewcode-block" id="DiscordAPI.update_commands">
 <a class="viewcode-back" href="../../api/http.html#discord_http.http.DiscordAPI.update_commands">[docs]</a>
@@ -743,13 +737,20 @@
 <span class="sd">        `dict`</span>
 <span class="sd">            The response from the request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app_command_query</span><span class="p">(</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app_command_query</span><span class="p">(</span>
             <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
             <span class="n">guild_id</span><span class="o">=</span><span class="n">guild_id</span><span class="p">,</span>
             <span class="n">json</span><span class="o">=</span><span class="n">data</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">data</span></div>
+        <span class="n">target</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;for Guild:</span><span class="si">{</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">guild_id</span> <span class="k">else</span> <span class="s2">&quot;globally&quot;</span>
+
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">&gt;=</span> <span class="mi">200</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span> <span class="o">&lt;=</span> <span class="mi">299</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔁 Successfully synced commands </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔁 Failed to sync global </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span></div>
 
 
 <div class="viewcode-block" id="DiscordAPI.fetch_commands">
@@ -771,12 +772,12 @@
 <span class="sd">        `dict`</span>
 <span class="sd">            The response from the request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app_command_query</span><span class="p">(</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app_command_query</span><span class="p">(</span>
             <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
             <span class="n">guild_id</span><span class="o">=</span><span class="n">guild_id</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">data</span></div>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span></div>
 </div>
 
 </pre></div>
