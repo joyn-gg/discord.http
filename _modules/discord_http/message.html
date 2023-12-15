@@ -242,7 +242,7 @@
         </div>
         <article role="main">
           <h1>Source code for discord_http.message</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -255,7 +255,8 @@
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">MessageResponse</span>
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">PartialRole</span>
-<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">PartialUser</span><span class="p">,</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.sticker</span> <span class="kn">import</span> <span class="n">PartialSticker</span>
+<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">.view</span> <span class="kn">import</span> <span class="n">View</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -266,12 +267,12 @@
 <span class="n">MISSING</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MISSING</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;Attachment&quot;</span><span class="p">,</span>
     <span class="s2">&quot;JumpURL&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Message&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MessageReference&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PartialMessage&quot;</span><span class="p">,</span>
     <span class="s2">&quot;WebhookMessage&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MessageReference&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Attachment&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -1005,22 +1006,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">guild</span> <span class="o">=</span> <span class="n">guild</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">guild</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">guild</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pinned</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pinned&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mention_everyone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mention_everyone&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tts</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tts&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Embed</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Embed</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">Embed</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">embed</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">embed</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embeds&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Attachment</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attachments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Attachment</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">Attachment</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attachments&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="p">]</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">stickers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PartialSticker</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">PartialSticker</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sticker_items&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_mentions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mentions&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="p">]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">View</span><span class="p">]</span> <span class="o">=</span> <span class="n">View</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edited_timestamp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">message_reference</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MessageReference</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">referenced_message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Message</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1041,11 +1054,22 @@
                 <span class="n">guild</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span>
             <span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;edited_timestamp&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edited_timestamp</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_time</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;edited_timestamp&quot;</span><span class="p">])</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Message id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> author=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">emojis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PartialEmoji</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `list[PartialEmoji]`: Returns the emojis in the message &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">PartialEmoji</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">e</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">re_emoji</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+        <span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">jump_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JumpURL</span><span class="p">:</span>
@@ -1054,14 +1078,6 @@
             <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
             <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;https://discord.com/channels/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;@me&#39;</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">user_mentions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PartialUser</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; `list[PartialUser]`: Returns the user mentions in the message &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="n">PartialUser</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">user_id</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">re_mention</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-        <span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">role_mentions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">]:</span>

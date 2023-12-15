@@ -244,6 +244,7 @@
           <h1>Source code for discord_http.user</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.asset</span> <span class="kn">import</span> <span class="n">Asset</span>
 <span class="kn">from</span> <span class="nn">.colour</span> <span class="kn">import</span> <span class="n">Colour</span>
 <span class="kn">from</span> <span class="nn">.embeds</span> <span class="kn">import</span> <span class="n">Embed</span>
@@ -253,12 +254,11 @@
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">ResponseType</span><span class="p">,</span> <span class="n">MessageResponse</span>
 <span class="kn">from</span> <span class="nn">.view</span> <span class="kn">import</span> <span class="n">View</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Message</span>
     <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">DMChannel</span>
     <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
+    <span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Message</span>
 
 <span class="n">MISSING</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MISSING</span>
 

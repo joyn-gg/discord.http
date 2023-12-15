@@ -410,6 +410,17 @@ Example: <cite>./path/to/file.png</cite></p></li>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="discord_http.message.Message.emojis">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">emojis</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="emoji.html#discord_http.emoji.PartialEmoji" title="discord_http.emoji.PartialEmoji"><span class="pre">PartialEmoji</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#discord_http.message.Message.emojis" title="Link to this definition">#</a></dt>
+<dd><p>Returns the emojis in the message</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>list[PartialEmoji]</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="discord_http.message.Message.jump_url">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jump_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#discord_http.message.JumpURL" title="discord_http.message.JumpURL"><span class="pre">JumpURL</span></a></em><a class="headerlink" href="#discord_http.message.Message.jump_url" title="Link to this definition">#</a></dt>
 <dd><p>Returns the jump URL of the message</p>
@@ -438,17 +449,6 @@ Example: <cite>./path/to/file.png</cite></p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>list[PartialRole]</cite></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="discord_http.message.Message.user_mentions">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_mentions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="user.html#discord_http.user.PartialUser" title="discord_http.user.PartialUser"><span class="pre">PartialUser</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#discord_http.message.Message.user_mentions" title="Link to this definition">#</a></dt>
-<dd><p>Returns the user mentions in the message</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>list[PartialUser]</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -780,10 +780,10 @@ Example: <cite>./path/to/file.png</cite></p></li>
 </li>
 <li><a class="reference internal" href="#discord_http.message.Message"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a><ul>
 <li><a class="reference internal" href="#discord_http.message.Message.channel_mentions"><code class="docutils literal notranslate"><span class="pre">Message.channel_mentions</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.message.Message.emojis"><code class="docutils literal notranslate"><span class="pre">Message.emojis</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.Message.jump_url"><code class="docutils literal notranslate"><span class="pre">Message.jump_url</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.Message.jump_urls"><code class="docutils literal notranslate"><span class="pre">Message.jump_urls</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.Message.role_mentions"><code class="docutils literal notranslate"><span class="pre">Message.role_mentions</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.message.Message.user_mentions"><code class="docutils literal notranslate"><span class="pre">Message.user_mentions</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.message.MessageReference"><code class="docutils literal notranslate"><span class="pre">MessageReference</span></code></a><ul>

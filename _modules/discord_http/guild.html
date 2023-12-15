@@ -245,35 +245,35 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">AsyncIterator</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">.asset</span> <span class="kn">import</span> <span class="n">Asset</span>
-<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span><span class="p">,</span> <span class="n">PartialRole</span>
-<span class="kn">from</span> <span class="nn">.voice</span> <span class="kn">import</span> <span class="n">VoiceRegion</span>
 <span class="kn">from</span> <span class="nn">.colour</span> <span class="kn">import</span> <span class="n">Colour</span><span class="p">,</span> <span class="n">Color</span>
-<span class="kn">from</span> <span class="nn">.multipart</span> <span class="kn">import</span> <span class="n">MultipartData</span>
-<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
-<span class="kn">from</span> <span class="nn">.sticker</span> <span class="kn">import</span> <span class="n">Sticker</span>
-<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">SystemChannelFlags</span>
 <span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">Emoji</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ChannelType</span><span class="p">,</span> <span class="n">VerificationLevel</span><span class="p">,</span>
     <span class="n">DefaultNotificationLevel</span><span class="p">,</span> <span class="n">ContentFilterLevel</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
+<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">SystemChannelFlags</span>
+<span class="kn">from</span> <span class="nn">.multipart</span> <span class="kn">import</span> <span class="n">MultipartData</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
+<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span><span class="p">,</span> <span class="n">PartialRole</span>
+<span class="kn">from</span> <span class="nn">.sticker</span> <span class="kn">import</span> <span class="n">Sticker</span>
+<span class="kn">from</span> <span class="nn">.voice</span> <span class="kn">import</span> <span class="n">VoiceRegion</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.invite</span> <span class="kn">import</span> <span class="n">Invite</span>
-    <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span>
-    <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
     <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="p">(</span>
         <span class="n">TextChannel</span><span class="p">,</span> <span class="n">VoiceChannel</span><span class="p">,</span>
         <span class="n">PartialChannel</span><span class="p">,</span> <span class="n">BaseChannel</span>
     <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
+    <span class="kn">from</span> <span class="nn">.invite</span> <span class="kn">import</span> <span class="n">Invite</span>
+    <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span>
 
 <span class="n">MISSING</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MISSING</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;PartialGuild&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Guild&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PartialGuild&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 

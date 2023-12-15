@@ -243,28 +243,28 @@
         <article role="main">
           <h1>Source code for discord_http.backend</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">signal</span>
 
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">hypercorn.asyncio</span> <span class="kn">import</span> <span class="n">serve</span>
+<span class="kn">from</span> <span class="nn">hypercorn.config</span> <span class="kn">import</span> <span class="n">Config</span> <span class="k">as</span> <span class="n">HyperConfig</span>
+<span class="kn">from</span> <span class="nn">nacl.exceptions</span> <span class="kn">import</span> <span class="n">BadSignatureError</span>
+<span class="kn">from</span> <span class="nn">nacl.signing</span> <span class="kn">import</span> <span class="n">VerifyKey</span>
 <span class="kn">from</span> <span class="nn">quart</span> <span class="kn">import</span> <span class="n">Quart</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">abort</span>
 <span class="kn">from</span> <span class="nn">quart</span> <span class="kn">import</span> <span class="n">Response</span> <span class="k">as</span> <span class="n">QuartResponse</span>
 <span class="kn">from</span> <span class="nn">quart.logging</span> <span class="kn">import</span> <span class="n">default_handler</span>
 <span class="kn">from</span> <span class="nn">quart.utils</span> <span class="kn">import</span> <span class="n">MustReloadError</span><span class="p">,</span> <span class="n">restart</span>
-<span class="kn">from</span> <span class="nn">hypercorn.asyncio</span> <span class="kn">import</span> <span class="n">serve</span>
-<span class="kn">from</span> <span class="nn">hypercorn.config</span> <span class="kn">import</span> <span class="n">Config</span> <span class="k">as</span> <span class="n">HyperConfig</span>
-<span class="kn">from</span> <span class="nn">nacl.signing</span> <span class="kn">import</span> <span class="n">VerifyKey</span>
-<span class="kn">from</span> <span class="nn">nacl.exceptions</span> <span class="kn">import</span> <span class="n">BadSignatureError</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
+<span class="kn">from</span> <span class="nn">.commands</span> <span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">Listener</span><span class="p">,</span> <span class="n">SubGroup</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">InteractionType</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="n">CheckFailed</span>
-<span class="kn">from</span> <span class="nn">.commands</span> <span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">Listener</span><span class="p">,</span> <span class="n">SubGroup</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">BaseResponse</span><span class="p">,</span> <span class="n">Ping</span><span class="p">,</span> <span class="n">MessageResponse</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.context</span> <span class="kn">import</span> <span class="n">Context</span>
     <span class="kn">from</span> <span class="nn">.client</span> <span class="kn">import</span> <span class="n">Client</span>
+    <span class="kn">from</span> <span class="nn">.context</span> <span class="kn">import</span> <span class="n">Context</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -286,7 +286,7 @@
     <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">tasks</span><span class="p">):</span>
         <span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">get_coro</span><span class="p">()</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;_windows_signal_support&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">get_coro</span><span class="p">()</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;_windows_signal_support&quot;</span><span class="p">:</span>
             <span class="n">tasks</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
     <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>

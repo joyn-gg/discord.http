@@ -253,15 +253,6 @@
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ApplicationCommandType</span><span class="p">,</span> <span class="n">CommandOptionType</span><span class="p">,</span> <span class="n">ChannelType</span>
-<span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">BaseResponse</span><span class="p">,</span> <span class="n">AutocompleteResponse</span>
-<span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="n">UserMissingPermissions</span><span class="p">,</span> <span class="n">BotMissingPermissions</span><span class="p">,</span> <span class="n">CheckFailed</span>
-<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span>
-<span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
-<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span>
-<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
-<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Attachment</span>
 <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TextChannel</span><span class="p">,</span> <span class="n">VoiceChannel</span><span class="p">,</span>
     <span class="n">CategoryChannel</span><span class="p">,</span> <span class="n">NewsThread</span><span class="p">,</span>
@@ -269,6 +260,15 @@
     <span class="n">DirectoryChannel</span><span class="p">,</span> <span class="n">ForumChannel</span><span class="p">,</span> <span class="n">StoreChannel</span><span class="p">,</span>
     <span class="n">NewsChannel</span><span class="p">,</span> <span class="n">BaseChannel</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ApplicationCommandType</span><span class="p">,</span> <span class="n">CommandOptionType</span><span class="p">,</span> <span class="n">ChannelType</span>
+<span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="n">UserMissingPermissions</span><span class="p">,</span> <span class="n">BotMissingPermissions</span><span class="p">,</span> <span class="n">CheckFailed</span>
+<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span>
+<span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
+<span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Attachment</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
+<span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">BaseResponse</span><span class="p">,</span> <span class="n">AutocompleteResponse</span>
+<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span>
+<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.context</span> <span class="kn">import</span> <span class="n">Context</span>
@@ -305,14 +305,14 @@
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;Command&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Choice&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Cog&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PartialCommand&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SubGroup&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Command&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Interaction&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Listener&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Choice&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PartialCommand&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Range&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SubGroup&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
