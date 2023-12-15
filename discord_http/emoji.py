@@ -1,9 +1,10 @@
 import re
 
-from datetime import datetime
 from typing import TYPE_CHECKING, Union, Optional
 
 from . import utils
+from .asset import Asset
+from .object import PartialBase
 from .role import PartialRole
 
 if TYPE_CHECKING:
@@ -11,8 +12,8 @@ if TYPE_CHECKING:
     from .http import DiscordAPI
 
 __all__ = (
-    "PartialEmoji",
     "Emoji",
+    "PartialEmoji",
 )
 
 
@@ -35,6 +36,11 @@ class PartialEmoji:
         else:
             self.name: str = emoji
 
+    def __repr__(self) -> str:
+        if self.discord_emoji:
+            return f"<PartialEmoji name='{self.name}' id={self.id} animated={self.animated}>"
+        return f"<PartialEmoji name='{self.name}'>"
+
     def __str__(self) -> str:
         return self._original_name
 
@@ -43,10 +49,12 @@ class PartialEmoji:
             return self.id
         return None
 
-    def __repr__(self) -> str:
+    @property
+    def url(self) -> Optional[str]:
+        """ `str`: Returns the URL of the emoji if it's a Discord emoji """
         if self.discord_emoji:
-            return f"<PartialEmoji name='{self.name}' id={self.id} animated={self.animated}>"
-        return f"<PartialEmoji name='{self.name}'>"
+            return f"{Asset.BASE}/emojis/{self.id}.{'gif' if self.animated else 'png'}"
+        return None
 
     def to_dict(self) -> dict:
         """ `dict`: Returns a dict representation of the emoji """
@@ -62,7 +70,7 @@ class PartialEmoji:
         return self.name
 
 
-class Emoji:
+class Emoji(PartialBase):
     def __init__(
         self,
         *,
@@ -70,11 +78,10 @@ class Emoji:
         guild: Union["PartialGuild", "Guild"],
         data: dict
     ):
+        super().__init__(id=int(data["id"]))
         self._state = state
 
-        self.id: int = int(data["id"])
         self.guild: Union[PartialGuild, Guild] = guild
-        self.created_at: datetime = utils.snowflake_time(self.id)
         self.name: str = data["name"]
         self.animated: bool = data["animated"]
         self.available: bool = data["available"]

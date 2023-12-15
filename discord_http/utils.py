@@ -1,14 +1,14 @@
-import re
-import numbers
-import traceback
-import logging
-import unicodedata
-import random
 import enum
+import logging
+import numbers
+import random
+import re
+import traceback
+import unicodedata
 
 from base64 import b64encode
-from typing import Optional, Any, Union, Iterator
 from datetime import datetime, timezone
+from typing import Optional, Any, Union, Iterator
 from typing import Self
 
 from .file import File
@@ -427,7 +427,7 @@ class Enum(enum.Enum):
     @classmethod
     def random(cls) -> Self:
         """ `Enum`: Return a random enum """
-        return random.choice(list(cls))
+        return random.choice(list(cls))  # type: ignore
 
     def __str__(self) -> str:
         """ `str` Return the name of the enum """

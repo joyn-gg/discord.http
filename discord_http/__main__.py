@@ -1,7 +1,7 @@
 import argparse
 import discord_http
-import sys
 import platform
+import sys
 
 from importlib.metadata import version
 

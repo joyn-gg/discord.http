@@ -1,21 +1,21 @@
 from typing import TYPE_CHECKING, Optional, Union
 
 from . import utils
-from .user import User
-from .enums import ResponseType
-from .view import View
-from .file import File
 from .embeds import Embed
+from .enums import ResponseType
+from .file import File
 from .mentions import AllowedMentions
+from .multipart import MultipartData
 from .object import PartialBase
 from .response import MessageResponse
-from .multipart import MultipartData
+from .user import User
+from .view import View
 
 if TYPE_CHECKING:
-    from .http import DiscordAPI
-    from .guild import PartialGuild
-    from .message import WebhookMessage
     from .channel import PartialChannel
+    from .guild import PartialGuild
+    from .http import DiscordAPI
+    from .message import WebhookMessage
 
 __all__ = (
     "PartialWebhook",

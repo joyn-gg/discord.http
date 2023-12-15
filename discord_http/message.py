@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from io import BytesIO
 from typing import TYPE_CHECKING, Optional, Union
 
@@ -11,7 +11,8 @@ from .mentions import AllowedMentions
 from .object import PartialBase
 from .response import MessageResponse
 from .role import PartialRole
-from .user import PartialUser, User
+from .sticker import PartialSticker
+from .user import User
 from .view import View
 
 if TYPE_CHECKING:
@@ -22,12 +23,12 @@ if TYPE_CHECKING:
 MISSING = utils.MISSING
 
 __all__ = (
+    "Attachment",
     "JumpURL",
     "Message",
+    "MessageReference",
     "PartialMessage",
     "WebhookMessage",
-    "MessageReference",
-    "Attachment",
 )
 
 
@@ -690,22 +691,34 @@ class Message(PartialMessage):
         self.guild = guild
         self.guild_id: Optional[int] = guild.id if guild is not None else None
 
-        self.author: User = User(state=state, data=data["author"])
         self.content: Optional[str] = data.get("content", None)
+        self.author: User = User(state=state, data=data["author"])
         self.pinned: bool = data.get("pinned", False)
         self.mention_everyone: bool = data.get("mention_everyone", False)
+        self.tts: bool = data.get("tts", False)
 
-        self.embeds: Optional[list[Embed]] = [
+        self.embeds: list[Embed] = [
             Embed.from_dict(embed)
             for embed in data.get("embeds", [])
         ]
 
-        self.attachments: Optional[list[Attachment]] = [
+        self.attachments: list[Attachment] = [
             Attachment(state=state, data=a)
             for a in data.get("attachments", [])
         ]
 
+        self.stickers: list[PartialSticker] = [
+            PartialSticker(state=state, id=int(s["id"]), name=s["name"])
+            for s in data.get("sticker_items", [])
+        ]
+
+        self.user_mentions: list[User] = [
+            User(state=self._state, data=g)
+            for g in data.get("mentions", [])
+        ]
+
         self.view: Optional[View] = View.from_dict(data)
+        self.edited_timestamp: Optional[datetime] = None
 
         self.message_reference: Optional[MessageReference] = None
         self.referenced_message: Optional[Message] = None
@@ -726,11 +739,22 @@ class Message(PartialMessage):
                 guild=self.guild
             )
 
+        if data.get("edited_timestamp", None):
+            self.edited_timestamp = utils.parse_time(data["edited_timestamp"])
+
     def __str__(self) -> str:
         return self.content or ""
 
     def __repr__(self) -> str:
         return f"<Message id={self.id} author={self.author}>"
+
+    @property
+    def emojis(self) -> list[PartialEmoji]:
+        """ `list[PartialEmoji]`: Returns the emojis in the message """
+        return [
+            PartialEmoji(f"<{e[0]}:{e[1]}:{e[2]}>")
+            for e in utils.re_emoji.findall(self.content)
+        ]
 
     @property
     def jump_url(self) -> JumpURL:
@@ -739,14 +763,6 @@ class Message(PartialMessage):
             state=self._state,
             url=f"https://discord.com/channels/{self.guild_id or '@me'}/{self.channel_id}/{self.id}"
         )
-
-    @property
-    def user_mentions(self) -> list[PartialUser]:
-        """ `list[PartialUser]`: Returns the user mentions in the message """
-        return [
-            PartialUser(state=self._state, id=int(user_id))
-            for user_id in utils.re_mention.findall(self.content)
-        ]
 
     @property
     def role_mentions(self) -> list[PartialRole]:

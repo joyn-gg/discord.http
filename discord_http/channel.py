@@ -1,45 +1,45 @@
-from typing import Union, TYPE_CHECKING, Optional, AsyncIterator, Callable, Self
 from datetime import datetime, timedelta
+from typing import Union, TYPE_CHECKING, Optional, AsyncIterator, Callable, Self
 
-from .enums import ChannelType, PermissionType, ResponseType
-from .member import PartialMember, Member, ThreadMember
-from .role import PartialRole, Role
-from .response import MessageResponse
-from .flag import Permissions
-from .object import PartialBase
-from .embeds import Embed
-from .file import File
-from .view import View
-from .mentions import AllowedMentions
-from .webhook import Webhook
 from . import utils
+from .embeds import Embed
+from .enums import ChannelType, PermissionType, ResponseType
+from .file import File
+from .flag import Permissions
+from .member import PartialMember, Member, ThreadMember
+from .mentions import AllowedMentions
+from .object import PartialBase
+from .response import MessageResponse
+from .role import PartialRole, Role
+from .view import View
+from .webhook import Webhook
 
 if TYPE_CHECKING:
-    from .message import PartialMessage, Message
     from .guild import PartialGuild
-    from .user import PartialUser, User
-    from .invite import Invite
     from .http import DiscordAPI
+    from .invite import Invite
+    from .message import PartialMessage, Message
+    from .user import PartialUser, User
 
 MISSING = utils.MISSING
 
 __all__ = (
-    "PartialChannel",
     "BaseChannel",
-    "TextChannel",
-    "DMChannel",
-    "StoreChannel",
-    "GroupDMChannel",
-    "DirectoryChannel",
     "CategoryChannel",
-    "NewsChannel",
-    "PublicThread",
+    "DMChannel",
+    "DirectoryChannel",
     "ForumChannel",
+    "GroupDMChannel",
+    "NewsChannel",
     "NewsThread",
-    "PrivateThread",
-    "VoiceChannel",
-    "StageChannel",
+    "PartialChannel",
     "PermissionOverwrite",
+    "PrivateThread",
+    "PublicThread",
+    "StageChannel",
+    "StoreChannel",
+    "TextChannel",
+    "VoiceChannel",
 )
 
 
@@ -334,7 +334,7 @@ class PartialChannel(PartialBase):
             guild_id=utils.get_int(data, "guild_id")
         )
 
-        return temp_class._class_to_return(data=data, state=state)
+        return temp_class._class_to_return(data=data, state=state)  # type: ignore
 
     async def fetch(self) -> "BaseChannel":
         """ `BaseChannel`: Fetches the channel and returns the channel object """
@@ -437,9 +437,7 @@ class PartialChannel(PartialBase):
             reason=reason
         )
 
-        return self._class_to_return(
-            data=r.response
-        )
+        return self._class_to_return(data=r.response)  # type: ignore
 
     async def delete(
         self,

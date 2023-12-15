@@ -1,35 +1,35 @@
 from typing import TYPE_CHECKING, Union, Optional, AsyncIterator
 
 from . import utils
-from .file import File
 from .asset import Asset
-from .role import Role, PartialRole
-from .voice import VoiceRegion
 from .colour import Colour, Color
-from .multipart import MultipartData
-from .object import PartialBase
-from .sticker import Sticker
-from .flag import Permissions, SystemChannelFlags
 from .emoji import Emoji
 from .enums import (
     ChannelType, VerificationLevel,
     DefaultNotificationLevel, ContentFilterLevel
 )
+from .file import File
+from .flag import Permissions, SystemChannelFlags
+from .multipart import MultipartData
+from .object import PartialBase
+from .role import Role, PartialRole
+from .sticker import Sticker
+from .voice import VoiceRegion
 
 if TYPE_CHECKING:
-    from .invite import Invite
-    from .member import PartialMember, Member
-    from .http import DiscordAPI
     from .channel import (
         TextChannel, VoiceChannel,
         PartialChannel, BaseChannel
     )
+    from .http import DiscordAPI
+    from .invite import Invite
+    from .member import PartialMember, Member
 
 MISSING = utils.MISSING
 
 __all__ = (
-    "PartialGuild",
     "Guild",
+    "PartialGuild",
 )
 
 

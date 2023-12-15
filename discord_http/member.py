@@ -1,6 +1,7 @@
-from typing import Union, TYPE_CHECKING, Optional
 from datetime import datetime, timedelta
+from typing import Union, TYPE_CHECKING, Optional
 
+from . import utils
 from .asset import Asset
 from .embeds import Embed
 from .file import File
@@ -12,14 +13,13 @@ from .response import ResponseType
 from .role import PartialRole, Role
 from .user import User, PartialUser
 from .view import View
-from . import utils
 
 MISSING = utils.MISSING
 
 if TYPE_CHECKING:
-    from .message import Message
     from .channel import DMChannel
     from .http import DiscordAPI
+    from .message import Message
 
 __all__ = (
     "PartialMember",

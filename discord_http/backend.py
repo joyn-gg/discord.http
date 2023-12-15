@@ -1,26 +1,26 @@
 import asyncio
-import signal
 import logging
+import signal
 
+from datetime import datetime
+from hypercorn.asyncio import serve
+from hypercorn.config import Config as HyperConfig
+from nacl.exceptions import BadSignatureError
+from nacl.signing import VerifyKey
 from quart import Quart, request, abort
 from quart import Response as QuartResponse
 from quart.logging import default_handler
 from quart.utils import MustReloadError, restart
-from hypercorn.asyncio import serve
-from hypercorn.config import Config as HyperConfig
-from nacl.signing import VerifyKey
-from nacl.exceptions import BadSignatureError
-from datetime import datetime
 from typing import Optional, Any, Union, TYPE_CHECKING
 
+from .commands import Command, Interaction, Listener, SubGroup
 from .enums import InteractionType
 from .errors import CheckFailed
-from .commands import Command, Interaction, Listener, SubGroup
 from .response import BaseResponse, Ping, MessageResponse
 
 if TYPE_CHECKING:
-    from .context import Context
     from .client import Client
+    from .context import Context
 
 _log = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ def _cancel_all_tasks(loop: asyncio.AbstractEventLoop) -> None:
     for task in list(tasks):
         task.cancel()
 
-        if task.get_coro().__name__ == "_windows_signal_support":  # type: ignore
+        if task.get_coro().__name__ == "_windows_signal_support":
             tasks.remove(task)
 
     loop.run_until_complete(

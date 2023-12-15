@@ -39,6 +39,9 @@ flake8:  ## Run flake8 on the package
 type:  ## Run pyright on the package
 	@pyright discord_http --pythonversion 3.11
 
+clean:  ## Clean the project
+	@rm -rf build dist *.egg-info .venv docs/_build
+
 # Maintainer-only commands
 upload_pypi:  ## Maintainer only - Upload latest version to PyPi
 	@echo Uploading to PyPi...

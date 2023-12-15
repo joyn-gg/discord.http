@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Optional, Union
 
+from . import utils
 from .asset import Asset
 from .colour import Colour
 from .embeds import Embed
@@ -9,12 +10,11 @@ from .mentions import AllowedMentions
 from .object import PartialBase
 from .response import ResponseType, MessageResponse
 from .view import View
-from . import utils
 
 if TYPE_CHECKING:
-    from .message import Message
     from .channel import DMChannel
     from .http import DiscordAPI
+    from .message import Message
 
 MISSING = utils.MISSING
 

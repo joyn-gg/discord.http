@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING, Union, Optional
 
 from . import utils
-from .object import PartialBase
 from .colour import Colour
 from .file import File
+from .object import PartialBase
 
 if TYPE_CHECKING:
     from .guild import PartialGuild, Guild

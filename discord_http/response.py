@@ -10,17 +10,17 @@ from .multipart import MultipartData
 from .view import View, Modal
 
 if TYPE_CHECKING:
+    from .http import DiscordAPI
     from .message import MessageReference
     from .user import User
-    from .http import DiscordAPI
 
 MISSING = utils.MISSING
 
 __all__ = (
-    "Ping",
+    "AutocompleteResponse",
     "DeferResponse",
     "MessageResponse",
-    "AutocompleteResponse",
+    "Ping",
 )
 
 

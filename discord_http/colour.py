@@ -5,8 +5,8 @@ from typing import Optional, Any, Self
 from . import utils
 
 __all__ = (
-    "Colour",
     "Color",
+    "Colour",
 )
 
 

@@ -1,11 +1,11 @@
 import aiohttp
-import json
-import sys
-import logging
 import asyncio
+import json
+import logging
+import sys
 
-from collections import deque
 from aiohttp.client_exceptions import ContentTypeError
+from collections import deque
 from typing import (
     Optional, Any, Union, Self, overload,
     Literal, TypeVar, Generic, TYPE_CHECKING
@@ -26,8 +26,8 @@ ResponseT = TypeVar("ResponseT")
 _log = logging.getLogger(__name__)
 
 __all__ = (
-    "HTTPResponse",
     "DiscordAPI",
+    "HTTPResponse",
 )
 
 

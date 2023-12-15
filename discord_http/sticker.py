@@ -21,11 +21,14 @@ class PartialSticker(PartialBase):
         self,
         *,
         state: "DiscordAPI",
-        sticker_id: int,
+        id: int,
+        name: Optional[str] = None,
         guild_id: Optional[int] = None
     ):
-        super().__init__(id=int(sticker_id))
+        super().__init__(id=int(id))
         self._state = state
+
+        self.name: Optional[str] = name
         self.guild_id: Optional[int] = guild_id
 
     def __repr__(self) -> str:
@@ -123,7 +126,7 @@ class PartialSticker(PartialBase):
         return Sticker(
             state=self._state,
             data=r.response,
-            guild=self.partial_guild
+            guild=self.partial_guild,
         )
 
     async def delete(self, *, guild_id: Optional[int] = None) -> None:
@@ -161,15 +164,23 @@ class Sticker(PartialSticker):
         self,
         *,
         state: "DiscordAPI",
+        data: dict,
         guild: Union["PartialGuild", "Guild"],
-        data: dict
     ):
-        super().__init__(state=state, sticker_id=data["id"])
+        super().__init__(
+            state=state,
+            id=data["id"],
+            name=data["name"],
+            guild_id=guild.id
+        )
+
         self.guild: Union["PartialGuild", "Guild"] = guild
         self.description: str = data["description"]
         self.tags: str = data["tags"]
-        self.name: str = data["name"]
         self.available: bool = data["available"]
+
+        # Re-define types
+        self.name: str
 
     def __str__(self) -> str:
         return self.name

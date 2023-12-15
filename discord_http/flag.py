@@ -1,13 +1,13 @@
 import sys
 
-from typing import Union, Self
 from enum import Flag, CONFORM
+from typing import Union, Self
 
 __all__ = (
     "BaseFlag",
-    "PublicFlags",
-    "Permissions",
     "MessageFlags",
+    "Permissions",
+    "PublicFlags",
     "SystemChannelFlags",
 )
 
@@ -71,7 +71,7 @@ class BaseFlag(_FlagPyMeta):
                 f"{self.__class__.__name__} flag value"
             )
 
-        return self
+        return self  # type: ignore
 
     def remove_flag(self, flag_name: Union[Self, str]) -> Self:
         """
@@ -106,7 +106,7 @@ class BaseFlag(_FlagPyMeta):
                 f"{self.__class__.__name__} flag value"
             )
 
-        return self
+        return self  # type: ignore
 
     @classmethod
     def from_names(cls, *args: str) -> Self:

@@ -6,14 +6,14 @@ if TYPE_CHECKING:
     from .http import HTTPResponse
 
 __all__ = (
+    "BotMissingPermissions",
+    "CheckFailed",
     "DiscordException",
+    "DiscordServerError",
+    "Forbidden",
     "HTTPException",
     "NotFound",
-    "Forbidden",
-    "DiscordServerError",
-    "CheckFailed",
     "UserMissingPermissions",
-    "BotMissingPermissions",
 )
 
 
