@@ -341,6 +341,24 @@ If the user has converted to the new username, this will reutnr None</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.member.Member.has_permissions">
+<span class="sig-name descname"><span class="pre">has_permissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/discord_http/member.html#Member.has_permissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.Member.has_permissions" title="Link to this definition">#</a></dt>
+<dd><p>Check if a member has a permission</p>
+<p>Will be False if used in <cite>Member.fetch()</cite> every time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*args</strong> (<cite>str</cite>) – Permissions to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether the member has the permission(s)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>bool</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.member.Member.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#discord_http.member.Member.name" title="Link to this definition">#</a></dt>
@@ -388,8 +406,8 @@ If the user has converted to the new username, this will reutnr None</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.member.Member.resolved_permissions">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolved_permissions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a></em><a class="headerlink" href="#discord_http.member.Member.resolved_permissions" title="Link to this definition">#</a></dt>
-<dd><p><cite>Optional[Permissions]</cite> Returns permissions from an interaction,
-will be None if used in <cite>Member.fetch()</cite></p>
+<dd><p><cite>Permissions</cite> Returns permissions from an interaction.</p>
+<p>Will be None if used in <cite>Member.fetch()</cite></p>
 </dd></dl>
 
 </dd></dl>
@@ -637,6 +655,7 @@ will be None if used in <cite>Member.fetch()</cite></p>
 <li><a class="reference internal" href="#discord_http.member.Member.display_name"><code class="docutils literal notranslate"><span class="pre">Member.display_name</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.get_role"><code class="docutils literal notranslate"><span class="pre">Member.get_role()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.global_name"><code class="docutils literal notranslate"><span class="pre">Member.global_name</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.Member.has_permissions"><code class="docutils literal notranslate"><span class="pre">Member.has_permissions()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.name"><code class="docutils literal notranslate"><span class="pre">Member.name</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.original_avatar"><code class="docutils literal notranslate"><span class="pre">Member.original_avatar</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.original_banner"><code class="docutils literal notranslate"><span class="pre">Member.original_banner</span></code></a></li>

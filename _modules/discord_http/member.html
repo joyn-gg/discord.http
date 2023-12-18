@@ -720,12 +720,36 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">resolved_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Permissions</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        `Optional[Permissions]` Returns permissions from an interaction,</span>
-<span class="sd">        will be None if used in `Member.fetch()`</span>
+<span class="sd">        `Permissions` Returns permissions from an interaction.</span>
+
+<span class="sd">        Will be None if used in `Member.fetch()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_permissions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Permissions</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Permissions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_permissions</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Member.has_permissions">
+<a class="viewcode-back" href="../../api/member.html#discord_http.member.Member.has_permissions">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if a member has a permission</span>
+
+<span class="sd">        Will be False if used in `Member.fetch()` every time</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args: `str`</span>
+<span class="sd">            Permissions to check</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `bool`</span>
+<span class="sd">            Whether the member has the permission(s)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="s2">&quot;administrator&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolved_permissions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolved_permissions</span></div>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
