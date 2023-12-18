@@ -30,6 +30,11 @@ class BaseFlag(_FlagPyMeta):
     def __int__(self) -> int:
         return self.value
 
+    @classmethod
+    def all(cls) -> Self:
+        """ `BaseFlag`: Returns a flag with all the flags """
+        return cls(sum([int(g) for g in cls.__members__.values()]))
+
     @property
     def list_names(self) -> list[str]:
         """ `list[str]`: Returns a list of all the names of the flag """
@@ -58,20 +63,21 @@ class BaseFlag(_FlagPyMeta):
             The flag name is not a valid flag
         """
         if isinstance(flag_name, BaseFlag):
-            flag_name = flag_name.name or "UNKNOWN"
-
-        if flag_name in self.list_names:
+            self |= flag_name
             return self
+        else:
+            if flag_name in self.list_names:
+                return self
 
-        try:
-            self |= self.__class__[flag_name]
-        except KeyError:
-            raise ValueError(
-                f"{flag_name} is not a valid "
-                f"{self.__class__.__name__} flag value"
-            )
+            try:
+                self |= self.__class__[flag_name]
+            except KeyError:
+                raise ValueError(
+                    f"{flag_name} is not a valid "
+                    f"{self.__class__.__name__} flag value"
+                )
 
-        return self  # type: ignore
+            return self  # type: ignore
 
     def remove_flag(self, flag_name: Union[Self, str]) -> Self:
         """
@@ -93,20 +99,21 @@ class BaseFlag(_FlagPyMeta):
             The flag name is not a valid flag
         """
         if isinstance(flag_name, BaseFlag):
-            flag_name = flag_name.name or "UNKNOWN"
+            self &= ~flag_name
+            return self  # type: ignore
+        else:
+            if flag_name not in self.list_names:
+                return self
 
-        if flag_name not in self.list_names:
-            return self
+            try:
+                self &= ~self.__class__[flag_name]
+            except KeyError:
+                raise ValueError(
+                    f"{flag_name} is not a valid "
+                    f"{self.__class__.__name__} flag value"
+                )
 
-        try:
-            self &= ~self.__class__[flag_name]
-        except KeyError:
-            raise ValueError(
-                f"{flag_name} is not a valid "
-                f"{self.__class__.__name__} flag value"
-            )
-
-        return self  # type: ignore
+            return self  # type: ignore
 
     @classmethod
     def from_names(cls, *args: str) -> Self:

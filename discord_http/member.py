@@ -438,12 +438,33 @@ class Member(PartialMember):
     @property
     def resolved_permissions(self) -> Permissions:
         """
-        `Optional[Permissions]` Returns permissions from an interaction,
-        will be None if used in `Member.fetch()`
+        `Permissions` Returns permissions from an interaction.
+
+        Will be None if used in `Member.fetch()`
         """
         if self._raw_permissions is None:
             return Permissions(0)
         return Permissions(self._raw_permissions)
+
+    def has_permissions(self, *args: str) -> bool:
+        """
+        Check if a member has a permission
+
+        Will be False if used in `Member.fetch()` every time
+
+        Parameters
+        ----------
+        *args: `str`
+            Permissions to check
+
+        Returns
+        -------
+        `bool`
+            Whether the member has the permission(s)
+        """
+        if Permissions.from_names("administrator") in self.resolved_permissions:
+            return True
+        return Permissions.from_names(*args) in self.resolved_permissions
 
     @property
     def name(self) -> str:
