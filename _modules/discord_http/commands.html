@@ -790,6 +790,21 @@
 
 <span class="sd">        The function must at the end, return a `Response.send_autocomplete()` object.</span>
 
+<span class="sd">        Example usage</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            @commands.command()</span>
+<span class="sd">            async def ping(ctx, options: str):</span>
+<span class="sd">                await ctx.send(f&quot;You chose {options}&quot;)</span>
+
+<span class="sd">            @ping.autocomplete(&quot;options&quot;)</span>
+<span class="sd">            async def search_autocomplete(ctx, current: str):</span>
+<span class="sd">                return ctx.response.send_autocomplete({</span>
+<span class="sd">                    &quot;key&quot;: &quot;Value shown to user&quot;,</span>
+<span class="sd">                    &quot;feeling_lucky_tm&quot;: &quot;I&#39;m feeling lucky!&quot;</span>
+<span class="sd">                })</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name: `str`</span>

@@ -375,7 +375,8 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Guild&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a guild</span>
@@ -388,6 +389,8 @@
 <span class="sd">            The name of the guild</span>
 <span class="sd">        icon: `Optional[File]`</span>
 <span class="sd">            The icon of the guild</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the guild</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -402,7 +405,8 @@
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
             <span class="s2">&quot;/guilds&quot;</span><span class="p">,</span>
-            <span class="n">json</span><span class="o">=</span><span class="n">payload</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Guild</span><span class="p">(</span>
@@ -424,6 +428,7 @@
         <span class="n">icon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">hoist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">mentionable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Role</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a role</span>
@@ -446,6 +451,8 @@
 <span class="sd">            The unicode emoji of the role</span>
 <span class="sd">        icon: `Optional[File]`</span>
 <span class="sd">            The icon of the role</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the role</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -477,7 +484,8 @@
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/roles&quot;</span><span class="p">,</span>
-            <span class="n">json</span><span class="o">=</span><span class="n">payload</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Role</span><span class="p">(</span>
@@ -619,7 +627,8 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Emoji</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an emoji</span>
@@ -630,6 +639,8 @@
 <span class="sd">            Name of the emoji</span>
 <span class="sd">        image: `File`</span>
 <span class="sd">            File object to create an emoji from</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the emoji</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -639,6 +650,7 @@
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/emojis&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span>
             <span class="n">json</span><span class="o">=</span><span class="p">{</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
                 <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">bytes_to_base64</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -1102,6 +1114,7 @@
         <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">premium_progress_bar_enabled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">safety_alerts_channel_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;TextChannel&quot;</span><span class="p">,</span> <span class="s2">&quot;PartialChannel&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PartialGuild&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Edit the guild</span>
@@ -1148,6 +1161,8 @@
 <span class="sd">            Whether the premium progress bar is enabled</span>
 <span class="sd">        safety_alerts_channel_id: `Optional[Union[TextChannel, PartialChannel, int]]`</span>
 <span class="sd">            Safety alerts channel of the guild</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for editing the guild</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1224,7 +1239,8 @@
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">json</span><span class="o">=</span><span class="n">payload</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Guild</span><span class="p">(</span>

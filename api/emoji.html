@@ -253,8 +253,34 @@
 <dd><p>Bases: <a class="reference internal" href="object.html#discord_http.object.PartialBase" title="discord_http.object.PartialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialBase</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.emoji.Emoji.delete">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji.delete" title="Link to this definition">#</a></dt>
-<dd><p>Deletes the emoji from the guild</p>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji.delete" title="Link to this definition">#</a></dt>
+<dd><p>Deletes the emoji.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for deleting the emoji.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.emoji.Emoji.edit">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles:</span> <span class="pre">list[~discord_http.role.PartialRole</span> <span class="pre">|</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji.edit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji.edit" title="Link to this definition">#</a></dt>
+<dd><p>Edits the emoji.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>Optional[str]</cite>) – The new name of the emoji.</p></li>
+<li><p><strong>roles</strong> (<cite>Optional[list[Union[PartialRole, int]]]</cite>) – Roles that are allowed to use the emoji.</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for editing the emoji.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The edited emoji.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Emoji</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -350,6 +376,7 @@
 <li><a class="reference internal" href="#module-discord_http.emoji">discord_http.emoji module</a><ul>
 <li><a class="reference internal" href="#discord_http.emoji.Emoji"><code class="docutils literal notranslate"><span class="pre">Emoji</span></code></a><ul>
 <li><a class="reference internal" href="#discord_http.emoji.Emoji.delete"><code class="docutils literal notranslate"><span class="pre">Emoji.delete()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.Emoji.edit"><code class="docutils literal notranslate"><span class="pre">Emoji.edit()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.emoji.PartialEmoji"><code class="docutils literal notranslate"><span class="pre">PartialEmoji</span></code></a><ul>

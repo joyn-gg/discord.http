@@ -283,6 +283,19 @@
 <span class="sig-name descname"><span class="pre">autocomplete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/commands.html#Command.autocomplete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.commands.Command.autocomplete" title="Link to this definition">#</a></dt>
 <dd><p>Decorator to set an option as an autocomplete.</p>
 <p>The function must at the end, return a <cite>Response.send_autocomplete()</cite> object.</p>
+<p>Example usage</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You chose </span><span class="si">{</span><span class="n">options</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nd">@ping</span><span class="o">.</span><span class="n">autocomplete</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">search_autocomplete</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">current</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">send_autocomplete</span><span class="p">({</span>
+        <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;Value shown to user&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;feeling_lucky_tm&quot;</span><span class="p">:</span> <span class="s2">&quot;I&#39;m feeling lucky!&quot;</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<cite>str</cite>) – Name of the option to set as an autocomplete.</p>
