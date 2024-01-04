@@ -79,6 +79,22 @@ class PartialGuild(PartialBase):
             for data in r.response
         ]
 
+    async def fetch_stickers(self) -> list[Sticker]:
+        """ `list[Sticker]`: Fetches all the stickers in the guild """
+        r = await self._state.query(
+            "GET",
+            f"/guilds/{self.id}/stickers"
+        )
+
+        return [
+            Sticker(
+                state=self._state,
+                guild=self,
+                data=data
+            )
+            for data in r.response
+        ]
+
     async def fetch_emojis(self) -> list[Emoji]:
         """ `list[Emoji]`: Fetches all the emojis in the guild """
         r = await self._state.query(
