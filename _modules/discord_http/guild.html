@@ -331,6 +331,25 @@
         <span class="p">]</span></div>
 
 
+<div class="viewcode-block" id="PartialGuild.fetch_stickers">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_stickers">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_stickers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Sticker</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `list[Sticker]`: Fetches all the stickers in the guild &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/stickers&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">Sticker</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+                <span class="n">guild</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="p">]</span></div>
+
+
 <div class="viewcode-block" id="PartialGuild.fetch_emojis">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_emojis">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_emojis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Emoji</span><span class="p">]:</span>
