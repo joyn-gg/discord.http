@@ -94,7 +94,7 @@ class Emoji(PartialBase):
         return f"<Emoji id={self.id} name='{self.name}' animated={self.animated}>"
 
     def __str__(self) -> str:
-        return self.name
+        return f"<{'a' if self.animated else ''}:{self.name}:{self.id}>"
 
     def __int__(self) -> int:
         return self.id
