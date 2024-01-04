@@ -242,7 +242,8 @@
         </div>
         <article role="main">
           <h1>Source code for discord_http.guild</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">AsyncIterator</span>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">AsyncIterator</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.asset</span> <span class="kn">import</span> <span class="n">Asset</span>
@@ -275,6 +276,15 @@
     <span class="s2">&quot;Guild&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PartialGuild&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">_GuildLimits</span><span class="p">:</span>
+    <span class="n">bitrate</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">emojis</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">filesize</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">soundboards</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">stickers</span><span class="p">:</span> <span class="nb">int</span>
 
 
 <div class="viewcode-block" id="PartialGuild">
@@ -1209,6 +1219,13 @@
 <div class="viewcode-block" id="Guild">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.Guild">[docs]</a>
 <span class="k">class</span> <span class="nc">Guild</span><span class="p">(</span><span class="n">PartialGuild</span><span class="p">):</span>
+    <span class="n">_GUILD_LIMITS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">_GuildLimits</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="n">_GuildLimits</span><span class="p">(</span><span class="n">emojis</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">stickers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">bitrate</span><span class="o">=</span><span class="mi">96_000</span><span class="p">,</span> <span class="n">filesize</span><span class="o">=</span><span class="mi">26_214_400</span><span class="p">,</span> <span class="n">soundboards</span><span class="o">=</span><span class="mi">8</span><span class="p">),</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="n">_GuildLimits</span><span class="p">(</span><span class="n">emojis</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">stickers</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">bitrate</span><span class="o">=</span><span class="mi">128_000</span><span class="p">,</span> <span class="n">filesize</span><span class="o">=</span><span class="mi">26_214_400</span><span class="p">,</span> <span class="n">soundboards</span><span class="o">=</span><span class="mi">24</span><span class="p">),</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="n">_GuildLimits</span><span class="p">(</span><span class="n">emojis</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">stickers</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">bitrate</span><span class="o">=</span><span class="mi">256_000</span><span class="p">,</span> <span class="n">filesize</span><span class="o">=</span><span class="mi">52_428_800</span><span class="p">,</span> <span class="n">soundboards</span><span class="o">=</span><span class="mi">36</span><span class="p">),</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="n">_GuildLimits</span><span class="p">(</span><span class="n">emojis</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">stickers</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">bitrate</span><span class="o">=</span><span class="mi">384_000</span><span class="p">,</span> <span class="n">filesize</span><span class="o">=</span><span class="mi">104_857_600</span><span class="p">,</span> <span class="n">soundboards</span><span class="o">=</span><span class="mi">48</span><span class="p">),</span>
+    <span class="p">}</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">afk_channel_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;afk_channel_id&quot;</span><span class="p">)</span>
@@ -1263,6 +1280,35 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Guild id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">emojis_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `int`: The maximum amount of emojis the guild can have &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="mi">200</span> <span class="k">if</span> <span class="s2">&quot;MORE_EMOJI&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="k">else</span> <span class="mi">50</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_GUILD_LIMITS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">premium_tier</span><span class="p">]</span><span class="o">.</span><span class="n">emojis</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">stickers_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `int`: The maximum amount of stickers the guild can have &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="mi">60</span> <span class="k">if</span> <span class="s2">&quot;MORE_STICKERS&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_GUILD_LIMITS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">premium_tier</span><span class="p">]</span><span class="o">.</span><span class="n">stickers</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bitrate_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `float`: The maximum bitrate the guild can have &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_GUILD_LIMITS</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bitrate</span> <span class="k">if</span> <span class="s2">&quot;VIP_REGIONS&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="k">else</span> <span class="mi">96_000</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_GUILD_LIMITS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">premium_tier</span><span class="p">]</span><span class="o">.</span><span class="n">bitrate</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filesize_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `int`: The maximum filesize the guild can have &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_GUILD_LIMITS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">premium_tier</span><span class="p">]</span><span class="o">.</span><span class="n">filesize</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">icon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: The guild&#39;s icon &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_icon</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1275,6 +1321,34 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_banner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">Asset</span><span class="o">.</span><span class="n">_from_guild_banner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_banner</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Role</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Role`: The guild&#39;s default role, which is always provided &quot;&quot;&quot;</span>
+        <span class="n">role</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">role</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The default Guild role was somehow not found...?&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">role</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">premium_subscriber_role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Role]`: The guild&#39;s premium subscriber role if available &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">is_premium_subscriber</span><span class="p">()),</span>
+            <span class="kc">None</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">self_role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Role]`: The guild&#39;s bot role if available &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span>
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">bot_id</span> <span class="ow">and</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">bot_id</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">application_id</span>
+            <span class="p">),</span>
+            <span class="kc">None</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="Guild.get_role">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.Guild.get_role">[docs]</a>
@@ -1297,6 +1371,28 @@
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span>
             <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">role_id</span>
+        <span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Guild.get_role_by_name">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.Guild.get_role_by_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_role_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the first role with the specified name</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        role_name: `str`</span>
+<span class="sd">            The name of the role to get (case sensitive)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Optional[Role]`</span>
+<span class="sd">            The role if it exists, else `None`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span>
+            <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">role_name</span>
         <span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
 

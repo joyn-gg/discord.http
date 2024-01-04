@@ -477,12 +477,56 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mentionable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;mentionable&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">permissions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;permissions&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bot_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;bot_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integration_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;integration_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscription_listing_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;subscription_listing_id&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_premium_subscriber</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;premium_subscriber&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_available_for_purchase</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;available_for_purchase&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_guild_connections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="s2">&quot;guild_connections&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Role id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Role id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+
+<div class="viewcode-block" id="Role.is_bot_managed">
+<a class="viewcode-back" href="../../api/role.html#discord_http.role.Role.is_bot_managed">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_bot_managed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Returns whether the role is bot managed &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Role.is_integration">
+<a class="viewcode-back" href="../../api/role.html#discord_http.role.Role.is_integration">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_integration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Returns whether the role is an integration &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">integration_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Role.is_premium_subscriber">
+<a class="viewcode-back" href="../../api/role.html#discord_http.role.Role.is_premium_subscriber">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_premium_subscriber</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Returns whether the role is a premium subscriber &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_premium_subscriber</span></div>
+
+
+<div class="viewcode-block" id="Role.is_available_for_purchase">
+<a class="viewcode-back" href="../../api/role.html#discord_http.role.Role.is_available_for_purchase">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_available_for_purchase</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Returns whether the role is available for purchase &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_available_for_purchase</span></div>
+
+
+<div class="viewcode-block" id="Role.is_guild_connection">
+<a class="viewcode-back" href="../../api/role.html#discord_http.role.Role.is_guild_connection">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_guild_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Returns whether the role is a guild connection &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guild_connections</span></div>
+</div>
 
 </pre></div>
         </article>
