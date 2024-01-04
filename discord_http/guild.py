@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Union, Optional, AsyncIterator
 
 from . import utils
@@ -31,6 +32,15 @@ __all__ = (
     "Guild",
     "PartialGuild",
 )
+
+
+@dataclass
+class _GuildLimits:
+    bitrate: int
+    emojis: int
+    filesize: int
+    soundboards: int
+    stickers: int
 
 
 class PartialGuild(PartialBase):
@@ -894,6 +904,13 @@ class PartialGuild(PartialBase):
 
 
 class Guild(PartialGuild):
+    _GUILD_LIMITS: dict[int, _GuildLimits] = {
+        0: _GuildLimits(emojis=50, stickers=5, bitrate=96_000, filesize=26_214_400, soundboards=8),
+        1: _GuildLimits(emojis=100, stickers=15, bitrate=128_000, filesize=26_214_400, soundboards=24),
+        2: _GuildLimits(emojis=150, stickers=30, bitrate=256_000, filesize=52_428_800, soundboards=36),
+        3: _GuildLimits(emojis=250, stickers=60, bitrate=384_000, filesize=104_857_600, soundboards=48),
+    }
+
     def __init__(self, *, state: "DiscordAPI", data: dict):
         super().__init__(state=state, guild_id=int(data["id"]))
         self.afk_channel_id: Optional[int] = utils.get_int(data, "afk_channel_id")
@@ -948,6 +965,35 @@ class Guild(PartialGuild):
         return f"<Guild id={self.id} name='{self.name}'>"
 
     @property
+    def emojis_limit(self) -> int:
+        """ `int`: The maximum amount of emojis the guild can have """
+        return max(
+            200 if "MORE_EMOJI" in self.features else 50,
+            self._GUILD_LIMITS[self.premium_tier].emojis
+        )
+
+    @property
+    def stickers_limit(self) -> int:
+        """ `int`: The maximum amount of stickers the guild can have """
+        return max(
+            60 if "MORE_STICKERS" in self.features else 0,
+            self._GUILD_LIMITS[self.premium_tier].stickers
+        )
+
+    @property
+    def bitrate_limit(self) -> int:
+        """ `float`: The maximum bitrate the guild can have """
+        return max(
+            self._GUILD_LIMITS[1].bitrate if "VIP_REGIONS" in self.features else 96_000,
+            self._GUILD_LIMITS[self.premium_tier].bitrate
+        )
+
+    @property
+    def filesize_limit(self) -> int:
+        """ `int`: The maximum filesize the guild can have """
+        return self._GUILD_LIMITS[self.premium_tier].filesize
+
+    @property
     def icon(self) -> Optional[Asset]:
         """ `Optional[Asset]`: The guild's icon """
         if self._icon is None:
@@ -960,6 +1006,34 @@ class Guild(PartialGuild):
         if self._banner is None:
             return None
         return Asset._from_guild_banner(self.id, self._banner)
+
+    @property
+    def default_role(self) -> Role:
+        """ `Role`: The guild's default role, which is always provided """
+        role = self.get_role(self.id)
+        if not role:
+            raise ValueError("The default Guild role was somehow not found...?")
+        return role
+
+    @property
+    def premium_subscriber_role(self) -> Optional[Role]:
+        """ `Optional[Role]`: The guild's premium subscriber role if available """
+        return next(
+            (r for r in self.roles if r.is_premium_subscriber()),
+            None
+        )
+
+    @property
+    def self_role(self) -> Optional[Role]:
+        """ `Optional[Role]`: The guild's bot role if available """
+        return next(
+            (
+                r for r in self.roles
+                if r.bot_id and
+                r.bot_id == self._state.application_id
+            ),
+            None
+        )
 
     def get_role(self, role_id: int) -> Optional[Role]:
         """
@@ -980,4 +1054,23 @@ class Guild(PartialGuild):
         return next((
             r for r in self.roles
             if r.id == role_id
+        ), None)
+
+    def get_role_by_name(self, role_name: str) -> Optional[Role]:
+        """
+        Gets the first role with the specified name
+
+        Parameters
+        ----------
+        role_name: `str`
+            The name of the role to get (case sensitive)
+
+        Returns
+        -------
+        `Optional[Role]`
+            The role if it exists, else `None`
+        """
+        return next((
+            r for r in self.roles
+            if r.name == role_name
         ), None)

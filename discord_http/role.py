@@ -216,9 +216,38 @@ class Role(PartialRole):
         self.mentionable: bool = data["mentionable"]
         self.permissions: int = int(data["permissions"])
         self.position: int = int(data["position"])
+        self.tags: dict = data.get("tags", {})
+
+        self.bot_id: Optional[int] = utils.get_int(data, "bot_id")
+        self.integration_id: Optional[int] = utils.get_int(data, "integration_id")
+        self.subscription_listing_id: Optional[int] = utils.get_int(data, "subscription_listing_id")
+
+        self._premium_subscriber: bool = "premium_subscriber" in self.tags
+        self._available_for_purchase: bool = "available_for_purchase" in self.tags
+        self._guild_connections: bool = "guild_connections" in self.tags
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
         return f"<Role id={self.id} name='{self.name}'>"
+
+    def is_bot_managed(self) -> bool:
+        """ `bool`: Returns whether the role is bot managed """
+        return self.bot_id is not None
+
+    def is_integration(self) -> bool:
+        """ `bool`: Returns whether the role is an integration """
+        return self.integration_id is not None
+
+    def is_premium_subscriber(self) -> bool:
+        """ `bool`: Returns whether the role is a premium subscriber """
+        return self._premium_subscriber
+
+    def is_available_for_purchase(self) -> bool:
+        """ `bool`: Returns whether the role is available for purchase """
+        return self._available_for_purchase
+
+    def is_guild_connection(self) -> bool:
+        """ `bool`: Returns whether the role is a guild connection """
+        return self._guild_connections
