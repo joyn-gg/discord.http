@@ -11,6 +11,8 @@ if TYPE_CHECKING:
     from .guild import PartialGuild, Guild
     from .http import DiscordAPI
 
+MISSING = utils.MISSING
+
 __all__ = (
     "Emoji",
     "PartialEmoji",
@@ -99,10 +101,70 @@ class Emoji(PartialBase):
     def __int__(self) -> int:
         return self.id
 
-    async def delete(self) -> None:
-        """ Deletes the emoji from the guild """
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Deletes the emoji.
+
+        Parameters
+        ----------
+        reason: `Optional[str]`
+            The reason for deleting the emoji.
+        """
         await self._state.query(
             "DELETE",
             f"/guilds/{self.guild.id}/emojis/{self.id}",
-            res_method="text"
+            res_method="text",
+            reason=reason
+        )
+
+    async def edit(
+        self,
+        *,
+        name: Optional[str] = MISSING,
+        roles: Optional[list[Union[PartialRole, int]]] = MISSING,
+        reason: Optional[str] = None
+    ):
+        """
+        Edits the emoji.
+
+        Parameters
+        ----------
+        name: `Optional[str]`
+            The new name of the emoji.
+        roles: `Optional[list[Union[PartialRole, int]]]`
+            Roles that are allowed to use the emoji.
+        reason: `Optional[str]`
+            The reason for editing the emoji.
+
+        Returns
+        -------
+        `Emoji`
+            The edited emoji.
+        """
+        payload = {}
+
+        if name is not MISSING:
+            payload["name"] = name
+
+        if isinstance(roles, list):
+            payload["roles"] = [
+                int(r) for r in roles
+                if isinstance(r, utils.Snowflake)
+            ]
+
+        r = await self._state.query(
+            "PATCH",
+            f"/guilds/{self.guild.id}/emojis/{self.id}",
+            json=payload,
+            reason=reason
+        )
+
+        return Emoji(
+            state=self._state,
+            guild=self.guild,
+            data=r.response
         )

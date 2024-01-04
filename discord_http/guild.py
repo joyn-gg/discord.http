@@ -115,7 +115,8 @@ class PartialGuild(PartialBase):
         self,
         *,
         name: str,
-        icon: Optional[Union[File, bytes]] = None
+        icon: Optional[Union[File, bytes]] = None,
+        reason: Optional[str] = None
     ) -> "Guild":
         """
         Create a guild
@@ -128,6 +129,8 @@ class PartialGuild(PartialBase):
             The name of the guild
         icon: `Optional[File]`
             The icon of the guild
+        reason: `Optional[str]`
+            The reason for creating the guild
 
         Returns
         -------
@@ -142,7 +145,8 @@ class PartialGuild(PartialBase):
         r = await self._state.query(
             "POST",
             "/guilds",
-            json=payload
+            json=payload,
+            reason=reason
         )
 
         return Guild(
@@ -161,6 +165,7 @@ class PartialGuild(PartialBase):
         icon: Optional[Union[File, bytes]] = None,
         hoist: bool = False,
         mentionable: bool = False,
+        reason: Optional[str] = None
     ) -> Role:
         """
         Create a role
@@ -183,6 +188,8 @@ class PartialGuild(PartialBase):
             The unicode emoji of the role
         icon: `Optional[File]`
             The icon of the role
+        reason: `Optional[str]`
+            The reason for creating the role
 
         Returns
         -------
@@ -214,7 +221,8 @@ class PartialGuild(PartialBase):
         r = await self._state.query(
             "POST",
             f"/guilds/{self.id}/roles",
-            json=payload
+            json=payload,
+            reason=reason
         )
 
         return Role(
@@ -347,7 +355,8 @@ class PartialGuild(PartialBase):
         self,
         *,
         name: str,
-        image: Union[File, bytes]
+        image: Union[File, bytes],
+        reason: Optional[str] = None
     ) -> Emoji:
         """
         Create an emoji
@@ -358,6 +367,8 @@ class PartialGuild(PartialBase):
             Name of the emoji
         image: `File`
             File object to create an emoji from
+        reason: `Optional[str]`
+            The reason for creating the emoji
 
         Returns
         -------
@@ -367,6 +378,7 @@ class PartialGuild(PartialBase):
         r = await self._state.query(
             "POST",
             f"/guilds/{self.id}/emojis",
+            reason=reason,
             json={
                 "name": name,
                 "image": utils.bytes_to_base64(image)
@@ -788,6 +800,7 @@ class PartialGuild(PartialBase):
         features: Optional[list[str]] = MISSING,
         premium_progress_bar_enabled: Optional[bool] = MISSING,
         safety_alerts_channel_id: Union["TextChannel", "PartialChannel", int, None] = MISSING,
+        reason: Optional[str] = None
     ) -> "PartialGuild":
         """
         Edit the guild
@@ -834,6 +847,8 @@ class PartialGuild(PartialBase):
             Whether the premium progress bar is enabled
         safety_alerts_channel_id: `Optional[Union[TextChannel, PartialChannel, int]]`
             Safety alerts channel of the guild
+        reason: `Optional[str]`
+            The reason for editing the guild
 
         Returns
         -------
@@ -910,7 +925,8 @@ class PartialGuild(PartialBase):
         r = await self._state.query(
             "PATCH",
             f"/guilds/{self.id}",
-            json=payload
+            json=payload,
+            reason=reason
         )
 
         return Guild(

@@ -521,6 +521,21 @@ class Command:
 
         The function must at the end, return a `Response.send_autocomplete()` object.
 
+        Example usage
+
+        .. code-block:: python
+
+            @commands.command()
+            async def ping(ctx, options: str):
+                await ctx.send(f"You chose {options}")
+
+            @ping.autocomplete("options")
+            async def search_autocomplete(ctx, current: str):
+                return ctx.response.send_autocomplete({
+                    "key": "Value shown to user",
+                    "feeling_lucky_tm": "I'm feeling lucky!"
+                })
+
         Parameters
         ----------
         name: `str`

@@ -169,8 +169,19 @@ class PartialWebhook(PartialBase):
 
         return None
 
-    async def delete(self) -> None:
-        """ Delete the webhook """
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Delete the webhook
+
+        Parameters
+        ----------
+        reason: `Optional[str]`
+            The reason for deleting the webhook
+        """
         if self.token is None:
             await self._state.query(
                 "DELETE",
@@ -183,7 +194,8 @@ class PartialWebhook(PartialBase):
         await self._state.query(
             "DELETE",
             f"/webhooks/{self.id}/{self.token}",
-            res_method="text"
+            res_method="text",
+            reason=reason
         )
 
     async def edit(
@@ -192,7 +204,7 @@ class PartialWebhook(PartialBase):
         name: Optional[str] = MISSING,
         avatar: Optional[Union[File, bytes]] = MISSING,
         channel_id: Optional[int] = MISSING,
-        reason: Optional[str] = MISSING
+        reason: Optional[str] = None
     ) -> "Webhook":
         """
         Edit the webhook

@@ -77,6 +77,7 @@ class PartialSticker(PartialBase):
         description: Optional[str] = MISSING,
         tags: Optional[str] = MISSING,
         guild_id: Optional[int] = None,
+        reason: Optional[str] = None
     ) -> "Sticker":
         """
         Edits the sticker
@@ -91,6 +92,8 @@ class PartialSticker(PartialBase):
             Replacement description for the sticker
         tags: `Optional[str]`
             Replacement tags for the sticker
+        reason: `Optional[str]`
+            The reason for editing the sticker
 
         Returns
         -------
@@ -118,7 +121,8 @@ class PartialSticker(PartialBase):
         r = await self._state.query(
             "PATCH",
             f"/guilds/{guild_id}/stickers/{self.id}",
-            json=payload
+            json=payload,
+            reason=reason
         )
 
         self.guild_id = int(r.response["guild_id"])
@@ -129,7 +133,12 @@ class PartialSticker(PartialBase):
             guild=self.partial_guild,
         )
 
-    async def delete(self, *, guild_id: Optional[int] = None) -> None:
+    async def delete(
+        self,
+        *,
+        guild_id: Optional[int] = None,
+        reason: Optional[str] = None
+    ) -> None:
         """
         Deletes the sticker
 
@@ -137,6 +146,8 @@ class PartialSticker(PartialBase):
         ----------
         guild_id: `int`
             Guild ID to delete the sticker from
+        reason: `Optional[str]`
+            The reason for deleting the sticker
 
         Raises
         ------
@@ -150,7 +161,8 @@ class PartialSticker(PartialBase):
         await self._state.query(
             "DELETE",
             f"/guilds/{guild_id}/stickers/{self.id}",
-            res_method="text"
+            res_method="text",
+            reason=reason
         )
 
     @property

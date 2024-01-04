@@ -43,7 +43,12 @@ class PartialRole(PartialBase):
         """ `str`: Returns a string that mentions the role """
         return f"<@&{self.id}>"
 
-    async def add_role(self, user_id: int) -> None:
+    async def add_role(
+        self,
+        user_id: int,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
         """
         Add the role to someone
 
@@ -51,14 +56,22 @@ class PartialRole(PartialBase):
         ----------
         user_id: `int`
             The user ID to add the role to
+        reason: `Optional[str]`
+            The reason for adding the role
         """
         await self._state.query(
             "PUT",
             f"/guilds/{self.guild_id}/members/{user_id}/roles/{self.id}",
-            res_method="text"
+            res_method="text",
+            reason=reason
         )
 
-    async def remove_role(self, user_id: int) -> None:
+    async def remove_role(
+        self,
+        user_id: int,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
         """
         Remove the role from someone
 
@@ -66,11 +79,14 @@ class PartialRole(PartialBase):
         ----------
         user_id: `int`
             The user ID to remove the role from
+        reason: `Optional[str]`
+            The reason for removing the role
         """
         await self._state.query(
             "DELETE",
             f"/guilds/{self.guild_id}/members/{user_id}/roles/{self.id}",
-            res_method="text"
+            res_method="text",
+            reason=reason
         )
 
     async def delete(self) -> None:

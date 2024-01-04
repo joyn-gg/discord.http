@@ -219,6 +219,7 @@ class PartialMember(PartialBase):
         deaf: Optional[bool] = MISSING,
         communication_disabled_until: Union[timedelta, datetime, int, None] = MISSING,
         channel_id: Optional[int] = MISSING,
+        reason: Optional[str] = None
     ) -> "Member":
         """
         Edit the member
@@ -237,6 +238,8 @@ class PartialMember(PartialBase):
             How long to disable communication for (timeout)
         channel_id: `Optional[int]`
             The channel ID to move the member to
+        reason: `Optional[str]`
+            The reason for editing the member
 
         Returns
         -------
@@ -287,7 +290,8 @@ class PartialMember(PartialBase):
         r = await self._state.query(
             "PATCH",
             f"/guilds/{self.guild_id}/members/{self.id}",
-            json=payload
+            json=payload,
+            reason=reason
         )
 
         return Member(
