@@ -101,6 +101,11 @@ class Emoji(PartialBase):
     def __int__(self) -> int:
         return self.id
 
+    @property
+    def url(self) -> str:
+        """ `str`: Returns the URL of the emoji """
+        return f"{Asset.BASE}/emojis/{self.id}.{'gif' if self.animated else 'png'}"
+
     async def delete(
         self,
         *,
