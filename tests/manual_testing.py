@@ -52,16 +52,17 @@ async def test_loop():
 
 
 @tasks.loop(time=[
-    time(hour=now.hour, minute=now.minute, second=2 * i)
-    for i in range(1, 6)
+    time(hour=now.hour, minute=now.minute, second=i)
+    for i in [10, 20, 30, 40, 50]
 ])
-async def test_loop_static():
+async def test_loop_static_1():
     print("I woke up to give you this lovely ping, cool right?")
 
 
 @client.backend.before_serving
 async def before_serving():
-    test_loop_static.start()
+    # test_loop.start()
+    test_loop_static_1.start()
 
 
 @test_loop.before_loop()
@@ -76,7 +77,7 @@ async def after_test_loop():
     print("Called after test loop")
 
 
-@test_loop_static.before_loop()
+@test_loop_static_1.before_loop()
 async def test_loop_static_before():
     print("Started static time test before loop")
 

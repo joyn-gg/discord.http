@@ -47,7 +47,7 @@ class Loop:
         seconds: Optional[float],
         minutes: Optional[float],
         hours: Optional[float],
-        time: Optional[Union[dtime, list[dtime]]],
+        time: Optional[Union[dtime, list[dtime]]] = None,
         count: Optional[int] = None,
         reconnect: bool = True
     ):
@@ -386,16 +386,16 @@ class Loop:
             if sleep <= 0:
                 raise ValueError("The sleep timer cannot be 0")
 
-            self._seconds = seconds
-            self._minutes = minutes
-            self._hours = hours
+            self._seconds = float(seconds)
+            self._minutes = float(minutes)
+            self._hours = float(hours)
             self._sleep = sleep
-            self._time: list[dtime] = []
+            self._time: Optional[list[dtime]] = None
         else:
             if any((seconds, minutes, hours)):
                 raise ValueError("Cannot use both time and seconds/minutes/hours")
 
-            self._time: list[dtime] = self._sort_static_times(time)
+            self._time: Optional[list[dtime]] = self._sort_static_times(time)
             self._sleep = self._seconds = self._minutes = self._hours = None
 
         if self.is_running() and self._last_loop is not None:
@@ -417,6 +417,9 @@ class Loop:
         `Optional[int]`
             The index of the next time in the list of times
         """
+        if not self._time:
+            return None
+
         for i, ts in enumerate(self._time):
             start = now.astimezone(ts.tzinfo)
             if ts >= start.timetz():
