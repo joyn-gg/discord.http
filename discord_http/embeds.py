@@ -281,6 +281,7 @@ class Embed:
         """
         self = cls.__new__(cls)
 
+        self.colour = None
         if data.get("color", None) is not None:
             self.colour = Colour(data["color"])
 

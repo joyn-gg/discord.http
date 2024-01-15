@@ -555,11 +555,14 @@ class View(InteractionStorage):
 
         for comp in data["components"]:
             for i, c in enumerate(comp["components"]):
-                cls = cls_table[c["type"]]
+                cls = cls_table[c.get("type", 2)]
 
                 if c.get("url", None):
                     cls = Link
-                    del c["style"]
+                    try:
+                        del c["style"]
+                    except KeyError:
+                        pass
 
                 if c.get("type", None):
                     del c["type"]

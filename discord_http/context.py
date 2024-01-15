@@ -100,6 +100,10 @@ class SelectValues:
         """ `List[str]`: of strings selected """
         return self._parsed_data["strings"]
 
+    def is_empty(self) -> bool:
+        """ `bool`: Whether no values were selected """
+        return not any(self._parsed_data.values())
+
     def _parse_resolved(self, ctx: "Context", key: str, data: dict):
         if not data.get(key, {}):
             return None
