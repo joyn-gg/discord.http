@@ -344,6 +344,10 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `List[str]`: of strings selected &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parsed_data</span><span class="p">[</span><span class="s2">&quot;strings&quot;</span><span class="p">]</span>
 
+    <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Whether no values were selected &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parsed_data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
     <span class="k">def</span> <span class="nf">_parse_resolved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{}):</span>
             <span class="k">return</span> <span class="kc">None</span>

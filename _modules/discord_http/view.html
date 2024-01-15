@@ -845,11 +845,14 @@
 
         <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;components&quot;</span><span class="p">]:</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">comp</span><span class="p">[</span><span class="s2">&quot;components&quot;</span><span class="p">]):</span>
-                <span class="bp">cls</span> <span class="o">=</span> <span class="n">cls_table</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]]</span>
+                <span class="bp">cls</span> <span class="o">=</span> <span class="n">cls_table</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
 
                 <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
                     <span class="bp">cls</span> <span class="o">=</span> <span class="n">Link</span>
-                    <span class="k">del</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;style&quot;</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                        <span class="k">pass</span>
 
                 <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
                     <span class="k">del</span> <span class="n">c</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
