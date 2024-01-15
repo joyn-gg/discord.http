@@ -57,6 +57,7 @@ async def query(
     url: str,
     *,
     res_method: Literal["text"],
+    **kwargs
 ) -> HTTPResponse[str]:
     ...
 
@@ -67,6 +68,7 @@ async def query(
     url: str,
     *,
     res_method: Literal["json"],
+    **kwargs
 ) -> HTTPResponse[dict[Any, Any]]:
     ...
 
@@ -77,6 +79,7 @@ async def query(
     url: str,
     *,
     res_method: Literal["read"],
+    **kwargs
 ) -> HTTPResponse[bytes]:
     ...
 
