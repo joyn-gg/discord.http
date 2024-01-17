@@ -13,6 +13,8 @@ __all__ = (
     "InviteType",
     "MFALevel",
     "ResponseType",
+    "StickerFormatType",
+    "StickerType",
     "TextStyles",
     "VerificationLevel",
 )
@@ -106,6 +108,18 @@ class InteractionType(Enum):
     message_component = 3
     application_command_autocomplete = 4
     modal_submit = 5
+
+
+class StickerType(Enum):
+    standard = 1
+    guild = 2
+
+
+class StickerFormatType(Enum):
+    png = 1
+    apng = 2
+    lottie = 3
+    gif = 4
 
 
 class ComponentType(Enum):

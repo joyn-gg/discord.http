@@ -19,6 +19,7 @@ from .member import PartialMember, Member
 from .mentions import AllowedMentions
 from .message import PartialMessage, Message
 from .role import PartialRole
+from .sticker import PartialSticker, Sticker
 from .user import User, PartialUser
 from .view import InteractionStorage
 from .webhook import PartialWebhook, Webhook
@@ -665,6 +666,59 @@ class Client:
             state=self.state,
             code=invite_code
         )
+
+    def get_partial_sticker(
+        self,
+        sticker_id: int,
+        *,
+        guild_id: Optional[int] = None
+    ) -> PartialSticker:
+        """
+        Creates a partial sticker object.
+
+        Parameters
+        ----------
+        sticker_id: `int`
+            Sticker ID to create the partial sticker object with.
+        guild_id: `Optional[int]`
+            Guild ID to create the partial sticker object with.
+
+        Returns
+        -------
+        `PartialSticker`
+            The partial sticker object.
+        """
+        return PartialSticker(
+            state=self.state,
+            id=sticker_id,
+            guild_id=guild_id
+        )
+
+    async def fetch_sticker(
+        self,
+        sticker_id: int,
+        *,
+        guild_id: Optional[int] = None
+    ) -> Sticker:
+        """
+        Fetches a sticker object.
+
+        Parameters
+        ----------
+        sticker_id: `int`
+            Sticker ID to fetch the sticker object with.
+
+        Returns
+        -------
+        `Sticker`
+            The sticker object.
+        """
+        sticker = self.get_partial_sticker(
+            sticker_id,
+            guild_id=guild_id
+        )
+
+        return await sticker.fetch()
 
     async def fetch_invite(
         self,

@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Union, Optional
 
 from . import utils
-from .asset import Asset
+from .enums import StickerType, StickerFormatType
 from .object import PartialBase
 
 if TYPE_CHECKING:
@@ -41,16 +41,16 @@ class PartialSticker(PartialBase):
             f"/stickers/{self.id}"
         )
 
-        self.guild_id = int(r.response["guild_id"])
+        self.guild_id = utils.get_int(r.response, "guild_id")
 
         return Sticker(
             state=self._state,
-            guild=self.partial_guild,
             data=r.response,
+            guild=self.partial_guild,
         )
 
     @property
-    def partial_guild(self) -> "PartialGuild":
+    def partial_guild(self) -> Optional["PartialGuild"]:
         """
         Returns the guild this sticker is in
 
@@ -65,7 +65,7 @@ class PartialSticker(PartialBase):
             guild_id is not defined, unable to create PartialGuild
         """
         if not self.guild_id:
-            raise ValueError("guild_id is not defined, unable to create PartialGuild")
+            return None
 
         from .guild import PartialGuild
         return PartialGuild(state=self._state, guild_id=self.guild_id)
@@ -168,7 +168,7 @@ class PartialSticker(PartialBase):
     @property
     def url(self) -> str:
         """ `str`: Returns the sticker's URL """
-        return f"{Asset.BASE}/stickers/{self.id}.png"
+        return f"https://media.discordapp.net/stickers/{self.id}.png"
 
 
 class Sticker(PartialSticker):
@@ -177,19 +177,24 @@ class Sticker(PartialSticker):
         *,
         state: "DiscordAPI",
         data: dict,
-        guild: Union["PartialGuild", "Guild"],
+        guild: Optional[Union["PartialGuild", "Guild"]],
     ):
         super().__init__(
             state=state,
             id=data["id"],
             name=data["name"],
-            guild_id=guild.id
+            guild_id=guild.id if guild else None
         )
 
-        self.guild: Union["PartialGuild", "Guild"] = guild
-        self.description: str = data["description"]
-        self.tags: str = data["tags"]
+        self.available: bool = data.get("available", False)
         self.available: bool = data["available"]
+        self.description: str = data["description"]
+        self.format_type: StickerFormatType = StickerFormatType(data["format_type"])
+        self.pack_id: Optional[int] = utils.get_int(data, "pack_id")
+        self.sort_value: Optional[int] = utils.get_int(data, "sort_value")
+        self.tags: str = data["tags"]
+        self.type: StickerType = StickerType(data["type"])
+        self.guild: Optional[Union["PartialGuild", "Guild"]] = guild
 
         # Re-define types
         self.name: str
@@ -199,6 +204,15 @@ class Sticker(PartialSticker):
 
     def __repr__(self) -> str:
         return f"<Sticker id={self.id} name='{self.name}'>"
+
+    @property
+    def url(self) -> str:
+        """ `str`: Returns the sticker's URL """
+        format = "png"
+        if self.format_type == StickerFormatType.gif:
+            format = "gif"
+
+        return f"https://media.discordapp.net/stickers/{self.id}.{format}"
 
     async def edit(
         self,
@@ -224,6 +238,9 @@ class Sticker(PartialSticker):
         `Sticker`
             The edited sticker
         """
+        if not self.guild:
+            raise ValueError("Sticker is not in a guild")
+
         return await super().edit(
             guild_id=self.guild.id,
             name=name,
@@ -233,4 +250,7 @@ class Sticker(PartialSticker):
 
     async def delete(self) -> None:
         """ Deletes the sticker """
+        if not self.guild:
+            raise ValueError("Sticker is not in a guild")
+
         await super().delete(guild_id=self.guild.id)
