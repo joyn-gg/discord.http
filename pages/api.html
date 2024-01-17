@@ -381,6 +381,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_invite"><code class="docutils literal notranslate"><span class="pre">Client.fetch_invite()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_member"><code class="docutils literal notranslate"><span class="pre">Client.fetch_member()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_message"><code class="docutils literal notranslate"><span class="pre">Client.fetch_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">Client.fetch_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_user"><code class="docutils literal notranslate"><span class="pre">Client.fetch_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_webhook"><code class="docutils literal notranslate"><span class="pre">Client.fetch_webhook()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.find_interaction"><code class="docutils literal notranslate"><span class="pre">Client.find_interaction()</span></code></a></li>
@@ -390,6 +391,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_member"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_member()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_message"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_message()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_role"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_role()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_sticker"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_user"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_webhook"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_webhook()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.group"><code class="docutils literal notranslate"><span class="pre">Client.group()</span></code></a></li>
@@ -656,6 +658,18 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.ResponseType.modal"><code class="docutils literal notranslate"><span class="pre">ResponseType.modal</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.ResponseType.pong"><code class="docutils literal notranslate"><span class="pre">ResponseType.pong</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.ResponseType.update_message"><code class="docutils literal notranslate"><span class="pre">ResponseType.update_message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerFormatType"><code class="docutils literal notranslate"><span class="pre">StickerFormatType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerFormatType.apng"><code class="docutils literal notranslate"><span class="pre">StickerFormatType.apng</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerFormatType.gif"><code class="docutils literal notranslate"><span class="pre">StickerFormatType.gif</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerFormatType.lottie"><code class="docutils literal notranslate"><span class="pre">StickerFormatType.lottie</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerFormatType.png"><code class="docutils literal notranslate"><span class="pre">StickerFormatType.png</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerType"><code class="docutils literal notranslate"><span class="pre">StickerType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerType.guild"><code class="docutils literal notranslate"><span class="pre">StickerType.guild</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerType.standard"><code class="docutils literal notranslate"><span class="pre">StickerType.standard</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.TextStyles"><code class="docutils literal notranslate"><span class="pre">TextStyles</span></code></a><ul>
@@ -1074,6 +1088,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.Sticker"><code class="docutils literal notranslate"><span class="pre">Sticker</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.Sticker.delete"><code class="docutils literal notranslate"><span class="pre">Sticker.delete()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.Sticker.edit"><code class="docutils literal notranslate"><span class="pre">Sticker.edit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.Sticker.url"><code class="docutils literal notranslate"><span class="pre">Sticker.url</span></code></a></li>
 </ul>
 </li>
 </ul>

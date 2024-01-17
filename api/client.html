@@ -449,6 +449,23 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_sticker">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_sticker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sticker_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sticker.html#discord_http.sticker.Sticker" title="discord_http.sticker.Sticker"><span class="pre">Sticker</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_sticker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_sticker" title="Link to this definition">#</a></dt>
+<dd><p>Fetches a sticker object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sticker_id</strong> (<cite>int</cite>) – Sticker ID to fetch the sticker object with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sticker object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Sticker</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.fetch_user">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="user.html#discord_http.user.User" title="discord_http.user.User"><span class="pre">User</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_user" title="Link to this definition">#</a></dt>
 <dd><p>Fetches a user object.</p>
@@ -613,6 +630,26 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>PartialRole</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.get_partial_sticker">
+<span class="sig-name descname"><span class="pre">get_partial_sticker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sticker_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sticker.html#discord_http.sticker.PartialSticker" title="discord_http.sticker.PartialSticker"><span class="pre">PartialSticker</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_sticker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_sticker" title="Link to this definition">#</a></dt>
+<dd><p>Creates a partial sticker object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sticker_id</strong> (<cite>int</cite>) – Sticker ID to create the partial sticker object with.</p></li>
+<li><p><strong>guild_id</strong> (<cite>Optional[int]</cite>) – Guild ID to create the partial sticker object with.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial sticker object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialSticker</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -899,6 +936,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_invite"><code class="docutils literal notranslate"><span class="pre">Client.fetch_invite()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_member"><code class="docutils literal notranslate"><span class="pre">Client.fetch_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_message"><code class="docutils literal notranslate"><span class="pre">Client.fetch_message()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">Client.fetch_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_user"><code class="docutils literal notranslate"><span class="pre">Client.fetch_user()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_webhook"><code class="docutils literal notranslate"><span class="pre">Client.fetch_webhook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.find_interaction"><code class="docutils literal notranslate"><span class="pre">Client.find_interaction()</span></code></a></li>
@@ -908,6 +946,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_member"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_message"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_message()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_role"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_role()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.get_partial_sticker"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_user"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_user()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_webhook"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_webhook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.group"><code class="docutils literal notranslate"><span class="pre">Client.group()</span></code></a></li>
