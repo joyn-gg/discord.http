@@ -13,10 +13,10 @@
         gtag('js', new Date());
         gtag('config', 'G-HVZQ2H4TGR');
     </script>
-    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="File" href="file.html" /><link rel="prev" title="Enums" href="enums.html" />
+    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Enums" href="enums.html" /><link rel="prev" title="Emoji" href="emoji.html" />
 
     <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Errors - discord.http docs</title>
+        <title>Entitlements - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -176,9 +176,9 @@
 <li class="toctree-l2"><a class="reference internal" href="context.html">Context</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emoji.html">Emoji</a></li>
-<li class="toctree-l2"><a class="reference internal" href="entitlements.html">Entitlements</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Entitlements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="enums.html">Enums</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="errors.html">Errors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file.html">File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flag.html">Flag</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guild.html">Guild</a></li>
@@ -244,64 +244,63 @@
           </label>
         </div>
         <article role="main">
-          <section id="errors">
-<h1>Errors<a class="headerlink" href="#errors" title="Link to this heading">#</a></h1>
-<section id="module-discord_http.errors">
-<span id="discord-http-errors-module"></span><h2>discord_http.errors module<a class="headerlink" href="#module-discord_http.errors" title="Link to this heading">#</a></h2>
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.BotMissingPermissions">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">BotMissingPermissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#BotMissingPermissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.BotMissingPermissions" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.CheckFailed" title="discord_http.errors.CheckFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckFailed</span></code></a></p>
-<p>Raised whenever a bot is missing permissions</p>
+          <section id="entitlements">
+<h1>Entitlements<a class="headerlink" href="#entitlements" title="Link to this heading">#</a></h1>
+<section id="module-discord_http.entitlements">
+<span id="discord-http-entitlements-module"></span><h2>discord_http.entitlements module<a class="headerlink" href="#module-discord_http.entitlements" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.entitlements.Entitlements">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.entitlements.</span></span><span class="sig-name descname"><span class="pre">Entitlements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/entitlements.html#Entitlements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.Entitlements" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Snowflake</span></code></p>
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.CheckFailed">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">CheckFailed</span></span><a class="reference internal" href="../_modules/discord_http/errors.html#CheckFailed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.CheckFailed" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.DiscordException" title="discord_http.errors.DiscordException"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscordException</span></code></a></p>
-<p>Raised whenever a check fails</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.entitlements.PartialEntitlements">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.entitlements.</span></span><span class="sig-name descname"><span class="pre">PartialEntitlements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/entitlements.html#PartialEntitlements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.PartialEntitlements" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="object.html#discord_http.object.PartialBase" title="discord_http.object.PartialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.entitlements.PartialEntitlements.delete_test_entitlement">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_test_entitlement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/entitlements.html#PartialEntitlements.delete_test_entitlement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.PartialEntitlements.delete_test_entitlement" title="Link to this definition">#</a></dt>
+<dd><p>Deletes a test entitlement.</p>
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.DiscordException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">DiscordException</span></span><a class="reference internal" href="../_modules/discord_http/errors.html#DiscordException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.DiscordException" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Base exception for discord_http</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.entitlements.PartialEntitlements.fetch">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.entitlements.Entitlements" title="discord_http.entitlements.Entitlements"><span class="pre">Entitlements</span></a></span></span><a class="reference internal" href="../_modules/discord_http/entitlements.html#PartialEntitlements.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.PartialEntitlements.fetch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.DiscordServerError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">DiscordServerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#DiscordServerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.DiscordServerError" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.HTTPException" title="discord_http.errors.HTTPException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPException</span></code></a></p>
-<p>Raised whenever an unexpected HTTP error occurs</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.entitlements.PartialSKU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.entitlements.</span></span><span class="sig-name descname"><span class="pre">PartialSKU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/entitlements.html#PartialSKU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.PartialSKU" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="object.html#discord_http.object.PartialBase" title="discord_http.object.PartialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.entitlements.PartialSKU.create_test_entitlement">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_test_entitlement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="enums.html#discord_http.enums.EntitlementOwnerType" title="discord_http.enums.EntitlementOwnerType"><span class="pre">EntitlementOwnerType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.entitlements.PartialEntitlements" title="discord_http.entitlements.PartialEntitlements"><span class="pre">PartialEntitlements</span></a></span></span><a class="reference internal" href="../_modules/discord_http/entitlements.html#PartialSKU.create_test_entitlement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.PartialSKU.create_test_entitlement" title="Link to this definition">#</a></dt>
+<dd><p>Create an entitlement for testing purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>owner_id</strong> (<cite>Union[utils.Snowflake, int]</cite>) – The ID of the owner, can be GuildID or UserID.</p></li>
+<li><p><strong>owner_type</strong> (<cite>Union[EntitlementOwnerType, int]</cite>) – The type of the owner.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created entitlement.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialEntitlements</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.Forbidden">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">Forbidden</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#Forbidden"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.Forbidden" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.HTTPException" title="discord_http.errors.HTTPException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPException</span></code></a></p>
-<p>Raised whenever a HTTP request returns 403</p>
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.HTTPException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">HTTPException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#HTTPException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.HTTPException" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.DiscordException" title="discord_http.errors.DiscordException"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscordException</span></code></a></p>
-<p>Base exception for HTTP requests</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.NotFound">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">NotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#NotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.NotFound" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.HTTPException" title="discord_http.errors.HTTPException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPException</span></code></a></p>
-<p>Raised whenever a HTTP request returns 404</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="discord_http.errors.UserMissingPermissions">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">UserMissingPermissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#UserMissingPermissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.UserMissingPermissions" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.CheckFailed" title="discord_http.errors.CheckFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckFailed</span></code></a></p>
-<p>Raised whenever a user is missing permissions</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.entitlements.SKU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.entitlements.</span></span><span class="sig-name descname"><span class="pre">SKU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/entitlements.html#SKU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.entitlements.SKU" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#discord_http.entitlements.PartialSKU" title="discord_http.entitlements.PartialSKU"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialSKU</span></code></a></p>
 </dd></dl>
 
 </section>
@@ -312,23 +311,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="file.html">
+          <a class="next-page" href="enums.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">File</div>
+                <div class="title">Enums</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="enums.html">
+          <a class="prev-page" href="emoji.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Enums</div>
+                <div class="title">Emoji</div>
                 
               </div>
             </a>
@@ -362,16 +361,19 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Errors</a><ul>
-<li><a class="reference internal" href="#module-discord_http.errors">discord_http.errors module</a><ul>
-<li><a class="reference internal" href="#discord_http.errors.BotMissingPermissions"><code class="docutils literal notranslate"><span class="pre">BotMissingPermissions</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.CheckFailed"><code class="docutils literal notranslate"><span class="pre">CheckFailed</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.DiscordException"><code class="docutils literal notranslate"><span class="pre">DiscordException</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.DiscordServerError"><code class="docutils literal notranslate"><span class="pre">DiscordServerError</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.Forbidden"><code class="docutils literal notranslate"><span class="pre">Forbidden</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.HTTPException"><code class="docutils literal notranslate"><span class="pre">HTTPException</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.NotFound"><code class="docutils literal notranslate"><span class="pre">NotFound</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.errors.UserMissingPermissions"><code class="docutils literal notranslate"><span class="pre">UserMissingPermissions</span></code></a></li>
+<li><a class="reference internal" href="#">Entitlements</a><ul>
+<li><a class="reference internal" href="#module-discord_http.entitlements">discord_http.entitlements module</a><ul>
+<li><a class="reference internal" href="#discord_http.entitlements.Entitlements"><code class="docutils literal notranslate"><span class="pre">Entitlements</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.entitlements.PartialEntitlements"><code class="docutils literal notranslate"><span class="pre">PartialEntitlements</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.entitlements.PartialEntitlements.delete_test_entitlement"><code class="docutils literal notranslate"><span class="pre">PartialEntitlements.delete_test_entitlement()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.entitlements.PartialEntitlements.fetch"><code class="docutils literal notranslate"><span class="pre">PartialEntitlements.fetch()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discord_http.entitlements.PartialSKU"><code class="docutils literal notranslate"><span class="pre">PartialSKU</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.entitlements.PartialSKU.create_test_entitlement"><code class="docutils literal notranslate"><span class="pre">PartialSKU.create_test_entitlement()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discord_http.entitlements.SKU"><code class="docutils literal notranslate"><span class="pre">SKU</span></code></a></li>
 </ul>
 </li>
 </ul>

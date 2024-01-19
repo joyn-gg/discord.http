@@ -174,6 +174,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/context.html">Context</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/emoji.html">Emoji</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/entitlements.html">Entitlements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/enums.html">Enums</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/errors.html">Errors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/file.html">File</a></li>
@@ -513,6 +514,8 @@
 </li>
         <li><a href="api/guild.html#discord_http.guild.PartialGuild.create_sticker">create_sticker() (discord_http.guild.PartialGuild method)</a>
 </li>
+        <li><a href="api/entitlements.html#discord_http.entitlements.PartialSKU.create_test_entitlement">create_test_entitlement() (discord_http.entitlements.PartialSKU method)</a>
+</li>
         <li><a href="api/guild.html#discord_http.guild.PartialGuild.create_text_channel">create_text_channel() (discord_http.guild.PartialGuild method)</a>
 </li>
         <li><a href="api/channel.html#discord_http.channel.PartialChannel.create_thread">create_thread() (discord_http.channel.PartialChannel method)</a>
@@ -578,6 +581,8 @@
         <li><a href="api/channel.html#discord_http.channel.PartialChannel.delete_messages">delete_messages() (discord_http.channel.PartialChannel method)</a>
 </li>
         <li><a href="api/context.html#discord_http.context.Context.delete_original_response">delete_original_response() (discord_http.context.Context method)</a>
+</li>
+        <li><a href="api/entitlements.html#discord_http.entitlements.PartialEntitlements.delete_test_entitlement">delete_test_entitlement() (discord_http.entitlements.PartialEntitlements method)</a>
 </li>
         <li><a href="api/commands.html#discord_http.commands.describe">describe() (in module discord_http.commands)</a>
 </li>
@@ -646,6 +651,13 @@
 
         <ul>
           <li><a href="api/emoji.html#module-discord_http.emoji">module</a>
+</li>
+        </ul></li>
+        <li>
+    discord_http.entitlements
+
+        <ul>
+          <li><a href="api/entitlements.html#module-discord_http.entitlements">module</a>
 </li>
         </ul></li>
         <li>
@@ -850,10 +862,10 @@
           <li><a href="api/webhook.html#discord_http.webhook.PartialWebhook.edit">(discord_http.webhook.PartialWebhook method)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/context.html#discord_http.context.InteractionResponse.edit_message">edit_message() (discord_http.context.InteractionResponse method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/context.html#discord_http.context.Context.edit_original_response">edit_original_response() (discord_http.context.Context method)</a>
 </li>
         <li><a href="api/enums.html#discord_http.enums.MFALevel.elevated">elevated (discord_http.enums.MFALevel attribute)</a>
@@ -869,6 +881,8 @@
         <li><a href="api/guild.html#discord_http.guild.Guild.emojis_limit">emojis_limit (discord_http.guild.Guild property)</a>
 </li>
         <li><a href="api/enums.html#discord_http.enums.EntitlementOwnerType">EntitlementOwnerType (class in discord_http.enums)</a>
+</li>
+        <li><a href="api/entitlements.html#discord_http.entitlements.Entitlements">Entitlements (class in discord_http.entitlements)</a>
 </li>
         <li><a href="api/enums.html#discord_http.enums.EntitlementType">EntitlementType (class in discord_http.enums)</a>
 </li>
@@ -894,6 +908,8 @@
 
         <ul>
           <li><a href="api/channel.html#discord_http.channel.PartialChannel.fetch">(discord_http.channel.PartialChannel method)</a>
+</li>
+          <li><a href="api/entitlements.html#discord_http.entitlements.PartialEntitlements.fetch">(discord_http.entitlements.PartialEntitlements method)</a>
 </li>
           <li><a href="api/guild.html#discord_http.guild.PartialGuild.fetch">(discord_http.guild.PartialGuild method)</a>
 </li>
@@ -950,6 +966,8 @@
         </ul></li>
         <li><a href="api/guild.html#discord_http.guild.PartialGuild.fetch_members">fetch_members() (discord_http.guild.PartialGuild method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/channel.html#discord_http.channel.PartialChannel.fetch_message">fetch_message() (discord_http.channel.PartialChannel method)</a>
 
         <ul>
@@ -958,8 +976,6 @@
           <li><a href="api/message.html#discord_http.message.JumpURL.fetch_message">(discord_http.message.JumpURL method)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/channel.html#discord_http.channel.PartialChannel.fetch_pins">fetch_pins() (discord_http.channel.PartialChannel method)</a>
 </li>
         <li><a href="api/guild.html#discord_http.guild.PartialGuild.fetch_regions">fetch_regions() (discord_http.guild.PartialGuild method)</a>
@@ -1440,6 +1456,8 @@
 </li>
           <li><a href="api/emoji.html#module-discord_http.emoji">discord_http.emoji</a>
 </li>
+          <li><a href="api/entitlements.html#module-discord_http.entitlements">discord_http.entitlements</a>
+</li>
           <li><a href="api/enums.html#module-discord_http.enums">discord_http.enums</a>
 </li>
           <li><a href="api/errors.html#module-discord_http.errors">discord_http.errors</a>
@@ -1567,6 +1585,8 @@
 </li>
         <li><a href="api/emoji.html#discord_http.emoji.PartialEmoji">PartialEmoji (class in discord_http.emoji)</a>
 </li>
+        <li><a href="api/entitlements.html#discord_http.entitlements.PartialEntitlements">PartialEntitlements (class in discord_http.entitlements)</a>
+</li>
         <li><a href="api/guild.html#discord_http.guild.PartialGuild">PartialGuild (class in discord_http.guild)</a>
 </li>
         <li><a href="api/invite.html#discord_http.invite.PartialInvite">PartialInvite (class in discord_http.invite)</a>
@@ -1577,6 +1597,8 @@
 </li>
         <li><a href="api/role.html#discord_http.role.PartialRole">PartialRole (class in discord_http.role)</a>
 </li>
+        <li><a href="api/entitlements.html#discord_http.entitlements.PartialSKU">PartialSKU (class in discord_http.entitlements)</a>
+</li>
         <li><a href="api/sticker.html#discord_http.sticker.PartialSticker">PartialSticker (class in discord_http.sticker)</a>
 </li>
         <li><a href="api/user.html#discord_http.user.PartialUser">PartialUser (class in discord_http.user)</a>
@@ -1585,10 +1607,10 @@
 </li>
         <li><a href="api/flag.html#discord_http.flag.PublicFlags.partner">partner (discord_http.flag.PublicFlags attribute)</a>
 </li>
-        <li><a href="api/channel.html#discord_http.channel.PermissionOverwrite">PermissionOverwrite (class in discord_http.channel)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/channel.html#discord_http.channel.PermissionOverwrite">PermissionOverwrite (class in discord_http.channel)</a>
+</li>
         <li><a href="api/flag.html#discord_http.flag.Permissions">Permissions (class in discord_http.flag)</a>
 </li>
         <li><a href="api/message.html#discord_http.message.PartialMessage.pin">pin() (discord_http.message.PartialMessage method)</a>
@@ -1772,6 +1794,8 @@
         <li><a href="api/client.html#discord_http.client.Client.setup_hook">setup_hook() (discord_http.client.Client method)</a>
 </li>
         <li><a href="api/enums.html#discord_http.enums.TextStyles.short">short (discord_http.enums.TextStyles attribute)</a>
+</li>
+        <li><a href="api/entitlements.html#discord_http.entitlements.SKU">SKU (class in discord_http.entitlements)</a>
 </li>
         <li><a href="api/flag.html#discord_http.flag.SKUFlags">SKUFlags (class in discord_http.flag)</a>
 </li>
