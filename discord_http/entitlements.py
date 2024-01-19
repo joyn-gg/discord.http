@@ -136,7 +136,7 @@ class Entitlements(PartialEntitlements):
         data: dict
     ):
         super().__init__(state=state, id=int(data["id"]))
-        self.delete
+
         self.deleted: bool = data["deleted"]
         self.type: EntitlementType = EntitlementType(data["type"])
         self.consumed: bool = data["consumed"]
