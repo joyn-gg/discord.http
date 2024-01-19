@@ -252,6 +252,7 @@
     <span class="s2">&quot;MessageFlags&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Permissions&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PublicFlags&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SKUFlags&quot;</span><span class="p">,</span>
     <span class="s2">&quot;SystemChannelFlags&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -297,7 +298,10 @@
 
 <div class="viewcode-block" id="BaseFlag.add_flag">
 <a class="viewcode-back" href="../../api/flag.html#discord_http.flag.BaseFlag.add_flag">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_flag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">add_flag</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">flag_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a flag by name</span>
 
@@ -331,7 +335,7 @@
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> flag value&quot;</span>
                 <span class="p">)</span>
 
-            <span class="k">return</span> <span class="bp">self</span>  <span class="c1"># type: ignore</span></div>
+            <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="BaseFlag.remove_flag">
@@ -357,7 +361,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flag_name</span><span class="p">,</span> <span class="n">BaseFlag</span><span class="p">):</span>
             <span class="bp">self</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">flag_name</span>
-            <span class="k">return</span> <span class="bp">self</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="bp">self</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">flag_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_names</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span>
@@ -370,7 +374,7 @@
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> flag value&quot;</span>
                 <span class="p">)</span>
 
-            <span class="k">return</span> <span class="bp">self</span>  <span class="c1"># type: ignore</span></div>
+            <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="BaseFlag.from_names">
@@ -424,6 +428,15 @@
     <span class="n">failed_to_mention_some_roles_in_thread</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span>
     <span class="n">suppress_notifications</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span>
     <span class="n">is_voice_message</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">13</span></div>
+
+
+
+<div class="viewcode-block" id="SKUFlags">
+<a class="viewcode-back" href="../../api/flag.html#discord_http.flag.SKUFlags">[docs]</a>
+<span class="k">class</span> <span class="nc">SKUFlags</span><span class="p">(</span><span class="n">BaseFlag</span><span class="p">):</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">guild_subscription</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span>
+    <span class="n">user_subscription</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span></div>
 
 
 

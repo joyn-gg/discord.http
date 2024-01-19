@@ -252,11 +252,14 @@
     <span class="s2">&quot;ComponentType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ContentFilterLevel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DefaultNotificationLevel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EntitlementOwnerType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;EntitlementType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;IntegrationType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;InteractionType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;InviteType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MFALevel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ResponseType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SKUType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;StickerFormatType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;StickerType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;TextStyles&quot;</span><span class="p">,</span>
@@ -373,6 +376,29 @@
     <span class="n">update_message</span> <span class="o">=</span> <span class="mi">7</span>
     <span class="n">application_command_autocomplete_result</span> <span class="o">=</span> <span class="mi">8</span>
     <span class="n">modal</span> <span class="o">=</span> <span class="mi">9</span></div>
+
+
+
+<div class="viewcode-block" id="EntitlementType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.EntitlementType">[docs]</a>
+<span class="k">class</span> <span class="nc">EntitlementType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">application_subscription</span> <span class="o">=</span> <span class="mi">8</span></div>
+
+
+
+<div class="viewcode-block" id="EntitlementOwnerType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.EntitlementOwnerType">[docs]</a>
+<span class="k">class</span> <span class="nc">EntitlementOwnerType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">guild</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="SKUType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.SKUType">[docs]</a>
+<span class="k">class</span> <span class="nc">SKUType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">subscription</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">subscription_group</span> <span class="o">=</span> <span class="mi">6</span></div>
 
 
 

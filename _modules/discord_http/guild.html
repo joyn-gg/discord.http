@@ -248,11 +248,11 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.asset</span> <span class="kn">import</span> <span class="n">Asset</span>
 <span class="kn">from</span> <span class="nn">.colour</span> <span class="kn">import</span> <span class="n">Colour</span><span class="p">,</span> <span class="n">Color</span>
-<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">Emoji</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ChannelType</span><span class="p">,</span> <span class="n">VerificationLevel</span><span class="p">,</span>
     <span class="n">DefaultNotificationLevel</span><span class="p">,</span> <span class="n">ContentFilterLevel</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">Emoji</span>
 <span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">SystemChannelFlags</span>
 <span class="kn">from</span> <span class="nn">.multipart</span> <span class="kn">import</span> <span class="n">MultipartData</span>
@@ -290,8 +290,8 @@
 <div class="viewcode-block" id="PartialGuild">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild">[docs]</a>
 <span class="k">class</span> <span class="nc">PartialGuild</span><span class="p">(</span><span class="n">PartialBase</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">guild_id</span><span class="p">))</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -711,7 +711,8 @@
         <span class="n">multidata</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">unicode_name</span><span class="p">(</span><span class="n">emoji</span><span class="p">))</span>
 
         <span class="n">multidata</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span>
-            <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span>
+            <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="n">file</span><span class="p">,</span>
             <span class="n">filename</span><span class="o">=</span><span class="n">file</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
             <span class="n">content_type</span><span class="o">=</span><span class="n">mime_type</span>
         <span class="p">)</span>
@@ -950,7 +951,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span>
-            <span class="n">member</span> <span class="o">=</span> <span class="n">PartialMember</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">member</span><span class="p">)</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="n">PartialMember</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">member</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">await</span> <span class="n">member</span><span class="o">.</span><span class="n">ban</span><span class="p">(</span>
             <span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">,</span>
@@ -979,7 +980,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span>
-            <span class="n">member</span> <span class="o">=</span> <span class="n">PartialMember</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">member</span><span class="p">)</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="n">PartialMember</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">member</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">await</span> <span class="n">member</span><span class="o">.</span><span class="n">unban</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">)</span></div>
 
@@ -1004,7 +1005,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span>
-            <span class="n">member</span> <span class="o">=</span> <span class="n">PartialMember</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">member</span><span class="p">)</span>
+            <span class="n">member</span> <span class="o">=</span> <span class="n">PartialMember</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">member</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
         <span class="k">await</span> <span class="n">member</span><span class="o">.</span><span class="n">kick</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="n">reason</span><span class="p">)</span></div>
 
@@ -1262,7 +1263,7 @@
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">afk_channel_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;afk_channel_id&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">afk_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;afk_timeout&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_message_notifications</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_message_notifications&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>

@@ -375,6 +375,48 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_entitlement">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_entitlement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entitlement_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Entitlements</span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_entitlement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_entitlement" title="Link to this definition">#</a></dt>
+<dd><p>Fetches an entitlement object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entitlement_id</strong> (<cite>int</cite>) – Entitlement ID to fetch the entitlement object with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The entitlement object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Entitlements</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_entitlement_list">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_entitlement_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sku_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_ended</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Entitlements</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_entitlement_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_entitlement_list" title="Link to this definition">#</a></dt>
+<dd><p>Fetches a list of entitlement objects with optional filters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<cite>Optional[int]</cite>) – Show entitlements for a specific user ID.</p></li>
+<li><p><strong>sku_ids</strong> (<cite>Optional[list[int]]</cite>) – Show entitlements for a specific SKU ID.</p></li>
+<li><p><strong>before</strong> (<cite>Optional[int]</cite>) – Only show entitlements before this entitlement ID.</p></li>
+<li><p><strong>after</strong> (<cite>Optional[int]</cite>) – Only show entitlements after this entitlement ID.</p></li>
+<li><p><strong>limit</strong> (<cite>int</cite>) – Limit the amount of entitlements to fetch.</p></li>
+<li><p><strong>guild_id</strong> (<cite>Optional[int]</cite>) – Show entitlements for a specific guild ID.</p></li>
+<li><p><strong>exclude_ended</strong> (<cite>bool</cite>) – Whether to exclude ended entitlements or not.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The entitlement objects.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>list[Entitlements]</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.fetch_guild">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_guild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="guild.html#discord_http.guild.Guild" title="discord_http.guild.Guild"><span class="pre">Guild</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_guild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_guild" title="Link to this definition">#</a></dt>
 <dd><p>Fetches a guild object.</p>
@@ -410,7 +452,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.fetch_member">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.Member" title="discord_http.member.Member"><span class="pre">Member</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_member" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.Member" title="discord_http.member.Member"><span class="pre">Member</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_member" title="Link to this definition">#</a></dt>
 <dd><p>Fetches a member object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -430,13 +472,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.fetch_message">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="message.html#discord_http.message.Message" title="discord_http.message.Message"><span class="pre">Message</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_message" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="message.html#discord_http.message.Message" title="discord_http.message.Message"><span class="pre">Message</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_message" title="Link to this definition">#</a></dt>
 <dd><p>Fetches a message object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>channel_id</strong> (<cite>int</cite>) – Channel ID to fetch the message object with.</p></li>
 <li><p><strong>message_id</strong> (<cite>int</cite>) – Message ID to fetch the message object with.</p></li>
+<li><p><strong>channel_id</strong> (<cite>int</cite>) – Channel ID to fetch the message object with.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -446,6 +488,12 @@
 <dd class="field-odd"><p><cite>Message</cite></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_skus">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_skus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">SKU</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_skus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_skus" title="Link to this definition">#</a></dt>
+<dd><p><cite>list[SKU]</cite>: Fetches all SKUs available to the bot.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -541,6 +589,23 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.get_partial_entitlement">
+<span class="sig-name descname"><span class="pre">get_partial_entitlement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entitlement_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PartialEntitlements</span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_entitlement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_entitlement" title="Link to this definition">#</a></dt>
+<dd><p>Creates a partial entitlement object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>entitlement_id</strong> (<cite>int</cite>) – Entitlement ID to create the partial entitlement object with.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial entitlement object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialEntitlements</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.get_partial_guild">
 <span class="sig-name descname"><span class="pre">get_partial_guild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="guild.html#discord_http.guild.PartialGuild" title="discord_http.guild.PartialGuild"><span class="pre">PartialGuild</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_guild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_guild" title="Link to this definition">#</a></dt>
 <dd><p>Creates a partial guild object.</p>
@@ -576,13 +641,13 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.get_partial_member">
-<span class="sig-name descname"><span class="pre">get_partial_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.PartialMember" title="discord_http.member.PartialMember"><span class="pre">PartialMember</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_member" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_partial_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.PartialMember" title="discord_http.member.PartialMember"><span class="pre">PartialMember</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_member" title="Link to this definition">#</a></dt>
 <dd><p>Creates a partial member object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>guild_id</strong> (<cite>int</cite>) – Guild ID that the member is in.</p></li>
 <li><p><strong>user_id</strong> (<cite>int</cite>) – User ID to create the partial member object with.</p></li>
+<li><p><strong>guild_id</strong> (<cite>int</cite>) – Guild ID that the member is in.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -596,13 +661,13 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.get_partial_message">
-<span class="sig-name descname"><span class="pre">get_partial_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="message.html#discord_http.message.PartialMessage" title="discord_http.message.PartialMessage"><span class="pre">PartialMessage</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_message" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_partial_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="message.html#discord_http.message.PartialMessage" title="discord_http.message.PartialMessage"><span class="pre">PartialMessage</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_message" title="Link to this definition">#</a></dt>
 <dd><p>Creates a partial message object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>channel_id</strong> (<cite>int</cite>) – Channel ID to create the partial message object with.</p></li>
 <li><p><strong>message_id</strong> (<cite>int</cite>) – Message ID to create the partial message object with.</p></li>
+<li><p><strong>channel_id</strong> (<cite>int</cite>) – Channel ID to create the partial message object with.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -616,13 +681,13 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.get_partial_role">
-<span class="sig-name descname"><span class="pre">get_partial_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="role.html#discord_http.role.PartialRole" title="discord_http.role.PartialRole"><span class="pre">PartialRole</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_role" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_partial_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="role.html#discord_http.role.PartialRole" title="discord_http.role.PartialRole"><span class="pre">PartialRole</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_role" title="Link to this definition">#</a></dt>
 <dd><p>Creates a partial role object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>guild_id</strong> (<cite>int</cite>) – Guild ID that the role is in.</p></li>
 <li><p><strong>role_id</strong> (<cite>int</cite>) – Role ID to create the partial role object with.</p></li>
+<li><p><strong>guild_id</strong> (<cite>int</cite>) – Guild ID that the role is in.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -932,15 +997,19 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.command"><code class="docutils literal notranslate"><span class="pre">Client.command()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.dispatch"><code class="docutils literal notranslate"><span class="pre">Client.dispatch()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_channel"><code class="docutils literal notranslate"><span class="pre">Client.fetch_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.fetch_entitlement()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_entitlement_list"><code class="docutils literal notranslate"><span class="pre">Client.fetch_entitlement_list()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_guild"><code class="docutils literal notranslate"><span class="pre">Client.fetch_guild()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_invite"><code class="docutils literal notranslate"><span class="pre">Client.fetch_invite()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_member"><code class="docutils literal notranslate"><span class="pre">Client.fetch_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_message"><code class="docutils literal notranslate"><span class="pre">Client.fetch_message()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_skus"><code class="docutils literal notranslate"><span class="pre">Client.fetch_skus()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">Client.fetch_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_user"><code class="docutils literal notranslate"><span class="pre">Client.fetch_user()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_webhook"><code class="docutils literal notranslate"><span class="pre">Client.fetch_webhook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.find_interaction"><code class="docutils literal notranslate"><span class="pre">Client.find_interaction()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.get_partial_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_entitlement()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_guild"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_guild()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_invite"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_invite()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_member"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_member()</span></code></a></li>

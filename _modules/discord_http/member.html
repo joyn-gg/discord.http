@@ -279,10 +279,10 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="n">PartialUser</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
@@ -300,7 +300,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">guild</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialGuild</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `PartialGuild`: The guild of the member &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">PartialGuild</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PartialGuild</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PartialMember.fetch">
 <a class="viewcode-back" href="../../api/member.html#discord_http.member.PartialMember.fetch">[docs]</a>
@@ -663,8 +663,8 @@
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
             <span class="n">guild_id</span><span class="o">=</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">user_id</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">])</span>
@@ -677,7 +677,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nick</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nick&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">joined_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_time</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;joined_at&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">PartialRole</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">role_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+            <span class="n">PartialRole</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;roles&quot;</span><span class="p">]</span>
         <span class="p">]</span>
 

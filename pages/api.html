@@ -377,15 +377,19 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.command"><code class="docutils literal notranslate"><span class="pre">Client.command()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.dispatch"><code class="docutils literal notranslate"><span class="pre">Client.dispatch()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_channel"><code class="docutils literal notranslate"><span class="pre">Client.fetch_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.fetch_entitlement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_entitlement_list"><code class="docutils literal notranslate"><span class="pre">Client.fetch_entitlement_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_guild"><code class="docutils literal notranslate"><span class="pre">Client.fetch_guild()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_invite"><code class="docutils literal notranslate"><span class="pre">Client.fetch_invite()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_member"><code class="docutils literal notranslate"><span class="pre">Client.fetch_member()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_message"><code class="docutils literal notranslate"><span class="pre">Client.fetch_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_skus"><code class="docutils literal notranslate"><span class="pre">Client.fetch_skus()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">Client.fetch_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_user"><code class="docutils literal notranslate"><span class="pre">Client.fetch_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_webhook"><code class="docutils literal notranslate"><span class="pre">Client.fetch_webhook()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.find_interaction"><code class="docutils literal notranslate"><span class="pre">Client.find_interaction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_entitlement()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_guild"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_guild()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_invite"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_invite()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_member"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_member()</span></code></a></li>
@@ -625,6 +629,15 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.DefaultNotificationLevel.only_mentions"><code class="docutils literal notranslate"><span class="pre">DefaultNotificationLevel.only_mentions</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.EntitlementOwnerType"><code class="docutils literal notranslate"><span class="pre">EntitlementOwnerType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.EntitlementOwnerType.guild"><code class="docutils literal notranslate"><span class="pre">EntitlementOwnerType.guild</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.EntitlementOwnerType.user"><code class="docutils literal notranslate"><span class="pre">EntitlementOwnerType.user</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.EntitlementType"><code class="docutils literal notranslate"><span class="pre">EntitlementType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.EntitlementType.application_subscription"><code class="docutils literal notranslate"><span class="pre">EntitlementType.application_subscription</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.IntegrationType"><code class="docutils literal notranslate"><span class="pre">IntegrationType</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.IntegrationType.guild"><code class="docutils literal notranslate"><span class="pre">IntegrationType.guild</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.IntegrationType.user"><code class="docutils literal notranslate"><span class="pre">IntegrationType.user</span></code></a></li>
@@ -658,6 +671,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.ResponseType.modal"><code class="docutils literal notranslate"><span class="pre">ResponseType.modal</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.ResponseType.pong"><code class="docutils literal notranslate"><span class="pre">ResponseType.pong</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.ResponseType.update_message"><code class="docutils literal notranslate"><span class="pre">ResponseType.update_message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.SKUType"><code class="docutils literal notranslate"><span class="pre">SKUType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.SKUType.subscription"><code class="docutils literal notranslate"><span class="pre">SKUType.subscription</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/enums.html#discord_http.enums.SKUType.subscription_group"><code class="docutils literal notranslate"><span class="pre">SKUType.subscription_group</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/enums.html#discord_http.enums.StickerFormatType"><code class="docutils literal notranslate"><span class="pre">StickerFormatType</span></code></a><ul>
@@ -805,6 +823,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.PublicFlags.team_pseudo_user"><code class="docutils literal notranslate"><span class="pre">PublicFlags.team_pseudo_user</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.PublicFlags.verified_bot"><code class="docutils literal notranslate"><span class="pre">PublicFlags.verified_bot</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.PublicFlags.verified_developer"><code class="docutils literal notranslate"><span class="pre">PublicFlags.verified_developer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flag.html#discord_http.flag.SKUFlags"><code class="docutils literal notranslate"><span class="pre">SKUFlags</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.SKUFlags.available"><code class="docutils literal notranslate"><span class="pre">SKUFlags.available</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.SKUFlags.guild_subscription"><code class="docutils literal notranslate"><span class="pre">SKUFlags.guild_subscription</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.SKUFlags.user_subscription"><code class="docutils literal notranslate"><span class="pre">SKUFlags.user_subscription</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/flag.html#discord_http.flag.SystemChannelFlags"><code class="docutils literal notranslate"><span class="pre">SystemChannelFlags</span></code></a><ul>
