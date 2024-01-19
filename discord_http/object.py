@@ -12,7 +12,7 @@ class PartialBase(utils.Snowflake):
     but with a few extra attributes.
     """
     def __init__(self, *, id: int):
-        super().__init__(id=id)
+        super().__init__(id=int(id))
 
     def __repr__(self) -> str:
         return f"<PartialBase id={self.id}>"

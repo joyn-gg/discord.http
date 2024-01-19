@@ -22,10 +22,10 @@ class PartialRole(PartialBase):
         self,
         *,
         state: "DiscordAPI",
-        guild_id: int,
-        role_id: int
+        id: int,
+        guild_id: int
     ):
-        super().__init__(id=int(role_id))
+        super().__init__(id=int(id))
         self._state = state
         self.guild_id: int = guild_id
 
@@ -36,7 +36,7 @@ class PartialRole(PartialBase):
     def guild(self) -> "PartialGuild":
         """ `PartialGuild`: Returns the guild this role is in """
         from .guild import PartialGuild
-        return PartialGuild(state=self._state, guild_id=self.guild_id)
+        return PartialGuild(state=self._state, id=self.guild_id)
 
     @property
     def mention(self) -> str:
@@ -222,7 +222,7 @@ class Role(PartialRole):
         guild: Union["PartialGuild", "Guild"],
         data: dict
     ):
-        super().__init__(state=state, guild_id=guild.id, role_id=data["id"])
+        super().__init__(state=state, id=data["id"], guild_id=guild.id)
 
         self.color: int = int(data["color"])
         self.colour: int = int(data["color"])

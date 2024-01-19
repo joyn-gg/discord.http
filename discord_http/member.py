@@ -33,10 +33,10 @@ class PartialMember(PartialBase):
         self,
         *,
         state: "DiscordAPI",
+        id: int,
         guild_id: int,
-        user_id: int
     ):
-        super().__init__(id=int(user_id))
+        super().__init__(id=int(id))
         self._state = state
 
         self._user = PartialUser(state=state, id=self.id)
@@ -54,7 +54,7 @@ class PartialMember(PartialBase):
     @property
     def guild(self) -> PartialGuild:
         """ `PartialGuild`: The guild of the member """
-        return PartialGuild(state=self._state, guild_id=self.guild_id)
+        return PartialGuild(state=self._state, id=self.guild_id)
 
     async def fetch(self) -> "Member":
         """ `Fetch`: Fetches the member from the API """
@@ -384,8 +384,8 @@ class Member(PartialMember):
     ):
         super().__init__(
             state=state,
+            id=data["user"]["id"],
             guild_id=guild.id,
-            user_id=data["user"]["id"]
         )
 
         self._user = User(state=state, data=data["user"])
@@ -398,7 +398,7 @@ class Member(PartialMember):
         self.nick: Optional[str] = data.get("nick", None)
         self.joined_at: datetime = utils.parse_time(data["joined_at"])
         self.roles: list[PartialRole] = [
-            PartialRole(state=state, guild_id=self.guild.id, role_id=int(r))
+            PartialRole(state=state, id=int(r), guild_id=self.guild.id)
             for r in data["roles"]
         ]
 

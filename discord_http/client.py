@@ -11,6 +11,7 @@ from .backend import DiscordHTTP
 from .channel import PartialChannel, BaseChannel
 from .commands import Command, Interaction, Listener, Cog, SubGroup
 from .context import Context
+from .entitlements import SKU, PartialEntitlements, Entitlements
 from .enums import ApplicationCommandType
 from .guild import PartialGuild, Guild
 from .http import DiscordAPI
@@ -617,7 +618,7 @@ class Client:
         """
         return PartialChannel(
             state=self.state,
-            channel_id=channel_id,
+            id=channel_id,
             guild_id=guild_id
         )
 
@@ -742,18 +743,18 @@ class Client:
 
     def get_partial_message(
         self,
-        channel_id: int,
-        message_id: int
+        message_id: int,
+        channel_id: int
     ) -> PartialMessage:
         """
         Creates a partial message object.
 
         Parameters
         ----------
-        channel_id: `int`
-            Channel ID to create the partial message object with.
         message_id: `int`
             Message ID to create the partial message object with.
+        channel_id: `int`
+            Channel ID to create the partial message object with.
 
         Returns
         -------
@@ -762,31 +763,31 @@ class Client:
         """
         return PartialMessage(
             state=self.state,
+            id=message_id,
             channel_id=channel_id,
-            id=message_id
         )
 
     async def fetch_message(
         self,
-        channel_id: int,
-        message_id: int
+        message_id: int,
+        channel_id: int
     ) -> Message:
         """
         Fetches a message object.
 
         Parameters
         ----------
-        channel_id: `int`
-            Channel ID to fetch the message object with.
         message_id: `int`
             Message ID to fetch the message object with.
+        channel_id: `int`
+            Channel ID to fetch the message object with.
 
         Returns
         -------
         `Message`
             The message object
         """
-        msg = self.get_partial_message(channel_id, message_id)
+        msg = self.get_partial_message(message_id, channel_id)
         return await msg.fetch()
 
     def get_partial_webhook(
@@ -812,8 +813,8 @@ class Client:
         """
         return PartialWebhook(
             state=self.state,
-            webhook_id=webhook_id,
-            webhook_token=webhook_token
+            id=webhook_id,
+            token=webhook_token
         )
 
     async def fetch_webhook(
@@ -888,18 +889,18 @@ class Client:
 
     def get_partial_member(
         self,
-        guild_id: int,
-        user_id: int
+        user_id: int,
+        guild_id: int
     ) -> PartialMember:
         """
         Creates a partial member object.
 
         Parameters
         ----------
-        guild_id: `int`
-            Guild ID that the member is in.
         user_id: `int`
             User ID to create the partial member object with.
+        guild_id: `int`
+            Guild ID that the member is in.
 
         Returns
         -------
@@ -908,14 +909,14 @@ class Client:
         """
         return PartialMember(
             state=self.state,
+            id=user_id,
             guild_id=guild_id,
-            user_id=user_id
         )
 
     async def fetch_member(
         self,
-        guild_id: int,
-        user_id: int
+        user_id: int,
+        guild_id: int
     ) -> Member:
         """
         Fetches a member object.
@@ -932,8 +933,126 @@ class Client:
         `Member`
             The member object.
         """
-        member = self.get_partial_member(guild_id, user_id)
+        member = self.get_partial_member(user_id, guild_id)
         return await member.fetch()
+
+    async def fetch_skus(self) -> list[SKU]:
+        """ `list[SKU]`: Fetches all SKUs available to the bot. """
+        r = await self.state.query(
+            "GET",
+            f"/applications/{self.application_id}/skus"
+        )
+
+        return [
+            SKU(state=self.state, data=g)
+            for g in r.response
+        ]
+
+    def get_partial_entitlement(
+        self,
+        entitlement_id: int
+    ) -> PartialEntitlements:
+        """
+        Creates a partial entitlement object.
+
+        Parameters
+        ----------
+        entitlement_id: `int`
+            Entitlement ID to create the partial entitlement object with.
+
+        Returns
+        -------
+        `PartialEntitlements`
+            The partial entitlement object.
+        """
+        return PartialEntitlements(
+            state=self.state,
+            id=entitlement_id
+        )
+
+    async def fetch_entitlement(
+        self,
+        entitlement_id: int
+    ) -> Entitlements:
+        """
+        Fetches an entitlement object.
+
+        Parameters
+        ----------
+        entitlement_id: `int`
+            Entitlement ID to fetch the entitlement object with.
+
+        Returns
+        -------
+        `Entitlements`
+            The entitlement object.
+        """
+        ent = self.get_partial_entitlement(entitlement_id)
+        return await ent.fetch()
+
+    async def fetch_entitlement_list(
+        self,
+        *,
+        user_id: Optional[int] = None,
+        sku_ids: Optional[list[int]] = None,
+        before: Optional[int] = None,
+        after: Optional[int] = None,
+        limit: int = 100,
+        guild_id: Optional[int] = None,
+        exclude_ended: bool = False
+    ) -> list[Entitlements]:
+        """
+        Fetches a list of entitlement objects with optional filters.
+
+        Parameters
+        ----------
+        user_id: `Optional[int]`
+            Show entitlements for a specific user ID.
+        sku_ids: `Optional[list[int]]`
+            Show entitlements for a specific SKU ID.
+        before: `Optional[int]`
+            Only show entitlements before this entitlement ID.
+        after: `Optional[int]`
+            Only show entitlements after this entitlement ID.
+        limit: `int`
+            Limit the amount of entitlements to fetch.
+        guild_id: `Optional[int]`
+            Show entitlements for a specific guild ID.
+        exclude_ended: `bool`
+            Whether to exclude ended entitlements or not.
+
+        Returns
+        -------
+        `list[Entitlements]`
+            The entitlement objects.
+        """
+        params: dict[str, Any] = {
+            "exclude_ended": "true" if exclude_ended else "false"
+        }
+
+        if user_id is not None:
+            params["user_id"] = int(user_id)
+        if sku_ids is not None:
+            params["sku_ids"] = ",".join([str(int(g)) for g in sku_ids])
+        if before is not None:
+            params["before"] = int(before)
+        if after is not None:
+            params["after"] = int(after)
+        if limit is not None:
+            params["limit"] = min(int(limit), 100)
+        if guild_id is not None:
+            params["guild_id"] = int(guild_id)
+
+        r = await self.state.query(
+            "GET",
+            f"/applications/{self.application_id}/entitlements",
+            params=params
+        )
+
+        return [
+            Entitlements(state=self.state, data=g)
+            for g in r.response
+        ]
 
     def get_partial_guild(
         self,
@@ -954,7 +1073,7 @@ class Client:
         """
         return PartialGuild(
             state=self.state,
-            guild_id=guild_id
+            id=guild_id
         )
 
     async def fetch_guild(
@@ -979,18 +1098,18 @@ class Client:
 
     def get_partial_role(
         self,
-        guild_id: int,
-        role_id: int
+        role_id: int,
+        guild_id: int
     ) -> PartialRole:
         """
         Creates a partial role object.
 
         Parameters
         ----------
-        guild_id: `int`
-            Guild ID that the role is in.
         role_id: `int`
             Role ID to create the partial role object with.
+        guild_id: `int`
+            Guild ID that the role is in.
 
         Returns
         -------
@@ -999,8 +1118,8 @@ class Client:
         """
         return PartialRole(
             state=self.state,
-            guild_id=guild_id,
-            role_id=role_id
+            id=role_id,
+            guild_id=guild_id
         )
 
     def find_interaction(

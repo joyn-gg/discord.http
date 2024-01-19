@@ -24,6 +24,7 @@ class MultipartData:
         self,
         name: str,
         data: Union[File, io.BufferedIOBase, dict, str],
+        *,
         filename: Optional[str] = None,
         content_type: Optional[str] = None
     ) -> None:

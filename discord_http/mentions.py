@@ -10,6 +10,7 @@ __all__ = (
 class AllowedMentions:
     def __init__(
         self,
+        *,
         everyone: bool = True,
         users: Optional[Union[bool, list[utils.Snowflake]]] = True,
         roles: Optional[Union[bool, list[utils.Snowflake]]] = True,

@@ -8,6 +8,7 @@ __all__ = (
     "MessageFlags",
     "Permissions",
     "PublicFlags",
+    "SKUFlags",
     "SystemChannelFlags",
 )
 
@@ -43,7 +44,10 @@ class BaseFlag(_FlagPyMeta):
             for g in self
         ]
 
-    def add_flag(self, flag_name: Union[Self, str]) -> Self:
+    def add_flag(
+        self,
+        flag_name: Union[Self, str]
+    ) -> Self:
         """
         Add a flag by name
 
@@ -77,7 +81,7 @@ class BaseFlag(_FlagPyMeta):
                     f"{self.__class__.__name__} flag value"
                 )
 
-            return self  # type: ignore
+            return self
 
     def remove_flag(self, flag_name: Union[Self, str]) -> Self:
         """
@@ -100,7 +104,7 @@ class BaseFlag(_FlagPyMeta):
         """
         if isinstance(flag_name, BaseFlag):
             self &= ~flag_name
-            return self  # type: ignore
+            return self
         else:
             if flag_name not in self.list_names:
                 return self
@@ -113,7 +117,7 @@ class BaseFlag(_FlagPyMeta):
                     f"{self.__class__.__name__} flag value"
                 )
 
-            return self  # type: ignore
+            return self
 
     @classmethod
     def from_names(cls, *args: str) -> Self:
@@ -160,6 +164,12 @@ class MessageFlags(BaseFlag):
     failed_to_mention_some_roles_in_thread = 1 << 8
     suppress_notifications = 1 << 12
     is_voice_message = 1 << 13
+
+
+class SKUFlags(BaseFlag):
+    available = 1 << 2
+    guild_subscription = 1 << 7
+    user_subscription = 1 << 8
 
 
 class PublicFlags(BaseFlag):

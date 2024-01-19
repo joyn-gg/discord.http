@@ -8,8 +8,7 @@ import unicodedata
 
 from base64 import b64encode
 from datetime import datetime, timezone
-from typing import Optional, Any, Union, Iterator
-from typing import Self
+from typing import Optional, Any, Union, Iterator, Self
 
 from .file import File
 
@@ -427,7 +426,7 @@ class Enum(enum.Enum):
     @classmethod
     def random(cls) -> Self:
         """ `Enum`: Return a random enum """
-        return random.choice(list(cls))  # type: ignore
+        return random.choice(list(cls))
 
     def __str__(self) -> str:
         """ `str` Return the name of the enum """

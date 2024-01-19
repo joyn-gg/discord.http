@@ -58,10 +58,10 @@ class PartialChannel(PartialBase):
         self,
         *,
         state: "DiscordAPI",
-        channel_id: int,
+        id: int,
         guild_id: Optional[int] = None
     ):
-        super().__init__(id=int(channel_id))
+        super().__init__(id=int(id))
         self._state = state
         self.guild_id: Optional[int] = guild_id
 
@@ -74,7 +74,7 @@ class PartialChannel(PartialBase):
         from .guild import PartialGuild
 
         if self.guild_id:
-            return PartialGuild(state=self._state, guild_id=self.guild_id)
+            return PartialGuild(state=self._state, id=self.guild_id)
         return None
 
     def get_partial_message(self, message_id: int) -> "PartialMessage":
@@ -330,7 +330,7 @@ class PartialChannel(PartialBase):
         """
         temp_class = cls(
             state=state,
-            channel_id=int(data["id"]),
+            id=int(data["id"]),
             guild_id=utils.get_int(data, "guild_id")
         )
 
@@ -840,7 +840,7 @@ class BaseChannel(PartialChannel):
     def __init__(self, state: "DiscordAPI", data: dict):
         super().__init__(
             state=state,
-            channel_id=int(data["id"]),
+            id=int(data["id"]),
             guild_id=utils.get_int(data, "guild_id")
         )
 
@@ -1102,13 +1102,13 @@ class PublicThread(BaseChannel):
     def channel(self) -> "PartialChannel":
         """ `PartialChannel`: Returns a partial channel object """
         from .channel import PartialChannel
-        return PartialChannel(state=self._state, channel_id=self.channel_id)
+        return PartialChannel(state=self._state, id=self.channel_id)
 
     @property
     def guild(self) -> "PartialGuild":
         """ `PartialGuild`: Returns a partial guild object """
         from .guild import PartialGuild
-        return PartialGuild(state=self._state, guild_id=self.guild_id)
+        return PartialGuild(state=self._state, id=self.guild_id)
 
     @property
     def owner(self) -> "PartialUser":

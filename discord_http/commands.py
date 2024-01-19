@@ -27,8 +27,8 @@ from .role import Role
 from .user import User
 
 if TYPE_CHECKING:
-    from .context import Context
     from .client import Client
+    from .context import Context
 
 ChoiceT = TypeVar("ChoiceT", str, int, float, Union[str, int, float])
 LocaleTypes = Literal[

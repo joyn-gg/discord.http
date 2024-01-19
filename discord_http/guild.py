@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING, Union, Optional, AsyncIterator
 from . import utils
 from .asset import Asset
 from .colour import Colour, Color
-from .emoji import Emoji
 from .enums import (
     ChannelType, VerificationLevel,
     DefaultNotificationLevel, ContentFilterLevel
 )
+from .emoji import Emoji
 from .file import File
 from .flag import Permissions, SystemChannelFlags
 from .multipart import MultipartData
@@ -44,8 +44,8 @@ class _GuildLimits:
 
 
 class PartialGuild(PartialBase):
-    def __init__(self, *, state: "DiscordAPI", guild_id: int):
-        super().__init__(id=int(guild_id))
+    def __init__(self, *, state: "DiscordAPI", id: int):
+        super().__init__(id=int(id))
         self._state = state
 
     def __repr__(self) -> str:
@@ -436,7 +436,8 @@ class PartialGuild(PartialBase):
         multidata.attach("tags", utils.unicode_name(emoji))
 
         multidata.attach(
-            "file", file,
+            "file",
+            file,
             filename=file.filename,
             content_type=mime_type
         )
@@ -654,7 +655,7 @@ class PartialGuild(PartialBase):
         """
         if isinstance(member, int):
             from .member import PartialMember
-            member = PartialMember(state=self._state, guild_id=self.id, user_id=member)
+            member = PartialMember(state=self._state, id=member, guild_id=self.id)
 
         await member.ban(
             reason=reason,
@@ -680,7 +681,7 @@ class PartialGuild(PartialBase):
         """
         if isinstance(member, int):
             from .member import PartialMember
-            member = PartialMember(state=self._state, guild_id=self.id, user_id=member)
+            member = PartialMember(state=self._state, id=member, guild_id=self.id)
 
         await member.unban(reason=reason)
 
@@ -702,7 +703,7 @@ class PartialGuild(PartialBase):
         """
         if isinstance(member, int):
             from .member import PartialMember
-            member = PartialMember(state=self._state, guild_id=self.id, user_id=member)
+            member = PartialMember(state=self._state, id=member, guild_id=self.id)
 
         await member.kick(reason=reason)
 
@@ -944,7 +945,7 @@ class Guild(PartialGuild):
     }
 
     def __init__(self, *, state: "DiscordAPI", data: dict):
-        super().__init__(state=state, guild_id=int(data["id"]))
+        super().__init__(state=state, id=int(data["id"]))
         self.afk_channel_id: Optional[int] = utils.get_int(data, "afk_channel_id")
         self.afk_timeout: int = data.get("afk_timeout", 0)
         self.default_message_notifications: int = data.get("default_message_notifications", 0)

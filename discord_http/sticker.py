@@ -68,7 +68,7 @@ class PartialSticker(PartialBase):
             return None
 
         from .guild import PartialGuild
-        return PartialGuild(state=self._state, guild_id=self.guild_id)
+        return PartialGuild(state=self._state, id=self.guild_id)
 
     async def edit(
         self,

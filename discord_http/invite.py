@@ -121,7 +121,7 @@ class Invite(PartialInvite):
             guild_id = data.get("guild", {}).get("id", None)
             self.channel = PartialChannel(
                 state=self._state,
-                channel_id=int(data["channel"]["id"]),
+                id=int(data["channel"]["id"]),
                 guild_id=int(guild_id) if guild_id else None,
             )
 

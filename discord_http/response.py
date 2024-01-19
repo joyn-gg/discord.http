@@ -288,7 +288,8 @@ class MessageResponse(BaseResponse):
             for i, file in enumerate(self.files):
                 multidata.attach(
                     f"files[{i}]",
-                    file, filename=file.filename  # type: ignore
+                    file,  # type: ignore
+                    filename=file.filename
                 )
 
         multidata.attach(

@@ -11,6 +11,7 @@ from typing import (
     Literal, TypeVar, Generic, TYPE_CHECKING
 )
 
+from . import __version__
 from .errors import (
     NotFound, DiscordServerError,
     Forbidden, HTTPException
@@ -372,7 +373,8 @@ class DiscordAPI:
         if res_method == "json" and "Content-Type" not in kwargs["headers"]:
             kwargs["headers"]["Content-Type"] = "application/json"
 
-        kwargs["headers"]["User-Agent"] = "discord.http Python/{0} aiohttp/{1}".format(
+        kwargs["headers"]["User-Agent"] = "discord.http/{0} Python/{1} aiohttp/{2}".format(
+            __version__,
             ".".join(str(i) for i in sys.version_info[:3]),
             aiohttp.__version__
         )

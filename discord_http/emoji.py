@@ -88,7 +88,7 @@ class Emoji(PartialBase):
         self.animated: bool = data["animated"]
         self.available: bool = data["available"]
         self.roles: list[PartialRole] = [
-            PartialRole(state=state, guild_id=guild.id, role_id=r)
+            PartialRole(state=state, id=r, guild_id=guild.id)
             for r in data["roles"]
         ]
 

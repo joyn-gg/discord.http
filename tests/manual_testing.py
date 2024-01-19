@@ -4,10 +4,10 @@ You can also use this is a reference for how to use the library
 But honestly, this thing might change a lot, so I wouldn't recommend it
 """
 
-import json
 import asyncio
-import secrets
+import json
 import logging
+import secrets
 
 from typing import Union, Optional
 from datetime import time, datetime
@@ -201,7 +201,8 @@ async def test_save(ctx: Context, message_id: str):
 async def test_webhook(ctx: Context):
     async def after():
         webhook = ctx.bot.get_partial_webhook(
-            config["webhook_id"], webhook_token=config["webhook_token"]
+            config["webhook_id"],
+            webhook_token=config["webhook_token"]
         )
 
         msg = await webhook.send(
@@ -256,7 +257,7 @@ async def test_partial_message(ctx: Context, channel: TextChannel, message_id: s
     if not message_id.isdigit():
         return ctx.response.send_message("Message ID must be a number")
 
-    msg = ctx.bot.get_partial_message(channel.id, int(message_id))
+    msg = ctx.bot.get_partial_message(int(message_id), channel.id)
     msg = await msg.fetch()
     print(msg.jump_urls)
     return ctx.response.send_message(f"Message: {msg.content} | Jump: {msg.jump_url}")
@@ -264,7 +265,7 @@ async def test_partial_message(ctx: Context, channel: TextChannel, message_id: s
 
 @client.command()
 async def test_partial_member(ctx: Context):
-    member = ctx.bot.get_partial_member(ctx.guild.id, ctx.user.id)
+    member = ctx.bot.get_partial_member(ctx.user.id, ctx.guild.id)
     member = await member.fetch()
     return ctx.response.send_message(f"Member: {member}")
 

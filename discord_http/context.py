@@ -22,11 +22,11 @@ from .flag import Permissions
 from .guild import PartialGuild
 from .member import Member
 from .mentions import AllowedMentions
+from .message import Message, Attachment
 from .response import (
     MessageResponse, DeferResponse,
     AutocompleteResponse, ModalResponse
 )
-from .message import Message, Attachment
 from .role import Role
 from .user import User
 from .view import View, Modal
@@ -486,7 +486,7 @@ class Context:
         self.guild: Optional[PartialGuild] = None
         if data.get("guild_id", None):
             self.guild = PartialGuild(
-                state=self.bot.state, guild_id=int(data["guild_id"])
+                state=self.bot.state, id=int(data["guild_id"])
             )
 
         self.message: Optional[Message] = None

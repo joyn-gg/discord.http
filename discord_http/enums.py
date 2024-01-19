@@ -8,11 +8,14 @@ __all__ = (
     "ComponentType",
     "ContentFilterLevel",
     "DefaultNotificationLevel",
+    "EntitlementOwnerType",
+    "EntitlementType",
     "IntegrationType",
     "InteractionType",
     "InviteType",
     "MFALevel",
     "ResponseType",
+    "SKUType",
     "StickerFormatType",
     "StickerType",
     "TextStyles",
@@ -100,6 +103,20 @@ class ResponseType(Enum):
     update_message = 7
     application_command_autocomplete_result = 8
     modal = 9
+
+
+class EntitlementType(Enum):
+    application_subscription = 8
+
+
+class EntitlementOwnerType(Enum):
+    guild = 1
+    user = 2
+
+
+class SKUType(Enum):
+    subscription = 5
+    subscription_group = 6
 
 
 class InteractionType(Enum):

@@ -85,7 +85,7 @@ class JumpURL:
         from .guild import PartialGuild
         return PartialGuild(
             state=self._state,
-            guild_id=self.guild_id
+            id=self.guild_id
         )
 
     async def fetch_guild(self) -> "Guild":
@@ -104,7 +104,7 @@ class JumpURL:
         from .channel import PartialChannel
         return PartialChannel(
             state=self._state,
-            channel_id=self.channel_id,
+            id=self.channel_id,
             guild_id=self.guild_id
         )
 
@@ -162,7 +162,7 @@ class MessageReference:
         from .guild import PartialGuild
         return PartialGuild(
             state=self._state,
-            guild_id=self.guild_id
+            id=self.guild_id
         )
 
     @property
@@ -174,7 +174,7 @@ class MessageReference:
         from .channel import PartialChannel
         return PartialChannel(
             state=self._state,
-            channel_id=self.channel_id,
+            id=self.channel_id,
             guild_id=self.guild_id
         )
 
@@ -351,7 +351,13 @@ class Attachment:
 
 
 class PartialMessage(PartialBase):
-    def __init__(self, *, state: "DiscordAPI", channel_id: int, id: int):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        id: int,
+        channel_id: int,
+    ):
         super().__init__(id=int(id))
         self._state = state
 
@@ -364,7 +370,7 @@ class PartialMessage(PartialBase):
     def channel(self) -> "PartialChannel":
         """ `PartialChannel`: Returns the channel the message was sent in """
         from .channel import PartialChannel
-        return PartialChannel(state=self._state, channel_id=self.channel_id)
+        return PartialChannel(state=self._state, id=self.channel_id)
 
     async def fetch(self) -> "Message":
         """ `Message`: Returns the message object """
@@ -773,8 +779,8 @@ class Message(PartialMessage):
         return [
             PartialRole(
                 state=self._state,
-                guild_id=self.guild_id,
-                role_id=int(role_id)
+                id=int(role_id),
+                guild_id=self.guild_id
             )
             for role_id in utils.re_role.findall(self.content)
         ]
@@ -785,7 +791,7 @@ class Message(PartialMessage):
         from .channel import PartialChannel
 
         return [
-            PartialChannel(state=self._state, channel_id=int(channel_id))
+            PartialChannel(state=self._state, id=int(channel_id))
             for channel_id in utils.re_channel.findall(self.content)
         ]
 

@@ -30,8 +30,17 @@ def show_version() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="discord.http", description="Command-line tool to debug")
-    parser.add_argument("-v", "--version", action="store_true", help="Show relevant version information")
+    parser = argparse.ArgumentParser(
+        prog="discord.http",
+        description="Command-line tool to debug"
+    )
+
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="store_true",
+        help="Show relevant version information"
+    )
 
     args = parser.parse_args()
 

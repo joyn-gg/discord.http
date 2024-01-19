@@ -13,6 +13,7 @@ class Asset:
 
     def __init__(
         self,
+        *,
         url: str,
         key: str,
         animated: bool = False

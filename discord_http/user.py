@@ -25,7 +25,12 @@ __all__ = (
 
 
 class PartialUser(PartialBase):
-    def __init__(self, *, state: "DiscordAPI", id: int):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        id: int
+    ):
         super().__init__(id=int(id))
         self._state = state
 

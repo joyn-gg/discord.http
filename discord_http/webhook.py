@@ -30,12 +30,12 @@ class PartialWebhook(PartialBase):
         self,
         *,
         state: "DiscordAPI",
-        webhook_id: int,
-        webhook_token: Optional[str] = None
+        id: int,
+        token: Optional[str] = None
     ):
-        super().__init__(id=int(webhook_id))
+        super().__init__(id=int(id))
         self._state = state
-        self.token: Optional[str] = webhook_token
+        self.token: Optional[str] = token
 
     def __repr__(self) -> str:
         return f"<PartialWebhook id={self.id}>"
@@ -137,7 +137,11 @@ class PartialWebhook(PartialBase):
 
         if isinstance(payload.files, list):
             for i, file in enumerate(payload.files):
-                multidata.attach(f"file{i}", file.data, file.filename)
+                multidata.attach(
+                    f"file{i}",
+                    file.data,
+                    filename=file.filename
+                )
 
         _modified_payload = payload.to_dict(is_request=True)
         if username is not MISSING:
@@ -257,12 +261,12 @@ class Webhook(PartialWebhook):
 
         super().__init__(
             state=state,
-            webhook_id=(
+            id=(
                 self.application_id or
                 utils.get_int(data, "id") or
                 0
             ),
-            webhook_token=data.get("token", None)
+            token=data.get("token", None)
         )
 
         self.name: Optional[str] = data.get("name", None)
@@ -314,7 +318,7 @@ class Webhook(PartialWebhook):
             from .guild import PartialGuild
             return PartialGuild(
                 state=self._state,
-                guild_id=self.guild_id
+                id=self.guild_id
             )
 
         return None
@@ -326,7 +330,7 @@ class Webhook(PartialWebhook):
             from .channel import PartialChannel
             return PartialChannel(
                 state=self._state,
-                channel_id=self.channel_id
+                id=self.channel_id
             )
 
         return None
