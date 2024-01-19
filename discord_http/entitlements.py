@@ -128,16 +128,15 @@ class PartialEntitlements(PartialBase):
         )
 
 
-class Entitlements(utils.Snowflake):
+class Entitlements(PartialEntitlements):
     def __init__(
         self,
         *,
         state: "DiscordAPI",
         data: dict
     ):
-        super().__init__(id=int(data["id"]))
-        self._state = state
-
+        super().__init__(state=state, id=int(data["id"]))
+        self.delete
         self.deleted: bool = data["deleted"]
         self.type: EntitlementType = EntitlementType(data["type"])
         self.consumed: bool = data["consumed"]
@@ -158,6 +157,9 @@ class Entitlements(utils.Snowflake):
 
         self._from_data(data)
 
+    def __repr__(self) -> str:
+        return f"<Entitlements id={self.id} sku={self.sku} type={self.type}>"
+
     def _from_data(self, data: dict):
         if data.get("user_id", None):
             self.user = PartialUser(state=self._state, id=int(data["user_id"]))
@@ -170,9 +172,3 @@ class Entitlements(utils.Snowflake):
 
         if data.get("ends_at", None):
             self.ends_at = utils.parse_time(data["ends_at"])
-
-    def __str__(self) -> str:
-        return f"{self.id}"
-
-    def __repr__(self) -> str:
-        return f"<Entitlements id={self.id} sku={self.sku} type={self.type}>"
