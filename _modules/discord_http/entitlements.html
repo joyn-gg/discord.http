@@ -401,7 +401,7 @@
         <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delete</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">deleted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;deleted&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span> <span class="n">EntitlementType</span> <span class="o">=</span> <span class="n">EntitlementType</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">consumed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;consumed&quot;</span><span class="p">]</span>
