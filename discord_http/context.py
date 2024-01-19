@@ -13,6 +13,7 @@ from .channel import (
     NewsChannel, BaseChannel
 )
 from .embeds import Embed
+from .entitlements import Entitlements
 from .enums import (
     ApplicationCommandType, CommandOptionType,
     ResponseType, ChannelType, InteractionType
@@ -470,6 +471,12 @@ class Context:
 
         self._original_response: Optional[Message] = None
         self._resolved: dict = data.get("data", {}).get("resolved", {})
+
+        self.entitlements: list[Entitlements] = [
+            Entitlements(state=self.bot.state, data=g)
+            for g in data.get("entitlements", [])
+        ]
+
         self._from_data(data)
 
     def _from_data(self, data: dict):
@@ -480,13 +487,15 @@ class Context:
         self.channel: Optional[BaseChannel] = None
         if data.get("channel", None):
             self.channel = channel_types[data["channel"]["type"]](
-                state=self.bot.state, data=data["channel"]
+                state=self.bot.state,
+                data=data["channel"]
             )
 
         self.guild: Optional[PartialGuild] = None
         if data.get("guild_id", None):
             self.guild = PartialGuild(
-                state=self.bot.state, id=int(data["guild_id"])
+                state=self.bot.state,
+                id=int(data["guild_id"])
             )
 
         self.message: Optional[Message] = None
