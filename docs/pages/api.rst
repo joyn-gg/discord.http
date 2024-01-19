@@ -15,6 +15,7 @@ Here are all the things you can find on discord.http, packed in one page
   ../api/context
   ../api/embeds
   ../api/emoji
+  ../api/entitlements
   ../api/enums
   ../api/errors
   ../api/file
