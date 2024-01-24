@@ -610,8 +610,9 @@
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span>
-            <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_index_interaction</span><span class="p">,</span>
+            <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_index_interaction</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
             <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 

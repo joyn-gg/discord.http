@@ -383,10 +383,13 @@
                     <span class="c1"># Give up trying, something is really wrong...</span>
                     <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
                     <span class="n">res_method</span> <span class="o">=</span> <span class="s2">&quot;text&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="n">res_method</span> <span class="o">=</span> <span class="s2">&quot;text&quot;</span>
 
         <span class="n">output</span> <span class="o">=</span> <span class="n">HTTPResponse</span><span class="p">(</span>
             <span class="n">status</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-            <span class="n">response</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">response</span><span class="o">=</span><span class="n">r</span><span class="p">,</span>
             <span class="n">res_method</span><span class="o">=</span><span class="n">res_method</span><span class="p">,</span>
             <span class="n">reason</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span>
             <span class="n">headers</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">headers</span>
