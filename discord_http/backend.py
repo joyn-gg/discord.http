@@ -352,8 +352,9 @@ class DiscordHTTP(Quart):
             )
 
         self.add_url_rule(
-            "/", "index",
-            self._index_interaction,
+            "/",
+            "index",
+            self._index_interaction,  # type: ignore
             methods=["POST"]
         )
 

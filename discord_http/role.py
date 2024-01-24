@@ -89,11 +89,23 @@ class PartialRole(PartialBase):
             reason=reason
         )
 
-    async def delete(self) -> None:
-        """ Delete the role """
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Delete the role
+
+        Parameters
+        ----------
+        reason: `Optional[str]`
+            The reason for deleting the role
+        """
         await self._state.query(
             "DELETE",
             f"/guilds/{self.guild_id}/roles/{self.id}",
+            reason=reason,
             res_method="text"
         )
 

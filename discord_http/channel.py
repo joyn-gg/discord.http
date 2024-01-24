@@ -899,6 +899,7 @@ class TextChannel(BaseChannel):
         position: Optional[int] = MISSING,
         nsfw: Optional[bool] = MISSING,
         parent_id: Optional[int] = MISSING,
+        reason: Optional[str] = None
     ) -> Self:
         """
         Edit the channel
@@ -917,6 +918,8 @@ class TextChannel(BaseChannel):
             If the channel should be NSFW
         parent_id: `int`
             The parent ID of the channel
+        reason: `Optional[str]`
+            The reason for editing the channel
 
         Returns
         -------
@@ -930,6 +933,8 @@ class TextChannel(BaseChannel):
         """
         payload = {}
 
+        if reason:
+            payload["reason"] = reason
         if name is not MISSING:
             payload["name"] = name
         if topic is not MISSING:

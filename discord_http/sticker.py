@@ -219,7 +219,8 @@ class Sticker(PartialSticker):
         *,
         name: Optional[str] = MISSING,
         description: Optional[str] = MISSING,
-        tags: Optional[str] = MISSING
+        tags: Optional[str] = MISSING,
+        reason: Optional[str] = None
     ) -> "Sticker":
         """
         Edits the sticker
@@ -232,6 +233,8 @@ class Sticker(PartialSticker):
             Description of the sticker
         tags: `Optional[str]`
             Tags of the sticker
+        reason: `Optional[str]`
+            The reason for editing the sticker
 
         Returns
         -------
@@ -245,12 +248,29 @@ class Sticker(PartialSticker):
             guild_id=self.guild.id,
             name=name,
             description=description,
-            tags=tags
+            tags=tags,
+            reason=reason
         )
 
-    async def delete(self) -> None:
-        """ Deletes the sticker """
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Deletes the sticker
+
+        Parameters
+        ----------
+        reason: `Optional[str]`
+            The reason for deleting the sticker
+
+        Raises
+        ------
+        `ValueError`
+            Guild is not defined
+        """
         if not self.guild:
             raise ValueError("Sticker is not in a guild")
 
-        await super().delete(guild_id=self.guild.id)
+        await super().delete(guild_id=self.guild.id, reason=reason)

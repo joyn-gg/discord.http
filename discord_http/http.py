@@ -135,10 +135,13 @@ async def query(
                     # Give up trying, something is really wrong...
                     r = await res.text()
                     res_method = "text"
+            else:
+                r = await res.text()
+                res_method = "text"
 
         output = HTTPResponse(
             status=res.status,
-            response=r,  # type: ignore
+            response=r,
             res_method=res_method,
             reason=res.reason,
             headers=res.headers

@@ -876,11 +876,23 @@ class WebhookMessage(Message):
             token=self.token
         )
 
-    async def delete(self) -> None:
-        """ Delete a webhook message """
+    async def delete(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Delete the webhook message
+
+        Parameters
+        ----------
+        reason: `Optional[str]`
+            Reason for deleting the message
+        """
         await self._state.query(
             "DELETE",
             f"/webhooks/{self.application_id}/{self.token}/messages/{self.id}",
+            reason=reason,
             webhook=True,
             res_method="text"
         )
