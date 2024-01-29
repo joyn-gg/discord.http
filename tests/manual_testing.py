@@ -580,7 +580,21 @@ async def test_ping(ctx: Context):
 
 @client.command()
 async def test_button(ctx: Context):
+    select_menu = Select(
+        placeholder="testing...",
+        custom_id="test_select::3",
+        disabled=True
+    )
+
+    select_menu.add_item(
+        label="No options found...",
+        value="test:hi",
+        description="This is a description, yes yes",
+        default=True
+    )
+
     view = View(
+        select_menu,
         Button(label="funny", custom_id="funny:1337"),
         Button(label="modal test", custom_id="test_send_modal_local"),
         Link(url="https://alexflipnote.dev", label="Test", emoji="👍"),

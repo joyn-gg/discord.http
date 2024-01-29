@@ -169,6 +169,7 @@ class Select(Item):
         value: str,
         description: Optional[str] = None,
         emoji: Optional[str] = None,
+        default: bool = False
     ) -> None:
         """
         Add an item to the select menu
@@ -183,6 +184,8 @@ class Select(Item):
             Description of the item
         emoji: `Optional[str]`
             Emoji shown on the left side of the item
+        default: `bool`
+            Whether the item is selected by default
 
         Raises
         ------
@@ -192,7 +195,12 @@ class Select(Item):
         if len(self._options) > 25:
             raise ValueError("Cannot have more than 25 options")
 
-        payload: dict = {"label": label, "value": value}
+        payload: dict = {
+            "label": label,
+            "value": value,
+            "default": default
+        }
+
         if description:
             payload["description"] = description
         if emoji:
@@ -488,7 +496,7 @@ class View(InteractionStorage):
         super().__init__()
 
         self.items = items
-        self._components: list[list[Optional[dict]]] = [[] for _ in range(5)]
+        self._components: list[list[dict]] = [[] for _ in range(5)]
         self._payload: list[dict] = []
 
         self._sanitize()
@@ -502,12 +510,25 @@ class View(InteractionStorage):
             if row not in range(0, 5):
                 raise ValueError("Row must be between 0 and 4")
 
+        _select_types: list[int] = [
+            int(ComponentType.string_select),
+            int(ComponentType.user_select),
+            int(ComponentType.role_select),
+            int(ComponentType.mentionable_select),
+            int(ComponentType.channel_select)
+        ]
+
         if row is None:
             row = next((
                 i for i, _ in enumerate(self._components)
                 if len(self._components[i]) < 5 and
-                not any(isinstance(g, Select) for g in self._components[i])
+                not any(
+                    g.get("type", 0) in _select_types
+                    for g in self._components[i]
+                )
             ), 0)
+            print(row)
+            print([g.get("type", None) for g in self._components[0]])
 
         if isinstance(item, Select):
             if len(self._components[row]) >= 1:
