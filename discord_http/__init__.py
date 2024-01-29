@@ -1,4 +1,4 @@
-__version__ = "1.1.6"
+__version__ = "1.1.7"
 
 # flake8: noqa: F401
 from .asset import *

@@ -527,8 +527,6 @@ class View(InteractionStorage):
                     for g in self._components[i]
                 )
             ), 0)
-            print(row)
-            print([g.get("type", None) for g in self._components[0]])
 
         if isinstance(item, Select):
             if len(self._components[row]) >= 1:
