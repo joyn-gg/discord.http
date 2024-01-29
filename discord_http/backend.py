@@ -42,7 +42,7 @@ def _cancel_all_tasks(loop: asyncio.AbstractEventLoop) -> None:
     for task in list(tasks):
         task.cancel()
 
-        if task.get_coro().__name__ == "_windows_signal_support":
+        if task.get_coro().__name__ == "_windows_signal_support":  # type: ignore
             tasks.remove(task)
 
     loop.run_until_complete(
@@ -354,7 +354,7 @@ class DiscordHTTP(Quart):
         self.add_url_rule(
             "/",
             "index",
-            self._index_interaction,  # type: ignore
+            self._index_interaction,
             methods=["POST"]
         )
 

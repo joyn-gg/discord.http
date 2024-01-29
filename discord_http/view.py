@@ -501,10 +501,12 @@ class View(InteractionStorage):
         if isinstance(row, int):
             if row not in range(0, 5):
                 raise ValueError("Row must be between 0 and 4")
+
         if row is None:
             row = next((
                 i for i, _ in enumerate(self._components)
-                if len(self._components[i]) < 5
+                if len(self._components[i]) < 5 and
+                not any(isinstance(g, Select) for g in self._components[i])
             ), 0)
 
         if isinstance(item, Select):
