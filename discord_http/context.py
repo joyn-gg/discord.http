@@ -477,6 +477,9 @@ class Context:
             for g in data.get("entitlements", [])
         ]
 
+        # Should not be used, but if you *really* want the raw data, here it is
+        self._data: dict = data
+
         self._from_data(data)
 
     def _from_data(self, data: dict):
