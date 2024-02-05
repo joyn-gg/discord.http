@@ -156,6 +156,7 @@ class User(PartialUser):
         self.banner: Optional[Asset] = None
 
         self.name: str = data["username"]
+        self.bot: bool = data.get("bot", False)
 
         # This section is ONLY here because bots still have a discriminator
         self.discriminator: Optional[str] = data.get("discriminator", None)

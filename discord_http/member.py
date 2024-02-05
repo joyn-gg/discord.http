@@ -476,6 +476,11 @@ class Member(PartialMember):
         return self._user.name
 
     @property
+    def bot(self) -> bool:
+        """ `bool`: Returns whether the member is a bot """
+        return self._user.bot
+
+    @property
     def global_name(self) -> Optional[str]:
         """
         Gives the global display name of a member if available
