@@ -422,6 +422,7 @@ class InteractionStorage:
         *,
         call_after: Callable,
         users: Optional[list["Snowflake"]] = [],
+        original_response: bool = False,
         timeout: float = 60,
     ) -> Optional["Context"]:
         """
@@ -445,6 +446,10 @@ class InteractionStorage:
                 async def call_after(ctx):
                     await ctx.response.edit_message(content="Hello world")
 
+        users: `Optional[list[Snowflake]]`
+            List of users that are allowed to interact with the view
+        original_response: `bool`
+            Whether to force the original response to be used as the message target
         timeout: `float`
             How long it should take until the code simply times out
 
@@ -470,7 +475,10 @@ class InteractionStorage:
         if ctx.message is not None:
             self._msg_cache = ctx.message
 
-        if self._msg_cache is None:
+        if (
+            self._msg_cache is None or
+            original_response is True
+        ):
             try:
                 await asyncio.sleep(0.15)  # Make sure Discord has time to store the message
                 self._msg_cache = await ctx.original_response()
