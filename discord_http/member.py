@@ -178,7 +178,11 @@ class PartialMember(PartialBase):
             json=payload
         )
 
-    async def unban(self, *, reason: Optional[str] = None) -> None:
+    async def unban(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
         """
         Unban the user
 
@@ -194,7 +198,11 @@ class PartialMember(PartialBase):
             res_method="text"
         )
 
-    async def kick(self, *, reason: Optional[str] = None) -> None:
+    async def kick(
+        self,
+        *,
+        reason: Optional[str] = None
+    ) -> None:
         """
         Kick the user
 
@@ -214,7 +222,7 @@ class PartialMember(PartialBase):
         self,
         *,
         nick: Optional[str] = MISSING,
-        roles: Union[list[Union[PartialRole, Role, int]], None] = MISSING,
+        roles: Union[list[Union[PartialRole, int]], None] = MISSING,
         mute: Optional[bool] = MISSING,
         deaf: Optional[bool] = MISSING,
         communication_disabled_until: Union[timedelta, datetime, int, None] = MISSING,
@@ -228,7 +236,7 @@ class PartialMember(PartialBase):
         ----------
         nick: `Optional[str]`
             The new nickname of the member
-        roles: `Optional[list[Union[PartialRole, Role, int]]]`
+        roles: `Optional[list[Union[PartialRole, int]]]`
             Roles to make the member have
         mute: `Optional[bool]`
             Whether to mute the member
@@ -302,7 +310,7 @@ class PartialMember(PartialBase):
 
     async def add_roles(
         self,
-        *roles: Union[PartialRole, Role, int],
+        *roles: Union[PartialRole, int],
         reason: Optional[str] = None
     ) -> None:
         """
@@ -310,7 +318,7 @@ class PartialMember(PartialBase):
 
         Parameters
         ----------
-        *roles: `Union[PartialRole, Role, int]`
+        *roles: `Union[PartialRole, int]`
             Roles to add to the member
         reason: `Optional[str]`
             The reason for adding the roles
@@ -321,7 +329,7 @@ class PartialMember(PartialBase):
             The reason for adding the roles
         """
         for role in roles:
-            if isinstance(role, (PartialRole, Role)):
+            if isinstance(role, PartialRole):
                 role = role.id
 
             await self._state.query(
@@ -332,7 +340,7 @@ class PartialMember(PartialBase):
 
     async def remove_roles(
         self,
-        *roles: Union[PartialRole, Role, int],
+        *roles: Union[PartialRole, int],
         reason: Optional[str] = None
     ) -> None:
         """
@@ -344,7 +352,7 @@ class PartialMember(PartialBase):
             The reason for removing the roles
         """
         for role in roles:
-            if isinstance(role, (PartialRole, Role)):
+            if isinstance(role, PartialRole):
                 role = role.id
 
             await self._state.query(
@@ -444,7 +452,7 @@ class Member(PartialMember):
         """
         `Permissions` Returns permissions from an interaction.
 
-        Will be None if used in `Member.fetch()`
+        Will always be `Permissions.none()` if used in `Member.fetch()`
         """
         if self._raw_permissions is None:
             return Permissions(0)
@@ -466,9 +474,16 @@ class Member(PartialMember):
         `bool`
             Whether the member has the permission(s)
         """
-        if Permissions.from_names("administrator") in self.resolved_permissions:
+        if (
+            Permissions.from_names("administrator") in
+            self.resolved_permissions
+        ):
             return True
-        return Permissions.from_names(*args) in self.resolved_permissions
+
+        return (
+            Permissions.from_names(*args) in
+            self.resolved_permissions
+        )
 
     @property
     def name(self) -> str:
@@ -501,7 +516,7 @@ class Member(PartialMember):
         -------
         `Optional[str]`
             Discriminator of a user who has yet to convert or a bot account.
-            If the user has converted to the new username, this will reutnr None
+            If the user has converted to the new username, this will return None
         """
         return self._user.discriminator
 

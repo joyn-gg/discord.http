@@ -521,7 +521,7 @@ class Context:
         if self.message is not None:
             self.author = self.message.author
 
-        self.user: Optional[Union[Member, User]] = self._parse_user(data)
+        self.user: Union[Member, User] = self._parse_user(data)
 
         match self.type:
             case InteractionType.message_component:
@@ -754,7 +754,7 @@ class Context:
             self._resolved
         )
 
-    def _parse_user(self, data: dict) -> Optional[Union[Member, User]]:
+    def _parse_user(self, data: dict) -> Union[Member, User]:
         if data.get("member", None):
             return Member(
                 state=self.bot.state,
@@ -767,4 +767,6 @@ class Context:
                 data=data["user"]
             )
         else:
-            return None
+            raise ValueError(
+                "Neither member nor user was detected while parsing user"
+            )

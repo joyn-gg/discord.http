@@ -268,7 +268,12 @@ def bytes_to_base64(image: Union[File, bytes]) -> str:
     )
 
 
-def get_int(data: dict, key: str, *, default: Optional[Any] = None) -> Optional[int]:
+def get_int(
+    data: dict,
+    key: str,
+    *,
+    default: Optional[Any] = None
+) -> Optional[int]:
     """
     Get an integer from a dictionary, similar to `dict.get`
 
@@ -315,6 +320,9 @@ class _MissingType:
     def __str__(self) -> str:
         return ""
 
+    def __int__(self) -> int:
+        return -1
+
     def __next__(self) -> None:
         return None
 
@@ -326,9 +334,6 @@ class _MissingType:
 
     def items(self) -> dict:
         return {}
-
-    def __int__(self) -> int:
-        return -1
 
     def __bytes__(self) -> bytes:
         return bytes()
