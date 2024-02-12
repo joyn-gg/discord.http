@@ -287,6 +287,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.create_text_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_text_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.create_voice_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_voice_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.type"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.type</span></code></a></li>
 </ul>
 </li>
@@ -317,6 +319,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.create_webhook"><code class="docutils literal notranslate"><span class="pre">PartialChannel.create_webhook()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.delete"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.delete_messages"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete_messages()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.delete_permission"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete_permission()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.edit"><code class="docutils literal notranslate"><span class="pre">PartialChannel.edit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.fetch"><code class="docutils literal notranslate"><span class="pre">PartialChannel.fetch()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.fetch_history"><code class="docutils literal notranslate"><span class="pre">PartialChannel.fetch_history()</span></code></a></li>
@@ -332,9 +335,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.leave_thread"><code class="docutils literal notranslate"><span class="pre">PartialChannel.leave_thread()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.remove_thread_member"><code class="docutils literal notranslate"><span class="pre">PartialChannel.remove_thread_member()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.send"><code class="docutils literal notranslate"><span class="pre">PartialChannel.send()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.set_permission"><code class="docutils literal notranslate"><span class="pre">PartialChannel.set_permission()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PartialChannel.typing"><code class="docutils literal notranslate"><span class="pre">PartialChannel.typing()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../api/channel.html#discord_http.channel.PermissionOverwrite"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/channel.html#discord_http.channel.PrivateThread"><code class="docutils literal notranslate"><span class="pre">PrivateThread</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.PrivateThread.type"><code class="docutils literal notranslate"><span class="pre">PrivateThread.type</span></code></a></li>
 </ul>
@@ -755,11 +759,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/flag.html">Flag</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/flag.html#module-discord_http.flag">discord_http.flag module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag"><code class="docutils literal notranslate"><span class="pre">BaseFlag</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.add_flag"><code class="docutils literal notranslate"><span class="pre">BaseFlag.add_flag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.add_flags"><code class="docutils literal notranslate"><span class="pre">BaseFlag.add_flags()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.all"><code class="docutils literal notranslate"><span class="pre">BaseFlag.all()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.from_names"><code class="docutils literal notranslate"><span class="pre">BaseFlag.from_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.list_names"><code class="docutils literal notranslate"><span class="pre">BaseFlag.list_names</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.remove_flag"><code class="docutils literal notranslate"><span class="pre">BaseFlag.remove_flag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.none"><code class="docutils literal notranslate"><span class="pre">BaseFlag.none()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.remove_flags"><code class="docutils literal notranslate"><span class="pre">BaseFlag.remove_flags()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.BaseFlag.to_names"><code class="docutils literal notranslate"><span class="pre">BaseFlag.to_names()</span></code></a></li>
 </ul>
 </li>
@@ -775,6 +780,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.MessageFlags.suppress_embeds"><code class="docutils literal notranslate"><span class="pre">MessageFlags.suppress_embeds</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.MessageFlags.suppress_notifications"><code class="docutils literal notranslate"><span class="pre">MessageFlags.suppress_notifications</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.MessageFlags.urgent"><code class="docutils literal notranslate"><span class="pre">MessageFlags.urgent</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/flag.html#discord_http.flag.PermissionOverwrite"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.PermissionOverwrite.from_dict"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/flag.html#discord_http.flag.PermissionOverwrite.to_dict"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite.to_dict()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/flag.html#discord_http.flag.Permissions"><code class="docutils literal notranslate"><span class="pre">Permissions</span></code></a><ul>
@@ -881,6 +891,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild"><code class="docutils literal notranslate"><span class="pre">PartialGuild</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.ban"><code class="docutils literal notranslate"><span class="pre">PartialGuild.ban()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.begin_guild_prune"><code class="docutils literal notranslate"><span class="pre">PartialGuild.begin_guild_prune()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_category"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_category()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_emoji()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_guild"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_guild()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_role()</span></code></a></li>

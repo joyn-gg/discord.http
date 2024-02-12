@@ -250,7 +250,7 @@
 <span id="discord-http-channel-module"></span><h2>discord_http.channel module<a class="headerlink" href="#module-discord_http.channel" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="discord_http.channel.BaseChannel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.channel.</span></span><span class="sig-name descname"><span class="pre">BaseChannel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/channel.html#BaseChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.BaseChannel" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.channel.</span></span><span class="sig-name descname"><span class="pre">BaseChannel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/channel.html#BaseChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.BaseChannel" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#discord_http.channel.PartialChannel" title="discord_http.channel.PartialChannel"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialChannel</span></code></a></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.channel.BaseChannel.mention">
@@ -280,6 +280,58 @@
 <dt class="sig sig-object py" id="discord_http.channel.CategoryChannel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.channel.</span></span><span class="sig-name descname"><span class="pre">CategoryChannel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/channel.html#CategoryChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.CategoryChannel" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#discord_http.channel.BaseChannel" title="discord_http.channel.BaseChannel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChannel</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.channel.CategoryChannel.create_text_channel">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_text_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.channel.TextChannel" title="discord_http.channel.TextChannel"><span class="pre">TextChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#CategoryChannel.create_text_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.CategoryChannel.create_text_channel" title="Link to this definition">#</a></dt>
+<dd><p>Create a text channel in the category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>str</cite>) – The name of the channel</p></li>
+<li><p><strong>topic</strong> (<cite>Optional[str]</cite>) – The topic of the channel</p></li>
+<li><p><strong>rate_limit_per_user</strong> (<cite>Optional[int]</cite>) – The rate limit per user of the channel</p></li>
+<li><p><strong>overwrites</strong> (<cite>Optional[list[PermissionOverwrite]]</cite>) – The permission overwrites of the category</p></li>
+<li><p><strong>parent_id</strong> (<cite>Optional[Snowflake]</cite>) – The Category ID where the channel will be placed</p></li>
+<li><p><strong>nsfw</strong> (<cite>Optional[bool]</cite>) – Whether the channel is NSFW or not</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for creating the text channel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The channel object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>TextChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.channel.CategoryChannel.create_voice_channel">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_voice_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.channel.VoiceChannel" title="discord_http.channel.VoiceChannel"><span class="pre">VoiceChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#CategoryChannel.create_voice_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.CategoryChannel.create_voice_channel" title="Link to this definition">#</a></dt>
+<dd><p>Create a voice channel to category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>str</cite>) – The name of the channel</p></li>
+<li><p><strong>bitrate</strong> (<cite>Optional[int]</cite>) – The bitrate of the channel</p></li>
+<li><p><strong>user_limit</strong> (<cite>Optional[int]</cite>) – The user limit of the channel</p></li>
+<li><p><strong>rate_limit_per_user</strong> (<cite>Optional</cite>) – The rate limit per user of the channel</p></li>
+<li><p><strong>overwrites</strong> (<cite>Optional[list[PermissionOverwrite]]</cite>) – The permission overwrites of the category</p></li>
+<li><p><strong>position</strong> (<cite>Optional[int]</cite>) – The position of the channel</p></li>
+<li><p><strong>parent_id</strong> (<cite>Optional[Snowflake]</cite>) – The Category ID where the channel will be placed</p></li>
+<li><p><strong>nsfw</strong> (<cite>Optional[bool]</cite>) – Whether the channel is NSFW or not</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for creating the voice channel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The channel object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>VoiceChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.channel.CategoryChannel.type">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="enums.html#discord_http.enums.ChannelType" title="discord_http.enums.ChannelType"><span class="pre">ChannelType</span></a></em><a class="headerlink" href="#discord_http.channel.CategoryChannel.type" title="Link to this definition">#</a></dt>
@@ -512,8 +564,22 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.channel.PartialChannel.delete_permission">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.delete_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.delete_permission" title="Link to this definition">#</a></dt>
+<dd><p>Delete a permission overwrite for the channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<cite>Union[utils.Snowflake, int]</cite>) – The ID of the overwrite</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for deleting the overwrite</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.channel.PartialChannel.edit">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category:</span> <span class="pre">~discord_http.channel.CategoryChannel</span> <span class="pre">|</span> <span class="pre">~discord_http.utils.Snowflake</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsfw:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrites:</span> <span class="pre">dict[~discord_http.role.PartialRole</span> <span class="pre">|</span> <span class="pre">~discord_http.member.PartialMember</span> <span class="pre">|</span> <span class="pre">~discord_http.utils.Snowflake</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~discord_http.channel.PermissionOverwrite]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.edit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.edit" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category:</span> <span class="pre">~discord_http.channel.CategoryChannel</span> <span class="pre">|</span> <span class="pre">~discord_http.utils.Snowflake</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrites:</span> <span class="pre">list[~discord_http.flag.PermissionOverwrite]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsfw:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.edit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.edit" title="Link to this definition">#</a></dt>
 <dd><p>Edit the channel</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -521,8 +587,8 @@
 <li><p><strong>name</strong> (<cite>Optional[str]</cite>) – New name of the channel</p></li>
 <li><p><strong>category</strong> (<cite>Optional[Union[CategoryChannel, utils.Snowflake]]</cite>) – Which category the channel should be in</p></li>
 <li><p><strong>position</strong> (<cite>Optional[int]</cite>) – The position of the channel</p></li>
+<li><p><strong>overwrites</strong> (<cite>Optional[list[PermissionOverwrite]]</cite>) – The permission overwrites for the channel</p></li>
 <li><p><strong>nsfw</strong> (<cite>Optional[bool]</cite>) – If the channel should be NSFW</p></li>
-<li><p><strong>overwrites</strong> (<cite>Optional[dict[Union[PartialRole, PartialMember, utils.Snowflake], PermissionOverwrite]]</cite>) – The permission overwrites for the channel</p></li>
 <li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for editing the channel</p></li>
 </ul>
 </dd>
@@ -531,9 +597,6 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>BaseChannel</cite></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If the overwrite key is not a PartialRole, Role, PartialMember, Member or Snowflake</p>
 </dd>
 </dl>
 </dd></dl>
@@ -735,12 +798,28 @@ Requires the state to be set</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.channel.PartialChannel.set_permission">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="flag.html#discord_http.flag.PermissionOverwrite" title="discord_http.flag.PermissionOverwrite"><span class="pre">PermissionOverwrite</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.set_permission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.set_permission" title="Link to this definition">#</a></dt>
+<dd><p>Set a permission overwrite for the channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<cite>Union[utils.Snowflake, int]</cite>) – The ID of the overwrite</p></li>
+<li><p><strong>overwrite</strong> (<cite>PermissionOverwrite</cite>) – The new overwrite permissions</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for editing the overwrite</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="discord_http.channel.PermissionOverwrite">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.channel.</span></span><span class="sig-name descname"><span class="pre">PermissionOverwrite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/channel.html#PermissionOverwrite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PermissionOverwrite" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.channel.PartialChannel.typing">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">typing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/channel.html#PartialChannel.typing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.channel.PartialChannel.typing" title="Link to this definition">#</a></dt>
+<dd><p>Makes the bot trigger the typing indicator.
+Times out after 10 seconds</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -972,6 +1051,8 @@ Requires the state to be set</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.channel.CategoryChannel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.channel.CategoryChannel.create_text_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_text_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.channel.CategoryChannel.create_voice_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_voice_channel()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.CategoryChannel.type"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.type</span></code></a></li>
 </ul>
 </li>
@@ -1002,6 +1083,7 @@ Requires the state to be set</p>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.create_webhook"><code class="docutils literal notranslate"><span class="pre">PartialChannel.create_webhook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.delete"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.delete_messages"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete_messages()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.channel.PartialChannel.delete_permission"><code class="docutils literal notranslate"><span class="pre">PartialChannel.delete_permission()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.edit"><code class="docutils literal notranslate"><span class="pre">PartialChannel.edit()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.fetch"><code class="docutils literal notranslate"><span class="pre">PartialChannel.fetch()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.fetch_history"><code class="docutils literal notranslate"><span class="pre">PartialChannel.fetch_history()</span></code></a></li>
@@ -1017,9 +1099,10 @@ Requires the state to be set</p>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.leave_thread"><code class="docutils literal notranslate"><span class="pre">PartialChannel.leave_thread()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.remove_thread_member"><code class="docutils literal notranslate"><span class="pre">PartialChannel.remove_thread_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PartialChannel.send"><code class="docutils literal notranslate"><span class="pre">PartialChannel.send()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.channel.PartialChannel.set_permission"><code class="docutils literal notranslate"><span class="pre">PartialChannel.set_permission()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.channel.PartialChannel.typing"><code class="docutils literal notranslate"><span class="pre">PartialChannel.typing()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#discord_http.channel.PermissionOverwrite"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.channel.PrivateThread"><code class="docutils literal notranslate"><span class="pre">PrivateThread</span></code></a><ul>
 <li><a class="reference internal" href="#discord_http.channel.PrivateThread.type"><code class="docutils literal notranslate"><span class="pre">PrivateThread.type</span></code></a></li>
 </ul>

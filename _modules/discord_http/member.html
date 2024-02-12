@@ -439,7 +439,11 @@
 
 <div class="viewcode-block" id="PartialMember.unban">
 <a class="viewcode-back" href="../../api/member.html#discord_http.member.PartialMember.unban">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">unban</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">unban</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unban the user</span>
 
@@ -458,7 +462,11 @@
 
 <div class="viewcode-block" id="PartialMember.kick">
 <a class="viewcode-back" href="../../api/member.html#discord_http.member.PartialMember.kick">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">kick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">kick</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Kick the user</span>
 
@@ -481,7 +489,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">nick</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
-        <span class="n">roles</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">roles</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">mute</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">deaf</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">communication_disabled_until</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
@@ -495,7 +503,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        nick: `Optional[str]`</span>
 <span class="sd">            The new nickname of the member</span>
-<span class="sd">        roles: `Optional[list[Union[PartialRole, Role, int]]]`</span>
+<span class="sd">        roles: `Optional[list[Union[PartialRole, int]]]`</span>
 <span class="sd">            Roles to make the member have</span>
 <span class="sd">        mute: `Optional[bool]`</span>
 <span class="sd">            Whether to mute the member</span>
@@ -572,7 +580,7 @@
 <a class="viewcode-back" href="../../api/member.html#discord_http.member.PartialMember.add_roles">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">add_roles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="n">roles</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="o">*</span><span class="n">roles</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -580,7 +588,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        *roles: `Union[PartialRole, Role, int]`</span>
+<span class="sd">        *roles: `Union[PartialRole, int]`</span>
 <span class="sd">            Roles to add to the member</span>
 <span class="sd">        reason: `Optional[str]`</span>
 <span class="sd">            The reason for adding the roles</span>
@@ -591,7 +599,7 @@
 <span class="sd">            The reason for adding the roles</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">(</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">PartialRole</span><span class="p">):</span>
                 <span class="n">role</span> <span class="o">=</span> <span class="n">role</span><span class="o">.</span><span class="n">id</span>
 
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
@@ -605,7 +613,7 @@
 <a class="viewcode-back" href="../../api/member.html#discord_http.member.PartialMember.remove_roles">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_roles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="n">roles</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="o">*</span><span class="n">roles</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -617,7 +625,7 @@
 <span class="sd">            The reason for removing the roles</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">roles</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="p">(</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">role</span><span class="p">,</span> <span class="n">PartialRole</span><span class="p">):</span>
                 <span class="n">role</span> <span class="o">=</span> <span class="n">role</span><span class="o">.</span><span class="n">id</span>
 
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
@@ -727,7 +735,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        `Permissions` Returns permissions from an interaction.</span>
 
-<span class="sd">        Will be None if used in `Member.fetch()`</span>
+<span class="sd">        Will always be `Permissions.none()` if used in `Member.fetch()`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_permissions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Permissions</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -751,9 +759,16 @@
 <span class="sd">        `bool`</span>
 <span class="sd">            Whether the member has the permission(s)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="s2">&quot;administrator&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolved_permissions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="s2">&quot;administrator&quot;</span><span class="p">)</span> <span class="ow">in</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolved_permissions</span>
+        <span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolved_permissions</span></div>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="ow">in</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resolved_permissions</span>
+        <span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -787,7 +802,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        `Optional[str]`</span>
 <span class="sd">            Discriminator of a user who has yet to convert or a bot account.</span>
-<span class="sd">            If the user has converted to the new username, this will reutnr None</span>
+<span class="sd">            If the user has converted to the new username, this will return None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">discriminator</span>
 

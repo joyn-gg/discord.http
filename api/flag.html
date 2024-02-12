@@ -253,12 +253,12 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.flag.</span></span><span class="sig-name descname"><span class="pre">BaseFlag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/flag.html#BaseFlag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.BaseFlag" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_FlagPyMeta</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="discord_http.flag.BaseFlag.add_flag">
-<span class="sig-name descname"><span class="pre">add_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#BaseFlag.add_flag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.BaseFlag.add_flag" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="discord_http.flag.BaseFlag.add_flags">
+<span class="sig-name descname"><span class="pre">add_flags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">flag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#BaseFlag.add_flags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.BaseFlag.add_flags" title="Link to this definition">#</a></dt>
 <dd><p>Add a flag by name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>flag_name</strong> (<cite>Union[BaseFlag, str]</cite>) – The flag to add</p>
+<dd class="field-odd"><p><strong>name</strong> (<cite>Union[Self, str]</cite>) – The flag to add</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The flag with the added flag</p>
@@ -293,10 +293,7 @@
 <dd class="field-odd"><p><cite>BaseFlag</cite></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – The argument is not a <cite>str</cite></p></li>
-<li><p><strong>ValueError</strong> – The flag name is not a valid flag</p></li>
-</ul>
+<dd class="field-even"><p><strong>ValueError</strong> – The flag name is not a valid flag</p>
 </dd>
 </dl>
 </dd></dl>
@@ -313,12 +310,18 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="discord_http.flag.BaseFlag.remove_flag">
-<span class="sig-name descname"><span class="pre">remove_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#BaseFlag.remove_flag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.BaseFlag.remove_flag" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="discord_http.flag.BaseFlag.none">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">none</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#BaseFlag.none"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.BaseFlag.none" title="Link to this definition">#</a></dt>
+<dd><p><cite>BaseFlag</cite>: Returns a flag with no flags</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.flag.BaseFlag.remove_flags">
+<span class="sig-name descname"><span class="pre">remove_flags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">flag_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#BaseFlag.remove_flags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.BaseFlag.remove_flags" title="Link to this definition">#</a></dt>
 <dd><p>Remove a flag by name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>flag_name</strong> (<cite>Union[BaseFlag, str]</cite>) – The flag to remove</p>
+<dd class="field-odd"><p><strong>flag_name</strong> (<cite>Union[Self, str]</cite>) – The flag to remove</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The flag with the removed flag</p>
@@ -397,6 +400,22 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="discord_http.flag.MessageFlags.urgent">
 <span class="sig-name descname"><span class="pre">urgent</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#discord_http.flag.MessageFlags.urgent" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.flag.PermissionOverwrite">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.flag.</span></span><span class="sig-name descname"><span class="pre">PermissionOverwrite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PermissionType</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/flag.html#PermissionOverwrite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.PermissionOverwrite" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.flag.PermissionOverwrite.from_dict">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#PermissionOverwrite.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.PermissionOverwrite.from_dict" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.flag.PermissionOverwrite.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/discord_http/flag.html#PermissionOverwrite.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.flag.PermissionOverwrite.to_dict" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -831,11 +850,12 @@
 <li><a class="reference internal" href="#">Flag</a><ul>
 <li><a class="reference internal" href="#module-discord_http.flag">discord_http.flag module</a><ul>
 <li><a class="reference internal" href="#discord_http.flag.BaseFlag"><code class="docutils literal notranslate"><span class="pre">BaseFlag</span></code></a><ul>
-<li><a class="reference internal" href="#discord_http.flag.BaseFlag.add_flag"><code class="docutils literal notranslate"><span class="pre">BaseFlag.add_flag()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.flag.BaseFlag.add_flags"><code class="docutils literal notranslate"><span class="pre">BaseFlag.add_flags()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.flag.BaseFlag.all"><code class="docutils literal notranslate"><span class="pre">BaseFlag.all()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.flag.BaseFlag.from_names"><code class="docutils literal notranslate"><span class="pre">BaseFlag.from_names()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.flag.BaseFlag.list_names"><code class="docutils literal notranslate"><span class="pre">BaseFlag.list_names</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.flag.BaseFlag.remove_flag"><code class="docutils literal notranslate"><span class="pre">BaseFlag.remove_flag()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.flag.BaseFlag.none"><code class="docutils literal notranslate"><span class="pre">BaseFlag.none()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.flag.BaseFlag.remove_flags"><code class="docutils literal notranslate"><span class="pre">BaseFlag.remove_flags()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.flag.BaseFlag.to_names"><code class="docutils literal notranslate"><span class="pre">BaseFlag.to_names()</span></code></a></li>
 </ul>
 </li>
@@ -851,6 +871,11 @@
 <li><a class="reference internal" href="#discord_http.flag.MessageFlags.suppress_embeds"><code class="docutils literal notranslate"><span class="pre">MessageFlags.suppress_embeds</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.flag.MessageFlags.suppress_notifications"><code class="docutils literal notranslate"><span class="pre">MessageFlags.suppress_notifications</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.flag.MessageFlags.urgent"><code class="docutils literal notranslate"><span class="pre">MessageFlags.urgent</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discord_http.flag.PermissionOverwrite"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.flag.PermissionOverwrite.from_dict"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite.from_dict()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.flag.PermissionOverwrite.to_dict"><code class="docutils literal notranslate"><span class="pre">PermissionOverwrite.to_dict()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.flag.Permissions"><code class="docutils literal notranslate"><span class="pre">Permissions</span></code></a><ul>

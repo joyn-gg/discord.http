@@ -248,14 +248,13 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.embeds</span> <span class="kn">import</span> <span class="n">Embed</span>
-<span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ChannelType</span><span class="p">,</span> <span class="n">PermissionType</span><span class="p">,</span> <span class="n">ResponseType</span>
+<span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ChannelType</span><span class="p">,</span> <span class="n">ResponseType</span>
 <span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
-<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span>
-<span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span><span class="p">,</span> <span class="n">ThreadMember</span>
+<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">PermissionOverwrite</span>
+<span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">ThreadMember</span>
 <span class="kn">from</span> <span class="nn">.mentions</span> <span class="kn">import</span> <span class="n">AllowedMentions</span>
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">MessageResponse</span>
-<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span>
 <span class="kn">from</span> <span class="nn">.view</span> <span class="kn">import</span> <span class="n">View</span>
 <span class="kn">from</span> <span class="nn">.webhook</span> <span class="kn">import</span> <span class="n">Webhook</span>
 
@@ -278,7 +277,6 @@
     <span class="s2">&quot;NewsChannel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NewsThread&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PartialChannel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PermissionOverwrite&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PrivateThread&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PublicThread&quot;</span><span class="p">,</span>
     <span class="s2">&quot;StageChannel&quot;</span><span class="p">,</span>
@@ -286,19 +284,6 @@
     <span class="s2">&quot;TextChannel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;VoiceChannel&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-
-
-<div class="viewcode-block" id="PermissionOverwrite">
-<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.PermissionOverwrite">[docs]</a>
-<span class="k">class</span> <span class="nc">PermissionOverwrite</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">allow</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Permissions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">deny</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Permissions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">allow</span><span class="p">:</span> <span class="n">Permissions</span> <span class="o">=</span> <span class="n">allow</span> <span class="ow">or</span> <span class="n">Permissions</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deny</span><span class="p">:</span> <span class="n">Permissions</span> <span class="o">=</span> <span class="n">deny</span> <span class="ow">or</span> <span class="n">Permissions</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
-
 
 
 <div class="viewcode-block" id="PartialChannel">
@@ -629,11 +614,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">category</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;CategoryChannel&quot;</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">overwrites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">PermissionOverwrite</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">nsfw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
-        <span class="n">overwrites</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
-            <span class="nb">dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">],</span> <span class="n">PermissionOverwrite</span><span class="p">],</span>
-            <span class="kc">None</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
@@ -648,10 +630,10 @@
 <span class="sd">            Which category the channel should be in</span>
 <span class="sd">        position: `Optional[int]`</span>
 <span class="sd">            The position of the channel</span>
+<span class="sd">        overwrites: `Optional[list[PermissionOverwrite]]`</span>
+<span class="sd">            The permission overwrites for the channel</span>
 <span class="sd">        nsfw: `Optional[bool]`</span>
 <span class="sd">            If the channel should be NSFW</span>
-<span class="sd">        overwrites: `Optional[dict[Union[PartialRole, PartialMember, utils.Snowflake], PermissionOverwrite]]`</span>
-<span class="sd">            The permission overwrites for the channel</span>
 <span class="sd">        reason: `Optional[str]`</span>
 <span class="sd">            The reason for editing the channel</span>
 
@@ -659,41 +641,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        `BaseChannel`</span>
 <span class="sd">            The channel object</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        `TypeError`</span>
-<span class="sd">            If the overwrite key is not a PartialRole, Role, PartialMember, Member or Snowflake</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="k">if</span> <span class="n">overwrites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
-            <span class="n">_overwrites</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">overwrites</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">perm</span><span class="p">,</span> <span class="n">PermissionOverwrite</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;overwrite </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">:value must be a PermissionOverwrite&quot;</span>
-                    <span class="p">)</span>
-
-                <span class="n">_type</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span><span class="p">)):</span>
-                    <span class="n">_type</span> <span class="o">=</span> <span class="n">PermissionType</span><span class="o">.</span><span class="n">role</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">)):</span>
-                    <span class="n">_type</span> <span class="o">=</span> <span class="n">PermissionType</span><span class="o">.</span><span class="n">member</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;overwrite </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">:key must be a PartialRole, &quot;</span>
-                        <span class="s2">&quot;Role, PartialMember, Member or Snowflake&quot;</span>
-                    <span class="p">)</span>
-
-                <span class="n">_overwrites</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">_type</span><span class="p">),</span>
-                    <span class="s2">&quot;allow&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="o">.</span><span class="n">allow</span><span class="p">,</span>
-                    <span class="s2">&quot;deny&quot;</span><span class="p">:</span> <span class="n">perm</span><span class="o">.</span><span class="n">deny</span>
-                <span class="p">})</span>
-
-            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;permission_overwrites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_overwrites</span>
 
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -701,6 +650,14 @@
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">position</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">position</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">overwrites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">overwrites</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;permission_overwrites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;permission_overwrites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">overwrites</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">PermissionOverwrite</span><span class="p">)</span>
+                <span class="p">]</span>
         <span class="k">if</span> <span class="n">nsfw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;nsfw&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">nsfw</span><span class="p">)</span>
 
@@ -714,6 +671,76 @@
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_to_return</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="PartialChannel.typing">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.PartialChannel.typing">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">typing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes the bot trigger the typing indicator.</span>
+<span class="sd">        Times out after 10 seconds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/channels/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/typing&quot;</span><span class="p">,</span>
+            <span class="n">res_method</span><span class="o">=</span><span class="s2">&quot;text&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialChannel.set_permission">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.PartialChannel.set_permission">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_permission</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">overwrite</span><span class="p">:</span> <span class="n">PermissionOverwrite</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set a permission overwrite for the channel</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: `Union[utils.Snowflake, int]`</span>
+<span class="sd">            The ID of the overwrite</span>
+<span class="sd">        overwrite: `PermissionOverwrite`</span>
+<span class="sd">            The new overwrite permissions</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for editing the overwrite</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/channels/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/permissions/</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">overwrite</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+            <span class="n">res_method</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialChannel.delete_permission">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.PartialChannel.delete_permission">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_permission</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a permission overwrite for the channel</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: `Union[utils.Snowflake, int]`</span>
+<span class="sd">            The ID of the overwrite</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for deleting the overwrite</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/channels/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/permissions/</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">res_method</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PartialChannel.delete">
@@ -1150,7 +1177,7 @@
 <div class="viewcode-block" id="BaseChannel">
 <a class="viewcode-back" href="../../api/channel.html#discord_http.channel.BaseChannel">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseChannel</span><span class="p">(</span><span class="n">PartialChannel</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
             <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]),</span>
@@ -1163,21 +1190,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nsfw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nsfw&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">topic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;topic&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;position&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_message_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;last_message_id&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;parent_id&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">permission_overwrites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;permissions&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">permissions</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;permissions&quot;</span><span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parent_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parent_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_message_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_message_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">last_message_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;last_message_id&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">permission_overwrites</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PermissionOverwrite</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">PermissionOverwrite</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;permission_overwrites&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Channel id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
@@ -1398,7 +1417,91 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChannelType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `ChannelType`: Returns the channel&#39;s type &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_category</span></div>
+        <span class="k">return</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_category</span>
+
+<div class="viewcode-block" id="CategoryChannel.create_text_channel">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.CategoryChannel.create_text_channel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_text_channel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TextChannel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a text channel in the category</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: `str`</span>
+<span class="sd">            The name of the channel</span>
+<span class="sd">        topic: `Optional[str]`</span>
+<span class="sd">            The topic of the channel</span>
+<span class="sd">        rate_limit_per_user: `Optional[int]`</span>
+<span class="sd">            The rate limit per user of the channel</span>
+<span class="sd">        overwrites: `Optional[list[PermissionOverwrite]]`</span>
+<span class="sd">            The permission overwrites of the category</span>
+<span class="sd">        parent_id: `Optional[Snowflake]`</span>
+<span class="sd">            The Category ID where the channel will be placed</span>
+<span class="sd">        nsfw: `Optional[bool]`</span>
+<span class="sd">            Whether the channel is NSFW or not</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the text channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `TextChannel`</span>
+<span class="sd">            The channel object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">create_text_channel</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">parent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CategoryChannel.create_voice_channel">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.CategoryChannel.create_voice_channel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_voice_channel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;VoiceChannel&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a voice channel to category</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: `str`</span>
+<span class="sd">            The name of the channel</span>
+<span class="sd">        bitrate: `Optional[int]`</span>
+<span class="sd">            The bitrate of the channel</span>
+<span class="sd">        user_limit: `Optional[int]`</span>
+<span class="sd">            The user limit of the channel</span>
+<span class="sd">        rate_limit_per_user: `Optional`</span>
+<span class="sd">            The rate limit per user of the channel</span>
+<span class="sd">        overwrites: `Optional[list[PermissionOverwrite]]`</span>
+<span class="sd">            The permission overwrites of the category</span>
+<span class="sd">        position: `Optional[int]`</span>
+<span class="sd">            The position of the channel</span>
+<span class="sd">        parent_id: `Optional[Snowflake]`</span>
+<span class="sd">            The Category ID where the channel will be placed</span>
+<span class="sd">        nsfw: `Optional[bool]`</span>
+<span class="sd">            Whether the channel is NSFW or not</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the voice channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `VoiceChannel`</span>
+<span class="sd">            The channel object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">create_voice_channel</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">parent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+</div>
 
 
 
@@ -1406,7 +1509,7 @@
 <a class="viewcode-back" href="../../api/channel.html#discord_http.channel.NewsChannel">[docs]</a>
 <span class="k">class</span> <span class="nc">NewsChannel</span><span class="p">(</span><span class="n">BaseChannel</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;NewsChannel id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
