@@ -20,7 +20,7 @@ from discord_http import (
     errors, Permissions, Colour,
     utils, VoiceChannel, Select,
     TextStyles, User, UserSelect, tasks,
-    TextChannel, Attachment
+    TextChannel, Attachment, PermissionOverwrite
 )
 
 with open("./config.json") as f:
@@ -475,6 +475,45 @@ async def test_fetch_channels(ctx: Context):
 async def test_edit_role(ctx: Context, role: Role, new_name: str):
     r = await role.edit(name=new_name)
     return ctx.response.send_message(f"Edited role {r.name}")
+
+
+@client.command()
+async def test_create_category(ctx: Context, name: str):
+    category = await ctx.guild.create_category(
+        name=name,
+        overwrites=[
+            PermissionOverwrite(
+                ctx.user,
+                allow=Permissions.from_names("send_messages")
+            )
+        ]
+    )
+
+    test1 = await category.create_text_channel(name="test")
+    await category.create_voice_channel(name="test")
+
+    await test1.set_permission(
+        ctx.user,
+        overwrite=PermissionOverwrite(
+            ctx.user,
+            allow=Permissions.from_names("send_messages", "embed_links")
+        )
+    )
+
+    return ctx.response.send_message(f"Created category {category}")
+
+
+@client.command()
+async def test_typing(ctx: Context):
+    """ type like there is no tomorrow """
+    async def call_after():
+        await asyncio.sleep(1)
+        await ctx.channel.typing()
+
+    return ctx.response.send_message(
+        "Triggered typing indicator",
+        call_after=call_after
+    )
 
 
 @client.command()

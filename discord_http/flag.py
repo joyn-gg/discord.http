@@ -1,16 +1,22 @@
 import sys
 
 from enum import Flag, CONFORM
-from typing import Union, Self
+from typing import Union, Self, Optional
+
+from . import utils
+from .role import PartialRole
+from .enums import PermissionType
 
 __all__ = (
     "BaseFlag",
     "MessageFlags",
+    "PermissionOverwrite",
     "Permissions",
     "PublicFlags",
     "SKUFlags",
     "SystemChannelFlags",
 )
+
 
 if sys.version_info >= (3, 11, 0):
     class _FlagPyMeta(Flag, boundary=CONFORM):
@@ -21,12 +27,8 @@ else:
 
 
 class BaseFlag(_FlagPyMeta):
-    def to_names(self) -> list[str]:
-        """ `list[str]`: Returns the current names of the flag """
-        return [
-            name for name, member in self.__class__.__members__.items()
-            if member in self
-        ]
+    def __str__(self) -> str:
+        return str(self.value)
 
     def __int__(self) -> int:
         return self.value
@@ -36,88 +38,10 @@ class BaseFlag(_FlagPyMeta):
         """ `BaseFlag`: Returns a flag with all the flags """
         return cls(sum([int(g) for g in cls.__members__.values()]))
 
-    @property
-    def list_names(self) -> list[str]:
-        """ `list[str]`: Returns a list of all the names of the flag """
-        return [
-            g.name or "UNKNOWN"
-            for g in self
-        ]
-
-    def add_flag(
-        self,
-        flag_name: Union[Self, str]
-    ) -> Self:
-        """
-        Add a flag by name
-
-        Parameters
-        ----------
-        flag_name: `Union[BaseFlag, str]`
-            The flag to add
-
-        Returns
-        -------
-        `BaseFlag`
-            The flag with the added flag
-
-        Raises
-        ------
-        `ValueError`
-            The flag name is not a valid flag
-        """
-        if isinstance(flag_name, BaseFlag):
-            self |= flag_name
-            return self
-        else:
-            if flag_name in self.list_names:
-                return self
-
-            try:
-                self |= self.__class__[flag_name]
-            except KeyError:
-                raise ValueError(
-                    f"{flag_name} is not a valid "
-                    f"{self.__class__.__name__} flag value"
-                )
-
-            return self
-
-    def remove_flag(self, flag_name: Union[Self, str]) -> Self:
-        """
-        Remove a flag by name
-
-        Parameters
-        ----------
-        flag_name: `Union[BaseFlag, str]`
-            The flag to remove
-
-        Returns
-        -------
-        `BaseFlag`
-            The flag with the removed flag
-
-        Raises
-        ------
-        `ValueError`
-            The flag name is not a valid flag
-        """
-        if isinstance(flag_name, BaseFlag):
-            self &= ~flag_name
-            return self
-        else:
-            if flag_name not in self.list_names:
-                return self
-
-            try:
-                self &= ~self.__class__[flag_name]
-            except KeyError:
-                raise ValueError(
-                    f"{flag_name} is not a valid "
-                    f"{self.__class__.__name__} flag value"
-                )
-
-            return self
+    @classmethod
+    def none(cls) -> Self:
+        """ `BaseFlag`: Returns a flag with no flags """
+        return cls(0)
 
     @classmethod
     def from_names(cls, *args: str) -> Self:
@@ -136,20 +60,106 @@ class BaseFlag(_FlagPyMeta):
 
         Raises
         ------
-        `TypeError`
-            The argument is not a `str`
         `ValueError`
             The flag name is not a valid flag
         """
-        _value = 0
-        for i, arg in enumerate(args, start=1):
-            if not isinstance(arg, str):
-                raise TypeError(f"Expected str, received {type(arg)} instead (arg:{i})")
+        _value = cls.none()
+        return _value.add_flags(*args)
+
+    @property
+    def list_names(self) -> list[str]:
+        """ `list[str]`: Returns a list of all the names of the flag """
+        return [
+            g.name or "UNKNOWN"
+            for g in self
+        ]
+
+    def to_names(self) -> list[str]:
+        """ `list[str]`: Returns the current names of the flag """
+        return [
+            name for name, member in self.__class__.__members__.items()
+            if member in self
+        ]
+
+    def add_flags(
+        self,
+        *flag_name: Union[Self, str]
+    ) -> Self:
+        """
+        Add a flag by name
+
+        Parameters
+        ----------
+        name: `Union[Self, str]`
+            The flag to add
+
+        Returns
+        -------
+        `BaseFlag`
+            The flag with the added flag
+
+        Raises
+        ------
+        `ValueError`
+            The flag name is not a valid flag
+        """
+        for p in flag_name:
+            if isinstance(p, BaseFlag):
+                self |= p
+                continue
+
+            if p in self.list_names:
+                continue
+
             try:
-                _value |= cls[arg].value
+                self |= self.__class__[p]
             except KeyError:
-                raise ValueError(f"{arg} is not a valid {cls.__name__} argument")
-        return cls(_value)
+                raise ValueError(
+                    f"{p} is not a valid "
+                    f"{self.__class__.__name__} flag value"
+                )
+
+        return self
+
+    def remove_flags(
+        self,
+        *flag_name: Union[Self, str]
+    ) -> Self:
+        """
+        Remove a flag by name
+
+        Parameters
+        ----------
+        flag_name: `Union[Self, str]`
+            The flag to remove
+
+        Returns
+        -------
+        `BaseFlag`
+            The flag with the removed flag
+
+        Raises
+        ------
+        `ValueError`
+            The flag name is not a valid flag
+        """
+        for p in flag_name:
+            if isinstance(p, BaseFlag):
+                self &= ~p
+                continue
+
+            if p not in self.list_names:
+                continue
+
+            try:
+                self &= ~self.__class__[p]
+            except KeyError:
+                raise ValueError(
+                    f"{p} is not a valid "
+                    f"{self.__class__.__name__} flag value"
+                )
+
+        return self
 
 
 class MessageFlags(BaseFlag):
@@ -245,3 +255,68 @@ class Permissions(BaseFlag):
     use_soundboard = 1 << 42
     use_external_sounds = 1 << 45
     send_voice_messages = 1 << 46
+
+
+class PermissionOverwrite:
+    def __init__(
+        self,
+        target: Union[utils.Snowflake, int],
+        *,
+        allow: Optional[Permissions] = None,
+        deny: Optional[Permissions] = None,
+        target_type: Optional[PermissionType] = None
+    ):
+        self.allow = allow or Permissions.none()
+        self.deny = deny or Permissions.none()
+
+        if not isinstance(self.allow, Permissions):
+            raise TypeError(
+                "Expected Permissions for allow, "
+                f"received {type(self.allow)} instead"
+            )
+        if not isinstance(self.deny, Permissions):
+            raise TypeError(
+                "Expected Permissions for deny, "
+                f"received {type(self.deny)} instead"
+            )
+
+        if isinstance(target, int):
+            target = utils.Snowflake(id=target)
+
+        self.target = target
+        self.target_type = (
+            target_type or
+            PermissionType.member
+        )
+
+        if isinstance(self.target, PartialRole):
+            self.target_type = PermissionType.role
+
+        if not isinstance(self.target_type, PermissionType):
+            raise TypeError(
+                "Expected PermissionType, "
+                f"received {type(self.target_type)} instead"
+            )
+
+    def __repr__(self) -> str:
+        return (
+            f"<PermissionOverwrite target={self.target} "
+            f"allow={int(self.allow)} deny={int(self.deny)}>"
+        )
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Self:
+        return cls(
+            target=int(data["id"]),
+            allow=Permissions(int(data["allow"])),
+            deny=Permissions(int(data["deny"])),
+            target_type=PermissionType(int(data["type"]))
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": str(int(self.target)),
+            "allow": int(self.allow),
+            "deny": int(self.deny),
+            "type": int(self.target_type)
+        }

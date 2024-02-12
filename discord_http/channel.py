@@ -3,14 +3,13 @@ from typing import Union, TYPE_CHECKING, Optional, AsyncIterator, Callable, Self
 
 from . import utils
 from .embeds import Embed
-from .enums import ChannelType, PermissionType, ResponseType
+from .enums import ChannelType, ResponseType
 from .file import File
-from .flag import Permissions
-from .member import PartialMember, Member, ThreadMember
+from .flag import PermissionOverwrite
+from .member import ThreadMember
 from .mentions import AllowedMentions
 from .object import PartialBase
 from .response import MessageResponse
-from .role import PartialRole, Role
 from .view import View
 from .webhook import Webhook
 
@@ -33,7 +32,6 @@ __all__ = (
     "NewsChannel",
     "NewsThread",
     "PartialChannel",
-    "PermissionOverwrite",
     "PrivateThread",
     "PublicThread",
     "StageChannel",
@@ -41,16 +39,6 @@ __all__ = (
     "TextChannel",
     "VoiceChannel",
 )
-
-
-class PermissionOverwrite:
-    def __init__(
-        self,
-        allow: Optional[Permissions] = None,
-        deny: Optional[Permissions] = None
-    ):
-        self.allow: Permissions = allow or Permissions(0)
-        self.deny: Permissions = deny or Permissions(0)
 
 
 class PartialChannel(PartialBase):
@@ -353,11 +341,8 @@ class PartialChannel(PartialBase):
         name: Optional[str] = MISSING,
         category: Union["CategoryChannel", utils.Snowflake, None] = MISSING,
         position: Optional[int] = MISSING,
+        overwrites: Optional[list[PermissionOverwrite]] = MISSING,
         nsfw: Optional[bool] = MISSING,
-        overwrites: Union[
-            dict[Union[PartialRole, PartialMember, utils.Snowflake], PermissionOverwrite],
-            None
-        ] = MISSING,
         reason: Optional[str] = None,
         **kwargs
     ) -> Self:
@@ -372,10 +357,10 @@ class PartialChannel(PartialBase):
             Which category the channel should be in
         position: `Optional[int]`
             The position of the channel
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites for the channel
         nsfw: `Optional[bool]`
             If the channel should be NSFW
-        overwrites: `Optional[dict[Union[PartialRole, PartialMember, utils.Snowflake], PermissionOverwrite]]`
-            The permission overwrites for the channel
         reason: `Optional[str]`
             The reason for editing the channel
 
@@ -383,41 +368,8 @@ class PartialChannel(PartialBase):
         -------
         `BaseChannel`
             The channel object
-
-        Raises
-        ------
-        `TypeError`
-            If the overwrite key is not a PartialRole, Role, PartialMember, Member or Snowflake
         """
         payload = {}
-
-        if overwrites is not MISSING:
-            _overwrites = []
-            for obj, perm in overwrites.items():
-                if not isinstance(perm, PermissionOverwrite):
-                    raise TypeError(
-                        f"overwrite {obj}:value must be a PermissionOverwrite"
-                    )
-
-                _type = None
-                if isinstance(obj, (PartialRole, Role)):
-                    _type = PermissionType.role
-                elif isinstance(obj, (PartialMember, Member, utils.Snowflake)):
-                    _type = PermissionType.member
-                else:
-                    raise TypeError(
-                        f"overwrite {obj}:key must be a PartialRole, "
-                        "Role, PartialMember, Member or Snowflake"
-                    )
-
-                _overwrites.append({
-                    "id": str(obj.id),
-                    "type": int(_type),
-                    "allow": perm.allow,
-                    "deny": perm.deny
-                })
-
-            payload["permission_overwrites"] = _overwrites
 
         if name is not MISSING:
             payload["name"] = str(name)
@@ -425,6 +377,14 @@ class PartialChannel(PartialBase):
             payload["parent_id"] = str(category.id)
         if position is not MISSING:
             payload["position"] = int(position or 0)
+        if overwrites is not MISSING:
+            if overwrites is None:
+                payload["permission_overwrites"] = []
+            else:
+                payload["permission_overwrites"] = [
+                    g.to_dict() for g in overwrites
+                    if isinstance(g, PermissionOverwrite)
+                ]
         if nsfw is not MISSING:
             payload["nsfw"] = bool(nsfw)
 
@@ -438,6 +398,67 @@ class PartialChannel(PartialBase):
         )
 
         return self._class_to_return(data=r.response)  # type: ignore
+
+    async def typing(self) -> None:
+        """
+        Makes the bot trigger the typing indicator.
+        Times out after 10 seconds
+        """
+        await self._state.query(
+            "POST",
+            f"/channels/{self.id}/typing",
+            res_method="text"
+        )
+
+    async def set_permission(
+        self,
+        id: Union[utils.Snowflake, int],
+        *,
+        overwrite: PermissionOverwrite,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Set a permission overwrite for the channel
+
+        Parameters
+        ----------
+        id: `Union[utils.Snowflake, int]`
+            The ID of the overwrite
+        overwrite: `PermissionOverwrite`
+            The new overwrite permissions
+        reason: `Optional[str]`
+            The reason for editing the overwrite
+        """
+        await self._state.query(
+            "PUT",
+            f"/channels/{self.id}/permissions/{int(id)}",
+            json=overwrite.to_dict(),
+            res_method="text",
+            reason=reason
+        )
+
+    async def delete_permission(
+        self,
+        id: Union[utils.Snowflake, int],
+        *,
+        reason: Optional[str] = None
+    ) -> None:
+        """
+        Delete a permission overwrite for the channel
+
+        Parameters
+        ----------
+        id: `Union[utils.Snowflake, int]`
+            The ID of the overwrite
+        reason: `Optional[str]`
+            The reason for deleting the overwrite
+        """
+        await self._state.query(
+            "DELETE",
+            f"/channels/{self.id}/permissions/{int(id)}",
+            res_method="text",
+            reason=reason
+        )
 
     async def delete(
         self,
@@ -837,7 +858,7 @@ class PartialChannel(PartialBase):
 
 
 class BaseChannel(PartialChannel):
-    def __init__(self, state: "DiscordAPI", data: dict):
+    def __init__(self, *, state: "DiscordAPI", data: dict):
         super().__init__(
             state=state,
             id=int(data["id"]),
@@ -850,21 +871,13 @@ class BaseChannel(PartialChannel):
         self.nsfw: bool = data.get("nsfw", False)
         self.topic: Optional[str] = data.get("topic", None)
         self.position: Optional[int] = utils.get_int(data, "position")
+        self.last_message_id: Optional[int] = utils.get_int(data, "last_message_id")
+        self.parent_id: Optional[int] = utils.get_int(data, "parent_id")
 
-        self._from_data(data)
-
-    def _from_data(self, data: dict):
-        self.permission_overwrites: Optional[int] = None
-        if data.get("permissions", None):
-            self.permissions = int(data["permissions"])
-
-        self.parent_id: Optional[int] = None
-        if data.get("parent_id", None):
-            self.parent_id = int(data["parent_id"])
-
-        self.last_message_id: Optional[int] = None
-        if data.get("last_message_id", None):
-            self.last_message_id = int(data["last_message_id"])
+        self.permission_overwrites: list[PermissionOverwrite] = [
+            PermissionOverwrite.from_dict(g)
+            for g in data.get("permission_overwrites", [])
+        ]
 
     def __repr__(self) -> str:
         return f"<Channel id={self.id} name='{self.name}'>"
@@ -1063,10 +1076,88 @@ class CategoryChannel(BaseChannel):
         """ `ChannelType`: Returns the channel's type """
         return ChannelType.guild_category
 
+    async def create_text_channel(
+        self,
+        *,
+        name: str,
+        **kwargs
+    ) -> TextChannel:
+        """
+        Create a text channel in the category
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the channel
+        topic: `Optional[str]`
+            The topic of the channel
+        rate_limit_per_user: `Optional[int]`
+            The rate limit per user of the channel
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        parent_id: `Optional[Snowflake]`
+            The Category ID where the channel will be placed
+        nsfw: `Optional[bool]`
+            Whether the channel is NSFW or not
+        reason: `Optional[str]`
+            The reason for creating the text channel
+
+        Returns
+        -------
+        `TextChannel`
+            The channel object
+        """
+        return await self.guild.create_text_channel(
+            name=name,
+            parent_id=self.id,
+            **kwargs
+        )
+
+    async def create_voice_channel(
+        self,
+        *,
+        name: str,
+        **kwargs
+    ) -> "VoiceChannel":
+        """
+        Create a voice channel to category
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the channel
+        bitrate: `Optional[int]`
+            The bitrate of the channel
+        user_limit: `Optional[int]`
+            The user limit of the channel
+        rate_limit_per_user: `Optional`
+            The rate limit per user of the channel
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        position: `Optional[int]`
+            The position of the channel
+        parent_id: `Optional[Snowflake]`
+            The Category ID where the channel will be placed
+        nsfw: `Optional[bool]`
+            Whether the channel is NSFW or not
+        reason: `Optional[str]`
+            The reason for creating the voice channel
+
+        Returns
+        -------
+        `VoiceChannel`
+            The channel object
+        """
+        return await self.guild.create_voice_channel(
+            name=name,
+            parent_id=self.id,
+            **kwargs
+        )
+
 
 class NewsChannel(BaseChannel):
     def __init__(self, state: "DiscordAPI", data: dict):
-        super().__init__(state, data)
+        super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
         return f"<NewsChannel id={self.id} name='{self.name}'>"

@@ -6,6 +6,7 @@ from .file import File
 from .object import PartialBase
 
 if TYPE_CHECKING:
+    from .flag import Permissions
     from .guild import PartialGuild, Guild
     from .http import DiscordAPI
 
@@ -113,10 +114,11 @@ class PartialRole(PartialBase):
         self,
         *,
         name: Optional[str] = MISSING,
-        colour: Union[Colour, int, None] = MISSING,
+        colour: Optional[Union[Colour, int]] = MISSING,
         hoist: Optional[bool] = MISSING,
         mentionable: Optional[bool] = MISSING,
         positions: Optional[int] = MISSING,
+        permissions: Optional["Permissions"] = MISSING,
         unicode_emoji: Optional[str] = MISSING,
         icon: Optional[Union[File, bytes]] = MISSING,
         reason: Optional[str] = None,
@@ -138,6 +140,8 @@ class PartialRole(PartialBase):
             The new unicode emoji of the role
         positions: `Optional[int]`
             The new position of the role
+        permissions: `Optional[Permissions]`
+            The new permissions for the role
         icon: `Optional[File]`
             The new icon of the role
         reason: `Union[str]`
@@ -165,6 +169,8 @@ class PartialRole(PartialBase):
                 payload["colour"] = colour.value
             else:
                 payload["colour"] = colour
+        if permissions is not MISSING:
+            payload["permissions"] = permissions.value
         if hoist is not MISSING:
             payload["hoist"] = hoist
         if mentionable is not MISSING:
@@ -190,15 +196,22 @@ class PartialRole(PartialBase):
                 "PATCH",
                 f"/guilds/{self.guild_id}/roles",
                 json={
-                    "id": self.id,
+                    "id": str(self.id),
                     "position": positions
                 },
                 reason=reason
             )
 
-            find_role: dict = next((r for r in r.response if r["id"] == str(self.id)), None)  # type: ignore
+            find_role: Optional[dict] = next((
+                r for r in r.response
+                if r["id"] == str(self.id)
+            ), None)
+
             if not find_role:
-                raise ValueError("Could not find role in response (Most likely Discord API bug)")
+                raise ValueError(
+                    "Could not find role in response "
+                    "(Most likely Discord API bug)"
+                )
 
             _role = Role(
                 state=self._state,
@@ -221,7 +234,10 @@ class PartialRole(PartialBase):
             )
 
         if not _role:
-            raise ValueError("There were no changes applied to the role, no edits were taken")
+            raise ValueError(
+                "There were no changes applied to the role. "
+                "No edits were taken"
+            )
 
         return _role
 

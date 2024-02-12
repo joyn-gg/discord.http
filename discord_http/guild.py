@@ -10,7 +10,7 @@ from .enums import (
 )
 from .emoji import Emoji
 from .file import File
-from .flag import Permissions, SystemChannelFlags
+from .flag import Permissions, SystemChannelFlags, PermissionOverwrite
 from .multipart import MultipartData
 from .object import PartialBase
 from .role import Role, PartialRole
@@ -20,7 +20,8 @@ from .voice import VoiceRegion
 if TYPE_CHECKING:
     from .channel import (
         TextChannel, VoiceChannel,
-        PartialChannel, BaseChannel
+        PartialChannel, BaseChannel,
+        CategoryChannel
     )
     from .http import DiscordAPI
     from .invite import Invite
@@ -158,7 +159,7 @@ class PartialGuild(PartialBase):
         self,
         *,
         name: str,
-        permissions: Optional[Union[Permissions, int]] = 0,
+        permissions: Optional[Permissions] = None,
         color: Optional[Union[Colour, Color, int]] = None,
         colour: Optional[Union[Colour, Color, int]] = None,
         unicode_emoji: Optional[str] = None,
@@ -174,7 +175,7 @@ class PartialGuild(PartialBase):
         ----------
         name: `str`
             The name of the role
-        permissions: `Optional[Union[Permissions, int]]`
+        permissions: `Optional[Permissions]`
             The permissions of the role
         color: `Optional[Union[Colour, Color, int]]`
             The colour of the role
@@ -231,14 +232,70 @@ class PartialGuild(PartialBase):
             data=r.response
         )
 
+    async def create_category(
+        self,
+        *,
+        name: str,
+        overwrites: Optional[list[PermissionOverwrite]] = None,
+        position: Optional[int] = None,
+        reason: Optional[str] = None
+    ) -> "CategoryChannel":
+        """
+        Create a category channel
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the category
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        position: `Optional[int]`
+            The position of the category
+        reason: `Optional[str]`
+            The reason for creating the category
+
+        Returns
+        -------
+        `CategoryChannel`
+            The created category
+        """
+        payload = {
+            "name": name,
+            "type": int(ChannelType.guild_category)
+        }
+
+        if overwrites:
+            payload["permission_overwrites"] = [
+                g.to_dict() for g in overwrites
+                if isinstance(g, PermissionOverwrite)
+            ]
+
+        if position is not None:
+            payload["position"] = int(position)
+
+        r = await self._state.query(
+            "POST",
+            f"/guilds/{self.id}/channels",
+            json=payload,
+            reason=reason
+        )
+
+        from .channel import CategoryChannel
+        return CategoryChannel(
+            state=self._state,
+            data=r.response
+        )
+
     async def create_text_channel(
         self,
         *,
         name: str,
-        topic: Optional[str] = MISSING,
-        rate_limit_per_user: Optional[int] = MISSING,
-        parent_id: Union[utils.Snowflake, int] = MISSING,
-        nsfw: Optional[bool] = MISSING,
+        topic: Optional[str] = None,
+        position: Optional[int] = None,
+        rate_limit_per_user: Optional[int] = None,
+        overwrites: Optional[list[PermissionOverwrite]] = None,
+        parent_id: Optional[Union[utils.Snowflake, int]] = None,
+        nsfw: Optional[bool] = None,
         reason: Optional[str] = None
     ) -> "TextChannel":
         """
@@ -252,7 +309,9 @@ class PartialGuild(PartialBase):
             The topic of the channel
         rate_limit_per_user: `Optional[int]`
             The rate limit per user of the channel
-        parent_id: `Optional[Union[utils.Snowflake, int]]`
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        parent_id: `Optional[Snowflake]`
             The Category ID where the channel will be placed
         nsfw: `Optional[bool]`
             Whether the channel is NSFW or not
@@ -269,18 +328,25 @@ class PartialGuild(PartialBase):
             "type": int(ChannelType.guild_text)
         }
 
-        if topic is not MISSING:
+        if topic is not None:
             payload["topic"] = topic
-        if rate_limit_per_user is not MISSING:
+        if rate_limit_per_user is not None:
             payload["rate_limit_per_user"] = (
                 int(rate_limit_per_user)
                 if isinstance(rate_limit_per_user, int)
                 else None
             )
-        if parent_id is not MISSING:
+        if overwrites:
+            payload["permission_overwrites"] = [
+                g.to_dict() for g in overwrites
+                if isinstance(g, PermissionOverwrite)
+            ]
+        if parent_id is not None:
             payload["parent_id"] = str(int(parent_id))
-        if nsfw is not MISSING:
+        if nsfw is not None:
             payload["nsfw"] = bool(nsfw)
+        if position is not None:
+            payload["position"] = int(position)
 
         r = await self._state.query(
             "POST",
@@ -302,6 +368,7 @@ class PartialGuild(PartialBase):
         bitrate: Optional[int] = None,
         user_limit: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
+        overwrites: Optional[list[PermissionOverwrite]] = None,
         position: Optional[int] = None,
         parent_id: Union[utils.Snowflake, int, None] = None,
         nsfw: Optional[bool] = None,
@@ -314,6 +381,22 @@ class PartialGuild(PartialBase):
         ----------
         name: `str`
             The name of the channel
+        bitrate: `Optional[int]`
+            The bitrate of the channel
+        user_limit: `Optional[int]`
+            The user limit of the channel
+        rate_limit_per_user: `Optional`
+            The rate limit per user of the channel
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        position: `Optional[int]`
+            The position of the channel
+        parent_id: `Optional[Snowflake]`
+            The Category ID where the channel will be placed
+        nsfw: `Optional[bool]`
+            Whether the channel is NSFW or not
+        reason: `Optional[str]`
+            The reason for creating the voice channel
 
         Returns
         -------
@@ -331,6 +414,11 @@ class PartialGuild(PartialBase):
             payload["user_limit"] = int(user_limit)
         if rate_limit_per_user is not None:
             payload["rate_limit_per_user"] = int(rate_limit_per_user)
+        if overwrites:
+            payload["permission_overwrites"] = [
+                g.to_dict() for g in overwrites
+                if isinstance(g, PermissionOverwrite)
+            ]
         if position is not None:
             payload["position"] = int(position)
         if parent_id is not None:
