@@ -7,7 +7,10 @@ import time
 from typing import Union, Optional, TYPE_CHECKING, Callable
 
 from .emoji import PartialEmoji
-from .enums import ButtonStyles, ComponentType, TextStyles, ChannelType
+from .enums import (
+    ButtonStyles, ComponentType, TextStyles,
+    ChannelType
+)
 
 if TYPE_CHECKING:
     from . import Snowflake
@@ -25,6 +28,7 @@ __all__ = (
     "Link",
     "MentionableSelect",
     "Modal",
+    "ModalItem",
     "RoleSelect",
     "Select",
     "UserSelect",
@@ -50,6 +54,67 @@ class Item:
         raise NotImplementedError("to_dict not implemented")
 
 
+class ModalItem:
+    def __init__(
+        self,
+        *,
+        label: str,
+        custom_id: Optional[str] = None,
+        style: Optional[TextStyles] = None,
+        placeholder: Optional[str] = None,
+        min_length: Optional[int] = None,
+        max_length: Optional[int] = None,
+        default: Optional[str] = None,
+        required: bool = True,
+    ):
+        self.label: str = label
+        self.custom_id: str = (
+            str(custom_id)
+            if custom_id else _garbage_id()
+        )
+        self.style: int = int(style or TextStyles.short)
+
+        self.placeholder: Optional[str] = placeholder
+        self.min_length: Optional[int] = min_length
+        self.max_length: Optional[int] = max_length
+        self.default: Optional[str] = default
+        self.required: bool = required
+
+        if (
+            isinstance(self.min_length, int) and
+            self.min_length not in range(0, 4001)
+        ):
+            raise ValueError("min_length must be between 0 and 4,000")
+
+        if (
+            isinstance(self.max_length, int) and
+            self.max_length not in range(1, 4001)
+        ):
+            raise ValueError("max_length must be between 1 and 4,000")
+
+    def to_dict(self) -> dict:
+        """ `dict`: Returns a dict representation of the modal item """
+        payload = {
+            "type": 4,
+            "label": self.label,
+            "custom_id": self.custom_id,
+            "style": self.style
+        }
+
+        if self.min_length is not None:
+            payload["min_length"] = int(self.min_length)
+        if self.max_length is not None:
+            payload["max_length"] = int(self.max_length)
+        if self.required:
+            payload["required"] = bool(self.required)
+        if self.placeholder is not None:
+            payload["placeholder"] = str(self.placeholder)
+        if self.default is not None:
+            payload["value"] = str(self.default)
+
+        return payload
+
+
 class Button(Item):
     def __init__(
         self,
@@ -66,10 +131,13 @@ class Button(Item):
 
         self.label: Optional[str] = label
         self.disabled: bool = disabled
-        self.custom_id: str = str(custom_id) if custom_id else _garbage_id()
         self.url: Optional[str] = url
         self.emoji: Optional[Union[str, dict]] = emoji
         self.style: Union[ButtonStyles, str, int] = style
+        self.custom_id: str = (
+            str(custom_id)
+            if custom_id else _garbage_id()
+        )
 
         if isinstance(style, ButtonStyles):
             pass
@@ -152,10 +220,13 @@ class Select(Item):
         )
 
         self.placeholder: Optional[str] = placeholder
-        self.custom_id: Optional[str] = str(custom_id) if custom_id else _garbage_id()
         self.min_values: Optional[int] = min_values
         self.max_values: Optional[int] = max_values
         self.disabled: bool = disabled
+        self.custom_id: str = (
+            str(custom_id)
+            if custom_id else _garbage_id()
+        )
 
         self._options: list[dict] = options or []
 
@@ -353,6 +424,12 @@ class InteractionStorage:
         self._timeout_expiry: Optional[float] = None
         self._msg_cache: Optional[Message] = None
 
+    def __repr__(self) -> str:
+        return (
+            f"<InteractionStorage timeout={self._timeout} "
+            f"msg={self._msg_cache}>"
+        )
+
     def _update_event(self, value: bool) -> None:
         """
         Update the event waiter to either set or clear
@@ -367,16 +444,6 @@ class InteractionStorage:
             self._event_wait.set()
         elif value is False:
             self._event_wait.clear()
-
-    async def on_timeout(self) -> None:
-        """ Called when the view times out """
-        self._timeout_bool = True
-        self._update_event(True)
-
-    @property
-    def is_timeout(self) -> bool:
-        """ `bool`: Whether the view has timed out """
-        return self._timeout_bool
 
     async def _timeout_watcher(self) -> None:
         """ Watches for the timeout and calls on_timeout when it expires """
@@ -401,12 +468,28 @@ class InteractionStorage:
             name=f"discordhttp-timeout-{int(time.time())}"
         )
 
-    async def callback(self, ctx: "Context") -> Optional["BaseResponse"]:
+    async def on_timeout(self) -> None:
+        """ Called when the view times out """
+        self._timeout_bool = True
+        self._update_event(True)
+
+    @property
+    def is_timeout(self) -> bool:
+        """ `bool`: Whether the view has timed out """
+        return self._timeout_bool
+
+    async def callback(
+        self,
+        ctx: "Context"
+    ) -> Optional["BaseResponse"]:
         """ Called when the view is interacted with """
         if not self._call_after:
             return None
 
-        if self._users and ctx.user.id not in [g.id for g in self._users]:
+        if (
+            self._users and
+            ctx.user.id not in [g.id for g in self._users]
+        ):
             return ctx.response.send_message(
                 "You are not allowed to interact with this message",
                 ephemeral=True
@@ -500,25 +583,12 @@ class InteractionStorage:
 
 
 class View(InteractionStorage):
-    def __init__(self, *items: Item):
+    def __init__(self, *items: Union[Button, Select, Link]):
         super().__init__()
 
         self.items = items
-        self._components: list[list[dict]] = [[] for _ in range(5)]
-        self._payload: list[dict] = []
 
-        self._sanitize()
-
-    def __repr__(self) -> str:
-        return f"<View items={list(self.items)}>"
-
-    def _insert(self, item: Item, row: Optional[int] = None) -> None:
-        """ Insert an item into the list """
-        if isinstance(row, int):
-            if row not in range(0, 5):
-                raise ValueError("Row must be between 0 and 4")
-
-        _select_types: list[int] = [
+        self._select_types: list[int] = [
             int(ComponentType.string_select),
             int(ComponentType.user_select),
             int(ComponentType.role_select),
@@ -526,45 +596,151 @@ class View(InteractionStorage):
             int(ComponentType.channel_select)
         ]
 
-        if row is None:
-            row = next((
-                i for i, _ in enumerate(self._components)
-                if len(self._components[i]) < 5 and
-                not any(
-                    g.get("type", 0) in _select_types
-                    for g in self._components[i]
+    def __repr__(self) -> str:
+        return f"<View items={list(self.items)}>"
+
+    def get_item(
+        self,
+        *,
+        label: Optional[str] = None,
+        custom_id: Optional[str] = None
+    ) -> Optional[Union[Button, Select, Link]]:
+        """
+        Get an item from the view that matches the parameters
+
+        Parameters
+        ----------
+        label: `Optional[str]`
+            Label of the item
+        custom_id: `Optional[str]`
+            Custom ID of the item
+
+        Returns
+        -------
+        `Optional[Union[Button, Select, Link]]`
+            Returns the item if found, otherwise `None`
+        """
+        for g in self.items:
+            if (
+                custom_id is not None and
+                g.custom_id == custom_id
+            ):
+                return g
+            if (
+                label is not None and
+                isinstance(g, Button) and
+                g.label == label
+            ):
+                return g
+
+        return None
+
+    def add_item(
+        self,
+        item: Union[Button, Select, Link]
+    ) -> Union[Button, Select, Link]:
+        """
+        Add an item to the view
+
+        Parameters
+        ----------
+        item: `Union[Button, Select, Link]`
+            The item to add to the view
+
+        Returns
+        -------
+        `Union[Button, Select, Link]`
+            Returns the added item
+        """
+        self.items = self.items + (item,)
+        return item
+
+    def remove_items(
+        self,
+        *,
+        label: Optional[str] = None,
+        custom_id: Optional[str] = None
+    ) -> int:
+        """
+        Remove items from the view that match the parameters
+
+        Parameters
+        ----------
+        label: `Optional[str]`
+            Label of the item
+        custom_id: `Optional[str]`
+            Custom ID of the item
+
+        Returns
+        -------
+        `int`
+            Returns the amount of items removed
+        """
+        temp = []
+        removed = 0
+
+        for g in self.items:
+            if (
+                custom_id is not None and
+                g.custom_id == custom_id
+            ):
+                removed += 1
+                continue
+            if (
+                label is not None and
+                isinstance(g, Button) and
+                g.label == label
+            ):
+                removed += 1
+                continue
+
+            temp.append(g)
+
+        self.items = tuple(temp)
+
+        return removed
+
+    def to_dict(self) -> list[dict]:
+        """ `list[dict]`: Returns a dict representation of the view """
+        components: list[list[dict]] = [[] for _ in range(5)]
+
+        for g in self.items:
+            if g.row is None:
+                g.row = next((
+                    i for i, _ in enumerate(components)
+                    if len(components[i]) < 5 and
+                    not any(
+                        g.get("type", 0) in self._select_types
+                        for g in components[i]
+                    )
+                ), 0)
+
+            if isinstance(g, Select):
+                if len(components[g.row]) >= 1:
+                    raise ValueError(
+                        "Cannot add select menu to row with other view items"
+                    )
+            else:
+                if any(isinstance(i, Select) for i in components[g.row]):
+                    raise ValueError(
+                        "Cannot add component to row with select menu"
+                    )
+
+            if len(components[g.row]) >= 5:
+                raise ValueError(
+                    f"Cannot have more than 5 items in row {g.row}"
                 )
-            ), 0)
 
-        if isinstance(item, Select):
-            if len(self._components[row]) >= 1:
-                raise ValueError("Cannot add select menu to row with other view items")
-        else:
-            if any(isinstance(i, Select) for i in self._components[row]):
-                raise ValueError("Cannot add component to row with select menu")
-
-        if row >= 5:
-            raise ValueError(f"Cannot have more than 5 items in row {row}")
-
-        self._components[row].append(item.to_dict())
-
-    def _sanitize(self) -> None:
-        """ Prepare the components for sending """
-        for item in self.items:
-            self._insert(item, item.row)
+            components[g.row].append(g.to_dict())
 
         payload = []
 
-        for c in self._components:
+        for c in components:
             if len(c) <= 0:
                 continue
             payload.append({"type": 1, "components": c})
 
-        self._payload = payload
-
-    def to_dict(self) -> list[dict]:
-        """ `list[dict]`: Returns a dict representation of the view """
-        return self._payload
+        return payload
 
     @classmethod
     def from_dict(cls, data: dict) -> "View":
@@ -582,8 +758,8 @@ class View(InteractionStorage):
             8: ChannelSelect,
         }
 
-        for comp in data["components"]:
-            for i, c in enumerate(comp["components"]):
+        for i, comp in enumerate(data["components"]):
+            for c in comp["components"]:
                 cls = cls_table[c.get("type", 2)]
 
                 if c.get("url", None):
@@ -611,8 +787,12 @@ class Modal(InteractionStorage):
         super().__init__()
 
         self.title: str = title
-        self.custom_id: str = str(custom_id) if custom_id else _garbage_id()
-        self._components: list[dict] = []
+        self.custom_id: str = (
+            str(custom_id)
+            if custom_id else _garbage_id()
+        )
+
+        self.items: list[ModalItem] = []
 
     def add_item(
         self,
@@ -621,11 +801,11 @@ class Modal(InteractionStorage):
         custom_id: Optional[str] = None,
         style: Optional[TextStyles] = None,
         placeholder: Optional[str] = None,
-        min_length: Optional[int] = 1,
-        max_length: Optional[int] = 4000,
+        min_length: Optional[int] = None,
+        max_length: Optional[int] = None,
         default: Optional[str] = None,
         required: bool = True,
-    ) -> None:
+    ) -> ModalItem:
         """
         Add an item to the modal
 
@@ -647,23 +827,25 @@ class Modal(InteractionStorage):
             Default value of the item
         required: `bool`
             Whether the item is required
+
+        Returns
+        -------
+        `ModalItem`
+            Returns the created modal item from the items list
         """
-        payload = {
-            "type": 4,
-            "label": label,
-            "custom_id": str(custom_id) if custom_id else _garbage_id(),
-            "style": int(style or TextStyles.short),
-            "min_length": min_length,
-            "max_length": max_length,
-            "required": required
-        }
+        item = ModalItem(
+            label=label,
+            custom_id=custom_id,
+            style=style,
+            placeholder=placeholder,
+            min_length=min_length,
+            max_length=max_length,
+            default=default,
+            required=required
+        )
 
-        if placeholder is not None:
-            payload["placeholder"] = str(placeholder)
-        if default is not None:
-            payload["value"] = str(default)
-
-        self._components.append(payload)
+        self.items.append(item)
+        return item
 
     def to_dict(self) -> dict:
         """ `dict`: Returns a dict representation of the modal """
@@ -671,7 +853,7 @@ class Modal(InteractionStorage):
             "title": self.title,
             "custom_id": self.custom_id,
             "components": [
-                {"type": 1, "components": [g]}
-                for g in self._components
+                {"type": 1, "components": [g.to_dict()]}
+                for g in self.items
             ]
         }

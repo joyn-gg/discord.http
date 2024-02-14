@@ -16,7 +16,7 @@ from discord_http import (
     Context, Embed, File, Member,
     View, Client, Message,
     Button, Role, commands, Link,
-    AllowedMentions, Modal,
+    AllowedMentions, Modal, ButtonStyles,
     errors, Permissions, Colour,
     utils, VoiceChannel, Select,
     TextStyles, User, UserSelect, tasks,
@@ -751,6 +751,37 @@ async def test_modal(ctx: Context):
 
 
 @client.command()
+async def test_button_change(ctx: Context):
+    buttons = [
+        Button(
+            label=str(i),
+            custom_id=f"test_button_change:{i}",
+            style=ButtonStyles.gray
+        )
+        for i in range(5 * 5)
+    ]
+
+    return ctx.response.send_message(
+        "Random colours, go!",
+        view=View(*buttons)
+    )
+
+
+@client.interaction(r"test_button_change:[0-9]{1}", regex=True)
+async def on_test_button_change(ctx: Context):
+    view = ctx.message.view
+
+    for b in view.items:
+        if not isinstance(b, Button):
+            continue
+        b.style = ButtonStyles.random()
+        if b.style == ButtonStyles.url:
+            b.style = ButtonStyles.green
+
+    return ctx.response.edit_message(view=view)
+
+
+@client.command()
 async def test_decoration(ctx: Context):
     return ctx.response.send_message(
         f"Decoration: {ctx.user.avatar_decoration}"
@@ -774,9 +805,10 @@ async def test_interaction_modal(ctx: Context):
 
 @client.interaction("test_user_select")
 async def test_interaction_user_select(ctx: Context):
-    print(ctx.select_values.members)
-    print(ctx.message.view)
-    return ctx.response.edit_message(view=ctx.message.view)
+    return ctx.response.edit_message(
+        content=f"Selected: {ctx.select_values.members}",
+        view=ctx.message.view
+    )
 
 
 @client.interaction("test_send_modal")
