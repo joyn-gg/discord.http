@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -296,7 +295,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;HTTPResponse status=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> res_method=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">res_method</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&lt;HTTPResponse status=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;res_method=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">res_method</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+        <span class="p">)</span></div>
 
 
 
@@ -678,10 +680,13 @@
                         <span class="c1"># The lovely exception hell</span>
                         <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">500</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">DiscordServerError</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
                         <span class="k">case</span> <span class="mi">403</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">Forbidden</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
                         <span class="k">case</span> <span class="mi">404</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">NotFound</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
                         <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 

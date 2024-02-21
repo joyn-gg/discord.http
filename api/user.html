@@ -195,7 +195,6 @@
 <li class="toctree-l2"><a class="reference internal" href="tasks.html">Tasks</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -310,23 +309,12 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.user.</span></span><span class="sig-name descname"><span class="pre">User</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/user.html#User"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.user.User" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#discord_http.user.PartialUser" title="discord_http.user.PartialUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialUser</span></code></a></p>
 <dl class="py property">
-<dt class="sig sig-object py" id="discord_http.user.User.original_avatar">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">original_avatar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.user.User.original_avatar" title="Link to this definition">#</a></dt>
-<dd><p>Returns the original avatar of the member if available</p>
+<dt class="sig sig-object py" id="discord_http.user.User.global_avatar">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">global_avatar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.user.User.global_avatar" title="Link to this definition">#</a></dt>
+<dd><p>Alias for <cite>User.avatar</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>Optional[Asset]</cite></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="discord_http.user.User.original_banner">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">original_banner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.user.User.original_banner" title="Link to this definition">#</a></dt>
-<dd><p>Returns the original banner of the member if available</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>Optional[Asset]</cite></p>
+<dd class="field-odd"><p><cite>Asset</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -401,8 +389,7 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.user.User"><code class="docutils literal notranslate"><span class="pre">User</span></code></a><ul>
-<li><a class="reference internal" href="#discord_http.user.User.original_avatar"><code class="docutils literal notranslate"><span class="pre">User.original_avatar</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.user.User.original_banner"><code class="docutils literal notranslate"><span class="pre">User.original_banner</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.user.User.global_avatar"><code class="docutils literal notranslate"><span class="pre">User.global_avatar</span></code></a></li>
 </ul>
 </li>
 </ul>

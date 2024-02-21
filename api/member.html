@@ -195,7 +195,6 @@
 <li class="toctree-l2"><a class="reference internal" href="tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -324,11 +323,11 @@ If the user has converted to the new username, this will return None</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.member.Member.get_role">
-<span class="sig-name descname"><span class="pre">get_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="role.html#discord_http.role.PartialRole" title="discord_http.role.PartialRole"><span class="pre">PartialRole</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/member.html#Member.get_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.Member.get_role" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="role.html#discord_http.role.PartialRole" title="discord_http.role.PartialRole"><span class="pre">PartialRole</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/member.html#Member.get_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.Member.get_role" title="Link to this definition">#</a></dt>
 <dd><p>Get a role from the member</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>role</strong> (<cite>Union[utils.Snowflake, int]</cite>) – The role to get. Can either be a role object or the Role ID</p>
+<dd class="field-odd"><p><strong>role</strong> (<cite>Union[Snowflake, int]</cite>) – The role to get. Can either be a role object or the Role ID</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The role if found, else None</p>
@@ -340,15 +339,34 @@ If the user has converted to the new username, this will return None</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="discord_http.member.Member.global_avatar">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">global_avatar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.member.Member.global_avatar" title="Link to this definition">#</a></dt>
+<dd><p>Shortcut for <cite>User.avatar</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Optional[Asset]</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.member.Member.global_banner">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">global_banner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.member.Member.global_banner" title="Link to this definition">#</a></dt>
+<dd><p>Shortcut for <cite>User.banner</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Optional[Asset]</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="discord_http.member.Member.global_name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">global_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.member.Member.global_name" title="Link to this definition">#</a></dt>
 <dd><p>Gives the global display name of a member if available</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Returns the global display name of a member if available, bots will return None</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><cite>Optional[str]</cite></p>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Optional[str]</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -383,28 +401,6 @@ If the user has converted to the new username, this will return None</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="discord_http.member.Member.original_avatar">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">original_avatar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.member.Member.original_avatar" title="Link to this definition">#</a></dt>
-<dd><p>Shortcut for <cite>User.original_avatar</cite></p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>Optional[Asset]</cite></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="discord_http.member.Member.original_banner">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">original_banner</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="asset.html#discord_http.asset.Asset" title="discord_http.asset.Asset"><span class="pre">Asset</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.member.Member.original_banner" title="Link to this definition">#</a></dt>
-<dd><p>Shortcut for <cite>User.original_banner</cite></p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>Optional[Asset]</cite></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="discord_http.member.Member.public_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">public_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="flag.html#discord_http.flag.PublicFlags" title="discord_http.flag.PublicFlags"><span class="pre">PublicFlags</span></a></em><a class="headerlink" href="#discord_http.member.Member.public_flags" title="Link to this definition">#</a></dt>
 <dd><p>Returns the public flags of the member</p>
@@ -420,6 +416,17 @@ If the user has converted to the new username, this will return None</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolved_permissions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a></em><a class="headerlink" href="#discord_http.member.Member.resolved_permissions" title="Link to this definition">#</a></dt>
 <dd><p><cite>Permissions</cite> Returns permissions from an interaction.</p>
 <p>Will always be <cite>Permissions.none()</cite> if used in <cite>Member.fetch()</cite></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.member.Member.system">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">system</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#discord_http.member.Member.system" title="Link to this definition">#</a></dt>
+<dd><p>Returns whether the member is a system user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>bool</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -668,13 +675,14 @@ If the user has converted to the new username, this will return None</p>
 <li><a class="reference internal" href="#discord_http.member.Member.display_avatar"><code class="docutils literal notranslate"><span class="pre">Member.display_avatar</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.display_name"><code class="docutils literal notranslate"><span class="pre">Member.display_name</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.get_role"><code class="docutils literal notranslate"><span class="pre">Member.get_role()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.Member.global_avatar"><code class="docutils literal notranslate"><span class="pre">Member.global_avatar</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.Member.global_banner"><code class="docutils literal notranslate"><span class="pre">Member.global_banner</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.global_name"><code class="docutils literal notranslate"><span class="pre">Member.global_name</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.has_permissions"><code class="docutils literal notranslate"><span class="pre">Member.has_permissions()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.name"><code class="docutils literal notranslate"><span class="pre">Member.name</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.member.Member.original_avatar"><code class="docutils literal notranslate"><span class="pre">Member.original_avatar</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.member.Member.original_banner"><code class="docutils literal notranslate"><span class="pre">Member.original_banner</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.public_flags"><code class="docutils literal notranslate"><span class="pre">Member.public_flags</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.Member.resolved_permissions"><code class="docutils literal notranslate"><span class="pre">Member.resolved_permissions</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.Member.system"><code class="docutils literal notranslate"><span class="pre">Member.system</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember"><code class="docutils literal notranslate"><span class="pre">PartialMember</span></code></a><ul>

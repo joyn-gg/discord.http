@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -258,6 +257,7 @@
 <span class="kn">from</span> <span class="nn">quart.utils</span> <span class="kn">import</span> <span class="n">MustReloadError</span><span class="p">,</span> <span class="n">restart</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.commands</span> <span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">Listener</span><span class="p">,</span> <span class="n">SubGroup</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">InteractionType</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="n">CheckFailed</span>
@@ -311,7 +311,7 @@
 <span class="sd">        This serves as the fundemental HTTP server for Discord Interactions</span>
 <span class="sd">        We recommend to not touch this class, unless you know what you&#39;re doing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="p">:</span> <span class="s2">&quot;Client&quot;</span> <span class="o">=</span> <span class="n">client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">loop</span>
@@ -328,10 +328,11 @@
         <span class="n">_quart_log</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">default_handler</span><span class="p">)</span>
         <span class="n">_quart_log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
 
-<div class="viewcode-block" id="DiscordHTTP.validate_request">
-<a class="viewcode-back" href="../../api/backend.html#discord_http.backend.DiscordHTTP.validate_request">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">validate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Used to validate requests sent by Discord Webhooks &quot;&quot;&quot;</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_validate_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to validate requests sent by Discord Webhooks</span>
+<span class="sd">        This should NOT be modified, unless you know what you&#39;re doing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">public_key</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;invalid public key&quot;</span><span class="p">)</span>
 
@@ -349,44 +350,16 @@
         <span class="k">except</span> <span class="n">BadSignatureError</span><span class="p">:</span>
             <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="s2">&quot;invalid request signature&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">abort</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;invalid request body&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="DiscordHTTP.error_messages">
-<a class="viewcode-back" href="../../api/backend.html#discord_http.backend.DiscordHTTP.error_messages">[docs]</a>
-    <span class="k">def</span> <span class="nf">error_messages</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
-        <span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MessageResponse</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Used to return error messages to Discord</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        ctx: `Context`</span>
-<span class="sd">            The context of the command</span>
-<span class="sd">        e: `Exception`</span>
-<span class="sd">            The exception that was raised</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        `Optional[MessageResponse]`</span>
-<span class="sd">            The message response provided by the library error handler</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CheckFailed</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
-                <span class="n">content</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
-                <span class="n">ephemeral</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span></div>
-
+            <span class="n">abort</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;invalid request body&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_dig_subcommand</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">cmd</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Command</span><span class="p">,</span> <span class="n">SubGroup</span><span class="p">],</span>
         <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Command</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Used to dig through subcommands to execute correct command/autocomplete &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to dig through subcommands to execute correct command/autocomplete</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_options</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
         <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">SubGroup</span><span class="p">):</span>
@@ -411,12 +384,174 @@
 
         <span class="k">return</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">data_options</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_index_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">BaseResponse</span><span class="p">,</span> <span class="n">QuartResponse</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_handle_ack_ping</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Used to handle ACK ping &quot;&quot;&quot;</span>
+        <span class="n">_ping</span> <span class="o">=</span> <span class="n">Ping</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">_ping</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Discord Interactions ACK recieved (</span><span class="si">{</span><span class="n">_ping</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">pong</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_application_command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuartResponse</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Used to handle application commands &quot;&quot;&quot;</span>
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received slash command, processing...&quot;</span><span class="p">)</span>
+
+        <span class="n">command_name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unhandeled command: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;(not found in local command list)&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                <span class="s2">&quot;command not found&quot;</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="mi">404</span>
+            <span class="p">)</span>
+
+        <span class="n">cmd</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dig_subcommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cmd</span><span class="o">.</span><span class="n">_make_context_and_run</span><span class="p">(</span>
+                <span class="n">context</span><span class="o">=</span><span class="n">ctx</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
+                <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error while running command </span><span class="si">{</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
+                <span class="p">)</span>
+
+            <span class="n">_send_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_send_error</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_send_error</span><span class="p">,</span> <span class="n">BaseResponse</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">_send_error</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_interaction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuartResponse</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Used to handle interactions &quot;&quot;&quot;</span>
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received interaction, processing...&quot;</span><span class="p">)</span>
+        <span class="n">_custom_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;custom_id&quot;</span><span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">message</span><span class="p">:</span>
+                <span class="n">local_view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">_view_storage</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">ctx</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="kc">None</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">local_view</span><span class="p">:</span>
+                    <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">local_view</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                        <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
+                        <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
+                    <span class="p">)</span>
+
+            <span class="n">intreact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">find_interaction</span><span class="p">(</span><span class="n">_custom_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">intreact</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Unhandled interaction recieved &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(custom_id: </span><span class="si">{</span><span class="n">_custom_id</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                    <span class="s2">&quot;interaction not found&quot;</span><span class="p">,</span>
+                    <span class="n">status</span><span class="o">=</span><span class="mi">404</span>
+                <span class="p">)</span>
+
+            <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">intreact</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
+                <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error while running interaction </span><span class="si">{</span><span class="n">_custom_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_autocomplete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuartResponse</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Used to handle autocomplete interactions &quot;&quot;&quot;</span>
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received autocomplete interaction, processing...&quot;</span><span class="p">)</span>
+
+        <span class="n">command_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unhandled autocomplete recieved (name: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                    <span class="s2">&quot;command not found&quot;</span><span class="p">,</span>
+                    <span class="n">status</span><span class="o">=</span><span class="mi">404</span>
+                <span class="p">)</span>
+
+            <span class="n">cmd</span><span class="p">,</span> <span class="n">data_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dig_subcommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+            <span class="n">find_focused</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span>
+                <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_options</span>
+                <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;focused&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">find_focused</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;Failed to find focused option in autocomplete &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(cmd name: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
+                    <span class="s2">&quot;focused option not found&quot;</span><span class="p">,</span>
+                    <span class="n">status</span><span class="o">=</span><span class="mi">400</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="k">await</span> <span class="n">cmd</span><span class="o">.</span><span class="n">run_autocomplete</span><span class="p">(</span>
+                <span class="n">ctx</span><span class="p">,</span> <span class="n">find_focused</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">find_focused</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error while running autocomplete </span><span class="si">{</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_index_interactions_endpoint</span><span class="p">(</span>
+        <span class="bp">self</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">QuartResponse</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The main function to handle all HTTP requests sent by Discord</span>
 <span class="sd">        Please do not touch this function, unless you know what you&#39;re doing</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_request</span><span class="p">()</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_request</span><span class="p">()</span>
+
         <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_events</span><span class="p">:</span>
@@ -427,146 +562,60 @@
 
         <span class="k">match</span> <span class="n">data_type</span><span class="p">:</span>
             <span class="k">case</span> <span class="n">InteractionType</span><span class="o">.</span><span class="n">ping</span><span class="p">:</span>
-                <span class="n">_ping</span> <span class="o">=</span> <span class="n">Ping</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="n">_ping</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Discord HTTP Ping | </span><span class="si">{</span><span class="n">_ping</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">pong</span><span class="p">()</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_ack_ping</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
             <span class="k">case</span> <span class="n">InteractionType</span><span class="o">.</span><span class="n">application_command</span><span class="p">:</span>
-                <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received slash command, processing...&quot;</span><span class="p">)</span>
-
-                <span class="n">command_name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd</span><span class="p">:</span>
-                    <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Unhandeled command: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2"> &quot;</span>
-                        <span class="s2">&quot;(not found in local command list)&quot;</span>
-                    <span class="p">)</span>
-                    <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                        <span class="s2">&quot;command not found&quot;</span><span class="p">,</span>
-                        <span class="n">status</span><span class="o">=</span><span class="mi">404</span>
-                    <span class="p">)</span>
-
-                <span class="n">cmd</span><span class="p">,</span> <span class="n">data_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dig_subcommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cmd</span><span class="o">.</span><span class="n">_make_context_and_run</span><span class="p">(</span>
-                        <span class="n">context</span><span class="o">=</span><span class="n">context</span>
-                    <span class="p">)</span>
-
-                    <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                        <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
-                        <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
-                    <span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Error while running command </span><span class="si">{</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
-                        <span class="p">)</span>
-
-                    <span class="n">_send_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">_send_error</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_send_error</span><span class="p">,</span> <span class="n">BaseResponse</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="n">_send_error</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-                    <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_application_command</span><span class="p">(</span>
+                    <span class="n">context</span><span class="p">,</span> <span class="n">data</span>
+                <span class="p">)</span>
 
             <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span>
                 <span class="n">InteractionType</span><span class="o">.</span><span class="n">message_component</span><span class="p">,</span>
                 <span class="n">InteractionType</span><span class="o">.</span><span class="n">modal_submit</span>
             <span class="p">):</span>
-                <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received interaction, processing...&quot;</span><span class="p">)</span>
-                <span class="n">_custom_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;custom_id&quot;</span><span class="p">]</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">message</span><span class="p">:</span>
-                        <span class="n">local_view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">_view_storage</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                            <span class="n">context</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                            <span class="kc">None</span>
-                        <span class="p">)</span>
-                        <span class="k">if</span> <span class="n">local_view</span><span class="p">:</span>
-                            <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">local_view</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                                <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
-                                <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
-                            <span class="p">)</span>
-
-                    <span class="n">intreact</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">find_interaction</span><span class="p">(</span><span class="n">_custom_id</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">intreact</span><span class="p">:</span>
-                        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                            <span class="s2">&quot;Unhandled interaction recieved &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;(custom_id: </span><span class="si">{</span><span class="n">_custom_id</span><span class="si">}</span><span class="s2">)&quot;</span>
-                        <span class="p">)</span>
-                        <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                            <span class="s2">&quot;interaction not found&quot;</span><span class="p">,</span>
-                            <span class="n">status</span><span class="o">=</span><span class="mi">404</span>
-                        <span class="p">)</span>
-
-                    <span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">intreact</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                        <span class="n">payload</span><span class="o">.</span><span class="n">to_multipart</span><span class="p">(),</span>
-                        <span class="n">content_type</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">content_type</span>
-                    <span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Error while running interaction </span><span class="si">{</span><span class="n">_custom_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
-                        <span class="p">)</span>
-                    <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_interaction</span><span class="p">(</span>
+                    <span class="n">context</span><span class="p">,</span> <span class="n">data</span>
+                <span class="p">)</span>
 
             <span class="k">case</span> <span class="n">InteractionType</span><span class="o">.</span><span class="n">application_command_autocomplete</span><span class="p">:</span>
-                <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received autocomplete interaction, processing...&quot;</span><span class="p">)</span>
-
-                <span class="n">command_name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">)</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd</span><span class="p">:</span>
-                        <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unhandled autocomplete recieved (name: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                            <span class="s2">&quot;command not found&quot;</span><span class="p">,</span>
-                            <span class="n">status</span><span class="o">=</span><span class="mi">404</span>
-                        <span class="p">)</span>
-
-                    <span class="n">cmd</span><span class="p">,</span> <span class="n">data_options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dig_subcommand</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-
-                    <span class="n">find_focused</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span>
-                        <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_options</span>
-                        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;focused&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-                    <span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">find_focused</span><span class="p">:</span>
-                        <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                            <span class="s2">&quot;Failed to find focused option in autocomplete &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;(cmd name: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2">)&quot;</span>
-                        <span class="p">)</span>
-                        <span class="k">return</span> <span class="n">QuartResponse</span><span class="p">(</span>
-                            <span class="s2">&quot;focused option not found&quot;</span><span class="p">,</span>
-                            <span class="n">status</span><span class="o">=</span><span class="mi">400</span>
-                        <span class="p">)</span>
-
-                    <span class="k">return</span> <span class="k">await</span> <span class="n">cmd</span><span class="o">.</span><span class="n">run_autocomplete</span><span class="p">(</span>
-                        <span class="n">context</span><span class="p">,</span> <span class="n">find_focused</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">find_focused</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
-                    <span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">has_any_dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">):</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;interaction_error&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Error while running autocomplete </span><span class="si">{</span><span class="n">cmd</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
-                        <span class="p">)</span>
-                    <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_autocomplete</span><span class="p">(</span>
+                    <span class="n">context</span><span class="p">,</span> <span class="n">data</span>
+                <span class="p">)</span>
 
             <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>  <span class="c1"># Unknown</span>
                 <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unhandled interaction recieved (type: </span><span class="si">{</span><span class="n">data_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">abort</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="s2">&quot;invalid request body&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DiscordHTTP.error_messages">
+<a class="viewcode-back" href="../../api/backend.html#discord_http.backend.DiscordHTTP.error_messages">[docs]</a>
+    <span class="k">def</span> <span class="nf">error_messages</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
+        <span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MessageResponse</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to return error messages to Discord.</span>
+<span class="sd">        By default, it will only cover CheckFailed errors.</span>
+<span class="sd">        You can overwrite this function to return your own error messages.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ctx: `Context`</span>
+<span class="sd">            The context of the command</span>
+<span class="sd">        e: `Exception`</span>
+<span class="sd">            The exception that was raised</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Optional[MessageResponse]`</span>
+<span class="sd">            The message response provided by the library error handler</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">CheckFailed</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
+                <span class="n">content</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                <span class="n">ephemeral</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="DiscordHTTP.index_ping">
 <a class="viewcode-back" href="../../api/backend.html#discord_http.backend.DiscordHTTP.index_ping">[docs]</a>
@@ -588,7 +637,7 @@
             <span class="p">},</span>
             <span class="s2">&quot;last_reboot&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;datetime&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="o">.</span><span class="n">astimezone</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()),</span>
-                <span class="s2">&quot;timedelta&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">),</span>
+                <span class="s2">&quot;timedelta&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="p">),</span>
                 <span class="s2">&quot;unix&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uptime</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()),</span>
             <span class="p">}</span>
         <span class="p">}</span></div>
@@ -604,7 +653,8 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">disable_default_get_path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span>
-                <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">index_ping</span><span class="p">,</span>
                 <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">]</span>
             <span class="p">)</span>
@@ -612,7 +662,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span>
             <span class="s2">&quot;/&quot;</span><span class="p">,</span>
             <span class="s2">&quot;index&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_index_interaction</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_index_interactions_endpoint</span><span class="p">,</span>
             <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">]</span>
         <span class="p">)</span>
 
@@ -645,10 +695,16 @@
         <span class="k">for</span> <span class="n">signal_name</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;SIGINT&quot;</span><span class="p">,</span> <span class="s2">&quot;SIGTERM&quot;</span><span class="p">,</span> <span class="s2">&quot;SIGBREAK&quot;</span><span class="p">}:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">loop</span><span class="o">.</span><span class="n">add_signal_handler</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">),</span> <span class="n">_signal_handler</span><span class="p">)</span>
+                    <span class="n">loop</span><span class="o">.</span><span class="n">add_signal_handler</span><span class="p">(</span>
+                        <span class="nb">getattr</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">),</span>
+                        <span class="n">_signal_handler</span>
+                    <span class="p">)</span>
                 <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
                     <span class="c1"># Add signal handler may not be implemented on Windows</span>
-                    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">),</span> <span class="n">_signal_handler</span><span class="p">)</span>
+                    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span>
+                        <span class="nb">getattr</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">),</span>
+                        <span class="n">_signal_handler</span>
+                    <span class="p">)</span>
 
         <span class="n">server_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SERVER_NAME&quot;</span><span class="p">)</span>
         <span class="n">sn_host</span> <span class="o">=</span> <span class="kc">None</span>
@@ -702,13 +758,17 @@
         <span class="n">config</span><span class="o">.</span><span class="n">access_log_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(h)s</span><span class="s2"> </span><span class="si">%(r)s</span><span class="s2"> </span><span class="si">%(s)s</span><span class="s2"> </span><span class="si">%(b)s</span><span class="s2"> </span><span class="si">%(D)s</span><span class="s2">&quot;</span>
         <span class="n">config</span><span class="o">.</span><span class="n">accesslog</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">config</span><span class="o">.</span><span class="n">ca_certs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config</span><span class="o">.</span><span class="n">certfile</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">config</span><span class="o">.</span><span class="n">errorlog</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">config</span><span class="o">.</span><span class="n">keyfile</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">return</span> <span class="n">serve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">shutdown_trigger</span><span class="o">=</span><span class="n">shutdown_trigger</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">serve</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">config</span><span class="p">,</span>
+            <span class="n">shutdown_trigger</span><span class="o">=</span><span class="n">shutdown_trigger</span>
+        <span class="p">)</span></div>
 </div>
 
 </pre></div>

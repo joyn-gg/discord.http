@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -316,6 +315,15 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_from_data</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parsed_data</span><span class="p">[</span><span class="s2">&quot;strings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="n">_resolved</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;resolved&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">data_to_resolve</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">,</span> <span class="s2">&quot;channels&quot;</span><span class="p">,</span> <span class="s2">&quot;roles&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data_to_resolve</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_resolved</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">_resolved</span><span class="p">)</span>
+
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">none</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `SelectValues`: with no values &quot;&quot;&quot;</span>
@@ -366,25 +374,20 @@
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">guild</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;While parsing members, guild object was not available&quot;</span><span class="p">)</span>
                     <span class="n">to_append</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Member</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">guild</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">guild</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">_data</span><span class="p">))</span>
+
                 <span class="k">case</span> <span class="s2">&quot;users&quot;</span><span class="p">:</span>
                     <span class="n">to_append</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">_data</span><span class="p">))</span>
+
                 <span class="k">case</span> <span class="s2">&quot;channels&quot;</span><span class="p">:</span>
                     <span class="n">to_append</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">channel_types</span><span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]](</span><span class="n">state</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">_data</span><span class="p">))</span>
+
                 <span class="k">case</span> <span class="s2">&quot;roles&quot;</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">guild</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;While parsing roles, guild object was not available&quot;</span><span class="p">)</span>
                     <span class="n">to_append</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Role</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">guild</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">guild</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">_data</span><span class="p">))</span>
+
                 <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                     <span class="k">pass</span>
-
-    <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_parsed_data</span><span class="p">[</span><span class="s2">&quot;strings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;values&quot;</span><span class="p">,</span> <span class="p">[])</span>
-
-        <span class="n">_resolved</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;resolved&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">data_to_resolve</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">,</span> <span class="s2">&quot;channels&quot;</span><span class="p">,</span> <span class="s2">&quot;roles&quot;</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data_to_resolve</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parse_resolved</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">_resolved</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="InteractionResponse">
@@ -794,6 +797,7 @@
         <span class="k">match</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
             <span class="k">case</span> <span class="n">InteractionType</span><span class="o">.</span><span class="n">message_component</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">select_values</span> <span class="o">=</span> <span class="n">SelectValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
             <span class="k">case</span> <span class="n">InteractionType</span><span class="o">.</span><span class="n">modal_submit</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;components&quot;</span><span class="p">]:</span>
                     <span class="n">ans</span> <span class="o">=</span> <span class="n">comp</span><span class="p">[</span><span class="s2">&quot;components&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -825,7 +829,7 @@
 <a class="viewcode-back" href="../../api/context.html#discord_http.context.Context.is_expired">[docs]</a>
     <span class="k">def</span> <span class="nf">is_expired</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool` Returns whether the interaction is expired &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span></div>
+        <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span></div>
 
 
     <span class="nd">@property</span>

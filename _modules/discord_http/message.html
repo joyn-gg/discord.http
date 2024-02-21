@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -1047,6 +1046,12 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Message id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> author=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message_reference&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">message_reference</span> <span class="o">=</span> <span class="n">MessageReference</span><span class="p">(</span>
@@ -1063,12 +1068,6 @@
 
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;edited_timestamp&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edited_timestamp</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_time</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;edited_timestamp&quot;</span><span class="p">])</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Message id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> author=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">emojis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PartialEmoji</span><span class="p">]:</span>

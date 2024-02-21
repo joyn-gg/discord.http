@@ -195,7 +195,6 @@
 <li class="toctree-l2"><a class="reference internal" href="tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -255,7 +254,9 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.backend.DiscordHTTP.error_messages">
 <span class="sig-name descname"><span class="pre">error_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="context.html#discord_http.context.Context" title="discord_http.context.Context"><span class="pre">Context</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="response.html#discord_http.response.MessageResponse" title="discord_http.response.MessageResponse"><span class="pre">MessageResponse</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/backend.html#DiscordHTTP.error_messages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.backend.DiscordHTTP.error_messages" title="Link to this definition">#</a></dt>
-<dd><p>Used to return error messages to Discord</p>
+<dd><p>Used to return error messages to Discord.
+By default, it will only cover CheckFailed errors.
+You can overwrite this function to return your own error messages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -296,12 +297,6 @@ Remember that it must return <cite>dict</cite></p>
 <dt class="sig sig-object py" id="discord_http.backend.DiscordHTTP.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'127.0.0.1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8080</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/backend.html#DiscordHTTP.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.backend.DiscordHTTP.start" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="discord_http.backend.DiscordHTTP.validate_request">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/backend.html#DiscordHTTP.validate_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.backend.DiscordHTTP.validate_request" title="Link to this definition">#</a></dt>
-<dd><p>Used to validate requests sent by Discord Webhooks</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -371,7 +366,6 @@ Remember that it must return <cite>dict</cite></p>
 <li><a class="reference internal" href="#discord_http.backend.DiscordHTTP.run"><code class="docutils literal notranslate"><span class="pre">DiscordHTTP.run()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.backend.DiscordHTTP.run_task"><code class="docutils literal notranslate"><span class="pre">DiscordHTTP.run_task()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.backend.DiscordHTTP.start"><code class="docutils literal notranslate"><span class="pre">DiscordHTTP.start()</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.backend.DiscordHTTP.validate_request"><code class="docutils literal notranslate"><span class="pre">DiscordHTTP.validate_request()</span></code></a></li>
 </ul>
 </li>
 </ul>

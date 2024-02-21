@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -250,7 +249,7 @@
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">EntitlementType</span><span class="p">,</span> <span class="n">EntitlementOwnerType</span><span class="p">,</span> <span class="n">SKUType</span>
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">SKUFlags</span>
 <span class="kn">from</span> <span class="nn">.guild</span> <span class="kn">import</span> <span class="n">PartialGuild</span>
-<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span><span class="p">,</span> <span class="n">Snowflake</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">PartialUser</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -284,7 +283,7 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">create_test_entitlement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">owner_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">owner_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">owner_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EntitlementOwnerType</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PartialEntitlements&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -292,7 +291,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        owner_id: `Union[utils.Snowflake, int]`</span>
+<span class="sd">        owner_id: `Union[Snowflake, int]`</span>
 <span class="sd">            The ID of the owner, can be GuildID or UserID.</span>
 <span class="sd">        owner_type: `Union[EntitlementOwnerType, int]`</span>
 <span class="sd">            The type of the owner.</span>

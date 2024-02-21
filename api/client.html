@@ -195,7 +195,6 @@
 <li class="toctree-l2"><a class="reference internal" href="tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -254,7 +253,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.add_cog">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_cog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Cog" title="discord_http.commands.Cog"><span class="pre">Cog</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_cog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_cog" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_cog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Cog" title="discord_http.commands.Cog"><span class="pre">Cog</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_cog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_cog" title="Link to this definition">#</a></dt>
 <dd><p>Adds a cog to the bot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -265,17 +264,11 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.add_command">
-<span class="sig-name descname"><span class="pre">add_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Command" title="discord_http.commands.Command"><span class="pre">Command</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_command" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Command" title="discord_http.commands.Command"><span class="pre">Command</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="commands.html#discord_http.commands.Command" title="discord_http.commands.Command"><span class="pre">Command</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_command" title="Link to this definition">#</a></dt>
 <dd><p>Adds a command to the bot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>command</strong> (<cite>Command</cite>) – The command to add to the bot.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The command that was added.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>Command</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -299,24 +292,18 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.add_interaction">
-<span class="sig-name descname"><span class="pre">add_interaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Interaction" title="discord_http.commands.Interaction"><span class="pre">Interaction</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_interaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_interaction" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_interaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Interaction" title="discord_http.commands.Interaction"><span class="pre">Interaction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="commands.html#discord_http.commands.Interaction" title="discord_http.commands.Interaction"><span class="pre">Interaction</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_interaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_interaction" title="Link to this definition">#</a></dt>
 <dd><p>Adds an interaction to the bot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>interaction</strong> (<cite>Interaction</cite>) – The interaction to add to the bot.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The interaction that was added.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>Interaction</cite></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.add_listener">
-<span class="sig-name descname"><span class="pre">add_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Listener" title="discord_http.commands.Listener"><span class="pre">Listener</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_listener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_listener" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="commands.html#discord_http.commands.Listener" title="discord_http.commands.Listener"><span class="pre">Listener</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="commands.html#discord_http.commands.Listener" title="discord_http.commands.Listener"><span class="pre">Listener</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.add_listener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.add_listener" title="Link to this definition">#</a></dt>
 <dd><p>Adds a listener to the bot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -327,14 +314,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.command">
-<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.command" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.command" title="Link to this definition">#</a></dt>
 <dd><p>Used to register a command</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p></li>
 <li><p><strong>description</strong> (<cite>Optional[str]</cite>) – Description of the command, if not provided, it will use the function docstring</p></li>
-<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[utils.Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
+<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
 </ul>
 </dd>
 </dl>
@@ -492,6 +479,11 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_scheduled_event">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_scheduled_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="guild.html#discord_http.guild.ScheduledEvent" title="discord_http.guild.ScheduledEvent"><span class="pre">ScheduledEvent</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_scheduled_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_scheduled_event" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.fetch_skus">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_skus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="entitlements.html#discord_http.entitlements.SKU" title="discord_http.entitlements.SKU"><span class="pre">SKU</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_skus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_skus" title="Link to this definition">#</a></dt>
 <dd><p><cite>list[SKU]</cite>: Fetches all SKUs available to the bot.</p>
@@ -558,7 +550,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>custom_id</strong> (<cite>str</cite>) – The Custom ID to find the interaction with.
-Will automatically convert to regex if some interaction Custom IDs are regex.</p>
+Will automatically convert to regex matching
+if some interaction Custom IDs are regex.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The interaction that was found if any.</p>
@@ -701,6 +694,11 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.get_partial_scheduled_event">
+<span class="sig-name descname"><span class="pre">get_partial_scheduled_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="guild.html#discord_http.guild.PartialScheduledEvent" title="discord_http.guild.PartialScheduledEvent"><span class="pre">PartialScheduledEvent</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_scheduled_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_scheduled_event" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.get_partial_sticker">
 <span class="sig-name descname"><span class="pre">get_partial_sticker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sticker_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sticker.html#discord_http.sticker.PartialSticker" title="discord_http.sticker.PartialSticker"><span class="pre">PartialSticker</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_sticker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_sticker" title="Link to this definition">#</a></dt>
 <dd><p>Creates a partial sticker object.</p>
@@ -840,7 +838,7 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.message_command">
-<span class="sig-name descname"><span class="pre">message_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.message_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.message_command" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">message_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.message_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.message_command" title="Link to this definition">#</a></dt>
 <dd><p>Used to register a message command</p>
 <p>Example usage</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@message_command</span><span class="p">()</span>
@@ -852,26 +850,54 @@ Will automatically convert to regex if some interaction Custom IDs are regex.</p
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p></li>
-<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[utils.Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
+<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="discord_http.client.Client.set_context">
-<span class="sig-name descname"><span class="pre">set_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.set_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.set_context" title="Link to this definition">#</a></dt>
-<dd><p>Get the context for a command, while allowing custom context as well</p>
+<dt class="sig sig-object py" id="discord_http.client.Client.set_backend">
+<span class="sig-name descname"><span class="pre">set_backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.set_backend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.set_backend" title="Link to this definition">#</a></dt>
+<dd><p>Set the backend to use for the bot</p>
 <p>Example of making one:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">discord_http</span> <span class="kn">import</span> <span class="n">commands</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">discord_http</span> <span class="kn">import</span> <span class="n">DiscordHTTP</span>
 
-<span class="k">class</span> <span class="nc">CustomContext</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">Context</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">CustomBackend</span><span class="p">(</span><span class="n">DiscordHTTP</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<span class="n">DiscordHTTP</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CustomContext</span><span class="p">)</span>
+<span class="n">Client</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CustomBackend</span><span class="p">)</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cls</strong> (<cite>Optional[Callable]</cite>) – The backend to use for everything.
+Leave empty to use the default backend.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.set_context">
+<span class="sig-name descname"><span class="pre">set_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.set_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.set_context" title="Link to this definition">#</a></dt>
+<dd><p>Get the context for a command, while allowing custom context as well</p>
+<p>Example of making one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">discord_http</span> <span class="kn">import</span> <span class="n">Context</span>
+
+<span class="k">class</span> <span class="nc">CustomContext</span><span class="p">(</span><span class="n">Context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="n">Client</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">CustomContext</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cls</strong> (<cite>Optional[Callable]</cite>) – The context to use for commands.
+Leave empty to use the default context.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -903,7 +929,7 @@ You can overwrite this function to do your own setup</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.user_command">
-<span class="sig-name descname"><span class="pre">user_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Snowflake</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.user_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.user_command" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">user_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.user_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.user_command" title="Link to this definition">#</a></dt>
 <dd><p>Used to register a user command</p>
 <p>Example usage</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@user_command</span><span class="p">()</span>
@@ -915,7 +941,7 @@ You can overwrite this function to do your own setup</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<cite>Optional[str]</cite>) – Name of the command, if not provided, it will use the function name</p></li>
-<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[utils.Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
+<li><p><strong>guild_ids</strong> (<cite>Optional[list[Union[Snowflake, int]]]</cite>) – List of guild IDs to register the command in</p></li>
 </ul>
 </dd>
 </dl>
@@ -1004,6 +1030,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_invite"><code class="docutils literal notranslate"><span class="pre">Client.fetch_invite()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_member"><code class="docutils literal notranslate"><span class="pre">Client.fetch_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_message"><code class="docutils literal notranslate"><span class="pre">Client.fetch_message()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_scheduled_event"><code class="docutils literal notranslate"><span class="pre">Client.fetch_scheduled_event()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_skus"><code class="docutils literal notranslate"><span class="pre">Client.fetch_skus()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">Client.fetch_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_user"><code class="docutils literal notranslate"><span class="pre">Client.fetch_user()</span></code></a></li>
@@ -1016,6 +1043,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_member"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_message"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_message()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_role"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_role()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.get_partial_scheduled_event"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_scheduled_event()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_sticker"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_user"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_user()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_webhook"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_webhook()</span></code></a></li>
@@ -1026,6 +1054,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.listener"><code class="docutils literal notranslate"><span class="pre">Client.listener()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.load_extension"><code class="docutils literal notranslate"><span class="pre">Client.load_extension()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.message_command"><code class="docutils literal notranslate"><span class="pre">Client.message_command()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.set_backend"><code class="docutils literal notranslate"><span class="pre">Client.set_backend()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.set_context"><code class="docutils literal notranslate"><span class="pre">Client.set_context()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.setup_hook"><code class="docutils literal notranslate"><span class="pre">Client.setup_hook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.start"><code class="docutils literal notranslate"><span class="pre">Client.start()</span></code></a></li>

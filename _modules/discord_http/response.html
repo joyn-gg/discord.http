@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -252,12 +251,13 @@
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">MessageFlags</span>
 <span class="kn">from</span> <span class="nn">.mentions</span> <span class="kn">import</span> <span class="n">AllowedMentions</span>
 <span class="kn">from</span> <span class="nn">.multipart</span> <span class="kn">import</span> <span class="n">MultipartData</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">Snowflake</span>
 <span class="kn">from</span> <span class="nn">.view</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Modal</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
     <span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">MessageReference</span>
-    <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
+    <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">PartialUser</span><span class="p">,</span> <span class="n">User</span>
 
 <span class="n">MISSING</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MISSING</span>
 
@@ -271,25 +271,29 @@
 
 <div class="viewcode-block" id="Ping">
 <a class="viewcode-back" href="../../api/response.html#discord_http.response.Ping">[docs]</a>
-<span class="k">class</span> <span class="nc">Ping</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Ping</span><span class="p">(</span><span class="n">Snowflake</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raw_user</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;application_id&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Ping application_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="si">}</span><span class="s2"> user=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Ping application=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="si">}</span><span class="s2"> user=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">application</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PartialUser&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `User`: Returns the user object of the bot &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">PartialUser</span>
+        <span class="k">return</span> <span class="n">PartialUser</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">application_id</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>

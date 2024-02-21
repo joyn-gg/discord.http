@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -248,12 +247,14 @@
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">CONFORM</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
-<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">PartialRole</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">PermissionType</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">Snowflake</span>
+<span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">PartialRole</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;BaseFlag&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ChannelFlags&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;GuildMemberFlags&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MessageFlags&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PermissionOverwrite&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Permissions&quot;</span><span class="p">,</span>
@@ -454,6 +455,25 @@
 
 
 
+<div class="viewcode-block" id="GuildMemberFlags">
+<a class="viewcode-back" href="../../api/flag.html#discord_http.flag.GuildMemberFlags">[docs]</a>
+<span class="k">class</span> <span class="nc">GuildMemberFlags</span><span class="p">(</span><span class="n">BaseFlag</span><span class="p">):</span>
+    <span class="n">did_rejoin</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span>
+    <span class="n">completed_onboarding</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
+    <span class="n">bypasses_verification</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+    <span class="n">started_onboarding</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span></div>
+
+
+
+<div class="viewcode-block" id="ChannelFlags">
+<a class="viewcode-back" href="../../api/flag.html#discord_http.flag.ChannelFlags">[docs]</a>
+<span class="k">class</span> <span class="nc">ChannelFlags</span><span class="p">(</span><span class="n">BaseFlag</span><span class="p">):</span>
+    <span class="n">pinned</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
+    <span class="n">require_tag</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span>
+    <span class="n">hide_media_download_options</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span></div>
+
+
+
 <div class="viewcode-block" id="PublicFlags">
 <a class="viewcode-back" href="../../api/flag.html#discord_http.flag.PublicFlags">[docs]</a>
 <span class="k">class</span> <span class="nc">PublicFlags</span><span class="p">(</span><span class="n">BaseFlag</span><span class="p">):</span>
@@ -543,7 +563,7 @@
 <span class="k">class</span> <span class="nc">PermissionOverwrite</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">allow</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Permissions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">deny</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Permissions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -564,7 +584,7 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">Snowflake</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target_type</span> <span class="o">=</span> <span class="p">(</span>

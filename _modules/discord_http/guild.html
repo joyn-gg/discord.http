@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -244,6 +243,7 @@
         <article role="main">
           <h1>Source code for discord_http.guild</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">AsyncIterator</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -251,32 +251,37 @@
 <span class="kn">from</span> <span class="nn">.colour</span> <span class="kn">import</span> <span class="n">Colour</span><span class="p">,</span> <span class="n">Color</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ChannelType</span><span class="p">,</span> <span class="n">VerificationLevel</span><span class="p">,</span>
-    <span class="n">DefaultNotificationLevel</span><span class="p">,</span> <span class="n">ContentFilterLevel</span>
+    <span class="n">DefaultNotificationLevel</span><span class="p">,</span> <span class="n">ContentFilterLevel</span><span class="p">,</span>
+    <span class="n">ScheduledEventEntityType</span><span class="p">,</span> <span class="n">ScheduledEventPrivacyType</span><span class="p">,</span>
+    <span class="n">ScheduledEventStatusType</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">Emoji</span>
 <span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">SystemChannelFlags</span><span class="p">,</span> <span class="n">PermissionOverwrite</span>
 <span class="kn">from</span> <span class="nn">.multipart</span> <span class="kn">import</span> <span class="n">MultipartData</span>
-<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span><span class="p">,</span> <span class="n">Snowflake</span>
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span><span class="p">,</span> <span class="n">PartialRole</span>
 <span class="kn">from</span> <span class="nn">.sticker</span> <span class="kn">import</span> <span class="n">Sticker</span>
-<span class="kn">from</span> <span class="nn">.voice</span> <span class="kn">import</span> <span class="n">VoiceRegion</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="p">(</span>
         <span class="n">TextChannel</span><span class="p">,</span> <span class="n">VoiceChannel</span><span class="p">,</span>
         <span class="n">PartialChannel</span><span class="p">,</span> <span class="n">BaseChannel</span><span class="p">,</span>
-        <span class="n">CategoryChannel</span>
+        <span class="n">CategoryChannel</span><span class="p">,</span> <span class="n">PublicThread</span><span class="p">,</span>
+        <span class="n">VoiceRegion</span>
     <span class="p">)</span>
     <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
     <span class="kn">from</span> <span class="nn">.invite</span> <span class="kn">import</span> <span class="n">Invite</span>
     <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span>
+    <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
 
 <span class="n">MISSING</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MISSING</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;Guild&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PartialGuild&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PartialScheduledEvent&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScheduledEvent&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -287,6 +292,235 @@
     <span class="n">filesize</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">soundboards</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">stickers</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<div class="viewcode-block" id="PartialScheduledEvent">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialScheduledEvent">[docs]</a>
+<span class="k">class</span> <span class="nc">PartialScheduledEvent</span><span class="p">(</span><span class="n">PartialBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">guild_id</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;PartialScheduledEvent id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">guild</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PartialGuild&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `PartialGuild`: The guild object this event is in &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialGuild</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PartialScheduledEvent.fetch">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialScheduledEvent.fetch">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScheduledEvent&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `ScheduledEvent`: Fetches more information about the event &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">/scheduled-events/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ScheduledEvent</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialScheduledEvent.delete">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialScheduledEvent.delete">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the event (the bot must own the event) &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">/scheduled-events/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">res_method</span><span class="o">=</span><span class="s2">&quot;text&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialScheduledEvent.edit">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialScheduledEvent.edit">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">edit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">channel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;PartialChannel&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">external_location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">privacy_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduledEventPrivacyType</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduledEventEntityType</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduledEventStatusType</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">start_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">image</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScheduledEvent&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Edit the event</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: `Optional[str]`</span>
+<span class="sd">            New name of the event</span>
+<span class="sd">        description: `Optional[str]`</span>
+<span class="sd">            New description of the event</span>
+<span class="sd">        channel: `Optional[Union[&amp;quot;PartialChannel&amp;quot;, int]]`</span>
+<span class="sd">            New channel of the event</span>
+<span class="sd">        privacy_level: `Optional[ScheduledEventPrivacyType]`</span>
+<span class="sd">            New privacy level of the event</span>
+<span class="sd">        entity_type: `Optional[ScheduledEventEntityType]`</span>
+<span class="sd">            New entity type of the event</span>
+<span class="sd">        status: `Optional[ScheduledEventStatusType]`</span>
+<span class="sd">            New status of the event</span>
+<span class="sd">        start_time: `Optional[Union[datetime, timedelta, int]]`</span>
+<span class="sd">            New start time of the event</span>
+<span class="sd">        end_time: `Optional[Union[datetime, timedelta, int]]`</span>
+<span class="sd">            New end time of the event (only for external events)</span>
+<span class="sd">        image: `Optional[Union[File, bytes]]`</span>
+<span class="sd">            New image of the event</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for editing the event</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `ScheduledEvent`</span>
+<span class="sd">            The edited event</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        `ValueError`</span>
+<span class="sd">            If the start_time is None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+
+        <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;channel_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">channel</span><span class="p">))</span> <span class="k">if</span> <span class="n">channel</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">external_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">external_location</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;entity_metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;entity_metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">external_location</span>
+                <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">privacy_level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;privacy_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">privacy_level</span> <span class="ow">or</span>
+                <span class="n">ScheduledEventPrivacyType</span><span class="o">.</span><span class="n">guild_only</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">entity_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">entity_type</span> <span class="ow">or</span>
+                <span class="n">ScheduledEventEntityType</span><span class="o">.</span><span class="n">voice</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">status</span> <span class="ow">or</span>
+                <span class="n">ScheduledEventStatusType</span><span class="o">.</span><span class="n">scheduled</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">start_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;start_time cannot be None&quot;</span><span class="p">)</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;scheduled_start_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">add_to_datetime</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;scheduled_end_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;scheduled_end_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">add_to_datetime</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">bytes_to_base64</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">/scheduled-events/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ScheduledEvent</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ScheduledEvent">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.ScheduledEvent">[docs]</a>
+<span class="k">class</span> <span class="nc">ScheduledEvent</span><span class="p">(</span><span class="n">PartialScheduledEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]),</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;guild_id&quot;</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;user_count&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">privacy_level</span><span class="p">:</span> <span class="n">ScheduledEventPrivacyType</span> <span class="o">=</span> <span class="n">ScheduledEventPrivacyType</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;privacy_level&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">:</span> <span class="n">ScheduledEventStatusType</span> <span class="o">=</span> <span class="n">ScheduledEventStatusType</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entity_type</span><span class="p">:</span> <span class="n">ScheduledEventEntityType</span> <span class="o">=</span> <span class="n">ScheduledEventEntityType</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PartialChannel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">creator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_time</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;scheduled_start_time&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;ScheduledEvent id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creator&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">creator</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;creator&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scheduled_end_time&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_time</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;scheduled_end_time&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entity_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">ScheduledEventEntityType</span><span class="o">.</span><span class="n">stage_instance</span><span class="p">,</span>
+            <span class="n">ScheduledEventEntityType</span><span class="o">.</span><span class="n">voice</span>
+        <span class="p">]:</span>
+            <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">PartialChannel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">PartialChannel</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+                <span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;entity_id&quot;</span><span class="p">]),</span>
+                <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span>
+            <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="PartialGuild">
@@ -346,6 +580,24 @@
             <span class="n">Sticker</span><span class="p">(</span>
                 <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
                 <span class="n">guild</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.fetch_scheduled_events">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_scheduled_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_scheduled_events</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScheduledEvent</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `list[ScheduledEvent]`: Fetches all the scheduled events in the guild &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/scheduled-events?with_user_count=true&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ScheduledEvent</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">data</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
@@ -497,6 +749,102 @@
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="PartialGuild.create_scheduled_event">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.create_scheduled_event">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_scheduled_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">start_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">end_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">channel</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;PartialChannel&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">privacy_level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduledEventPrivacyType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">entity_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduledEventEntityType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">external_location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">image</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">File</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScheduledEvent&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a scheduled event</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: `str`</span>
+<span class="sd">            The name of the event</span>
+<span class="sd">        start_time: `Union[datetime, timedelta, int]`</span>
+<span class="sd">            The start time of the event</span>
+<span class="sd">        end_time: `Optional[Union[datetime, timedelta, int]]`</span>
+<span class="sd">            The end time of the event</span>
+<span class="sd">        channel: `Optional[Union[PartialChannel, int]]`</span>
+<span class="sd">            The channel of the event</span>
+<span class="sd">        description: `Optional[str]`</span>
+<span class="sd">            The description of the event</span>
+<span class="sd">        privacy_level: `Optional[ScheduledEventPrivacyType]`</span>
+<span class="sd">            The privacy level of the event (default is guild_only)</span>
+<span class="sd">        entity_type: `Optional[ScheduledEventEntityType]`</span>
+<span class="sd">            The entity type of the event (default is voice)</span>
+<span class="sd">        external_location: `Optional[str]`</span>
+<span class="sd">            The external location of the event</span>
+<span class="sd">        image: `Optional[Union[File, bytes]]`</span>
+<span class="sd">            The image of the event</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the event</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `ScheduledEvent`</span>
+<span class="sd">            The created event</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">entity_type</span> <span class="ow">is</span> <span class="n">ScheduledEventEntityType</span><span class="o">.</span><span class="n">external</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;end_time cannot be None for external events&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">external_location</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;external_location cannot be None for external events&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;channel cannot be set for external events&quot;</span><span class="p">)</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;privacy_level&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">privacy_level</span> <span class="ow">or</span>
+                <span class="n">ScheduledEventPrivacyType</span><span class="o">.</span><span class="n">guild_only</span>
+            <span class="p">),</span>
+            <span class="s2">&quot;scheduled_start_time&quot;</span><span class="p">:</span> <span class="n">utils</span><span class="o">.</span><span class="n">add_to_datetime</span><span class="p">(</span><span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s2">&quot;channel_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">channel</span><span class="p">))</span> <span class="k">if</span> <span class="n">channel</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;entity_type&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="n">entity_type</span> <span class="ow">or</span>
+                <span class="n">ScheduledEventEntityType</span><span class="o">.</span><span class="n">voice</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">description</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;scheduled_end_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">add_to_datetime</span><span class="p">(</span><span class="n">end_time</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">external_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;entity_metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">external_location</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">bytes_to_base64</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/scheduled-events&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ScheduledEvent</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="PartialGuild.create_category">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.create_category">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">create_category</span><span class="p">(</span>
@@ -564,7 +912,7 @@
         <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">rate_limit_per_user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">overwrites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">PermissionOverwrite</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">nsfw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TextChannel&quot;</span><span class="p">:</span>
@@ -643,7 +991,7 @@
         <span class="n">rate_limit_per_user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">overwrites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">PermissionOverwrite</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">parent_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">parent_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">nsfw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;VoiceChannel&quot;</span><span class="p">:</span>
@@ -941,13 +1289,31 @@
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="PartialGuild.fetch_public_threads">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_public_threads">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_public_threads</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;PublicThread&quot;</span><span class="p">]:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/threads/active&quot;</span>
+        <span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">PublicThread</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">PublicThread</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">data</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="p">]</span></div>
+
+
 <div class="viewcode-block" id="PartialGuild.fetch_members">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_members">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_members</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="n">after</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">after</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="s2">&quot;Member&quot;</span><span class="p">]:</span>
         <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
 
@@ -957,7 +1323,7 @@
                 <span class="k">break</span>
 
             <span class="n">after_id</span> <span class="o">=</span> <span class="n">after</span> <span class="ow">or</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="n">Snowflake</span><span class="p">):</span>
                 <span class="n">after_id</span> <span class="o">=</span> <span class="n">after</span><span class="o">.</span><span class="n">id</span>
 
             <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
@@ -983,7 +1349,7 @@
 
 <div class="viewcode-block" id="PartialGuild.fetch_regions">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_regions">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">VoiceRegion</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;VoiceRegion&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `list[VoiceRegion]`: Fetches all the voice regions for the guild &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
@@ -991,9 +1357,7 @@
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span>
-            <span class="n">VoiceRegion</span><span class="p">(</span>
-                <span class="n">data</span><span class="o">=</span><span class="n">data</span>
-            <span class="p">)</span>
+            <span class="n">VoiceRegion</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
         <span class="p">]</span></div>
 

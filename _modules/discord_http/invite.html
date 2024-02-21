@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -360,15 +359,6 @@
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Invite code=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2">&#39; uses=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uses</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
 
-<div class="viewcode-block" id="Invite.is_vanity">
-<a class="viewcode-back" href="../../api/invite.html#discord_http.invite.Invite.is_vanity">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_vanity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Whether the invite is a vanity invite &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">vanity_url_code</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span></div>
-
-
     <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;expires_at&quot;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">expires_at</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">parse_time</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;expires_at&quot;</span><span class="p">])</span>
@@ -385,7 +375,16 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;inviter&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">inviter</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;inviter&quot;</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inviter</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;inviter&quot;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Invite.is_vanity">
+<a class="viewcode-back" href="../../api/invite.html#discord_http.invite.Invite.is_vanity">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_vanity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Whether the invite is a vanity invite &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">vanity_url_code</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span></div>
+</div>
 
 </pre></div>
         </article>

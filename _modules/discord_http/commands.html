@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -246,6 +245,7 @@
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_args</span> <span class="k">as</span> <span class="n">get_type_args</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
@@ -266,7 +266,7 @@
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span>
 <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
 <span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Attachment</span>
-<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span><span class="p">,</span> <span class="n">Snowflake</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">BaseResponse</span><span class="p">,</span> <span class="n">AutocompleteResponse</span>
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
@@ -330,16 +330,20 @@
         <span class="n">interactions</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">elem</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">base</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">match</span> <span class="n">value</span><span class="p">:</span>
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SubCommand</span><span class="p">):</span>
                         <span class="k">continue</span>  <span class="c1"># Do not overwrite commands just in case</span>
+
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Command</span><span class="p">):</span>
                         <span class="n">commands</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SubGroup</span><span class="p">):</span>
                         <span class="n">commands</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Interaction</span><span class="p">):</span>
                         <span class="n">interactions</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">custom_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Listener</span><span class="p">):</span>
                         <span class="n">listeners</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -412,7 +416,7 @@
         <span class="n">command</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">ApplicationCommandType</span> <span class="o">=</span> <span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -428,7 +432,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">description_localizations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">list_autocompletes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild_ids</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild_ids</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__list_choices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="p">:</span>
@@ -835,7 +839,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">func</span><span class="p">,</span>
@@ -856,11 +860,11 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="s2">&quot;...&quot;</span>  <span class="c1"># Only used to make Discord happy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild_ids</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild_ids</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Cog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subcommands</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SubCommand</span><span class="p">,</span> <span class="n">SubGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -875,7 +879,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Decorator to add a subcommand to a subcommand group</span>
@@ -886,7 +890,7 @@
 <span class="sd">            Name of the command (defaults to the function name)</span>
 <span class="sd">        description: `Optional[str]`</span>
 <span class="sd">            Description of the command (defaults to the function docstring)</span>
-<span class="sd">        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">        guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">            List of guild IDs to register the command in</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -898,6 +902,7 @@
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subcommands</span><span class="p">[</span><span class="n">subcommand</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">subcommand</span>
             <span class="k">return</span> <span class="n">subcommand</span>
+
         <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -916,6 +921,7 @@
             <span class="n">subgroup</span> <span class="o">=</span> <span class="n">SubGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subcommands</span><span class="p">[</span><span class="n">subgroup</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">subgroup</span>
             <span class="k">return</span> <span class="n">subgroup</span>
+
         <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -965,16 +971,43 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">custom_id</span> <span class="o">=</span> <span class="n">custom_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">custom_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">regex</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">cog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Cog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">regex</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">custom_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;&lt;Interaction custom_id=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_id</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;is_regex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">is_regex</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;regex=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
         <span class="p">)</span>
+
+<div class="viewcode-block" id="Interaction.match">
+<a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Interaction.match">[docs]</a>
+    <span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Matches the custom ID with the interaction.</span>
+<span class="sd">        Will always return False if the interaction is not a regex.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        custom_id: `str`</span>
+<span class="sd">            The custom ID to match.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `bool`</span>
+<span class="sd">            Whether the custom ID matched or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">custom_id</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="Interaction.run">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Interaction.run">[docs]</a>
@@ -1100,10 +1133,13 @@
         <span class="k">match</span> <span class="n">obj_type</span><span class="p">:</span>
             <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
                 <span class="n">opt</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
+
             <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
                 <span class="n">opt</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span>
+
             <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
                 <span class="n">opt</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
+
             <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s2">&quot;Range type must be str, int, &quot;</span>
@@ -1129,7 +1165,7 @@
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a command.</span>
@@ -1140,7 +1176,7 @@
 <span class="sd">        Name of the command (defaults to the function name)</span>
 <span class="sd">    description: `Optional[str]`</span>
 <span class="sd">        Description of the command (defaults to the function docstring)</span>
-<span class="sd">    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">        List of guild IDs to register the command in</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -1150,6 +1186,7 @@
             <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
             <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
         <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1159,7 +1196,7 @@
 <span class="k">def</span> <span class="nf">user_command</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a user command.</span>
@@ -1176,7 +1213,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name: `Optional[str]`</span>
 <span class="sd">        Name of the command (defaults to the function name)</span>
-<span class="sd">    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">        List of guild IDs to register the command in</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -1186,6 +1223,7 @@
             <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
             <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
         <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1195,7 +1233,7 @@
 <span class="k">def</span> <span class="nf">message_command</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a message command.</span>
@@ -1212,7 +1250,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name: `Optional[str]`</span>
 <span class="sd">        Name of the command (defaults to the function name)</span>
-<span class="sd">    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`</span>
+<span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">        List of guild IDs to register the command in</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -1222,6 +1260,7 @@
             <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
             <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span>
         <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1335,6 +1374,7 @@
             <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="n">description</span>
         <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1357,6 +1397,7 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__describe_params__</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1387,6 +1428,7 @@
 
         <span class="n">func</span><span class="o">.</span><span class="n">__choices_params__</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1398,6 +1440,7 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__dm_permission__</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1409,6 +1452,7 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__nsfw__</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1420,6 +1464,7 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1442,6 +1487,7 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__has_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1464,6 +1510,7 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__bot_has_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
@@ -1491,13 +1538,18 @@
         <span class="n">_check_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">predicate</span><span class="p">)</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__checks__</span> <span class="o">=</span> <span class="n">_check_list</span>
         <span class="k">return</span> <span class="n">func</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 
 
 <div class="viewcode-block" id="interaction">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.interaction">[docs]</a>
-<span class="k">def</span> <span class="nf">interaction</span><span class="p">(</span><span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">interaction</span><span class="p">(</span>
+    <span class="n">custom_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register an interaction.</span>
 
@@ -1512,8 +1564,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Interaction</span><span class="p">(</span>
-            <span class="n">func</span><span class="p">,</span> <span class="n">custom_id</span><span class="o">=</span><span class="n">custom_id</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="n">regex</span>
+            <span class="n">func</span><span class="p">,</span>
+            <span class="n">custom_id</span><span class="o">=</span><span class="n">custom_id</span><span class="p">,</span>
+            <span class="n">regex</span><span class="o">=</span><span class="n">regex</span>
         <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">decorator</span></div>
 
 

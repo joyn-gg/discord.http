@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -250,10 +249,10 @@
 <span class="kn">from</span> <span class="nn">.asset</span> <span class="kn">import</span> <span class="n">Asset</span>
 <span class="kn">from</span> <span class="nn">.embeds</span> <span class="kn">import</span> <span class="n">Embed</span>
 <span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
-<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">PublicFlags</span>
+<span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">PublicFlags</span><span class="p">,</span> <span class="n">GuildMemberFlags</span>
 <span class="kn">from</span> <span class="nn">.guild</span> <span class="kn">import</span> <span class="n">PartialGuild</span>
 <span class="kn">from</span> <span class="nn">.mentions</span> <span class="kn">import</span> <span class="n">AllowedMentions</span>
-<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span>
+<span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span><span class="p">,</span> <span class="n">Snowflake</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">ResponseType</span>
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">PartialRole</span><span class="p">,</span> <span class="n">Role</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">PartialUser</span>
@@ -542,25 +541,13 @@
         <span class="k">if</span> <span class="n">channel_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;channel_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">channel_id</span>
         <span class="k">if</span> <span class="n">communication_disabled_until</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
-            <span class="n">_timeout_value</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">_now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
-
-            <span class="k">match</span> <span class="n">communication_disabled_until</span><span class="p">:</span>
-                <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
-                    <span class="n">_timeout_value</span> <span class="o">=</span> <span class="n">_now</span> <span class="o">+</span> <span class="n">x</span>
-                <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
-                    <span class="n">_timeout_value</span> <span class="o">=</span> <span class="n">x</span>
-                <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                    <span class="n">_timeout_value</span> <span class="o">=</span> <span class="n">_now</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
-                <span class="n">case</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">_timeout_value</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="s2">&quot;Invalid type for communication_disabled_until, &quot;</span>
-                        <span class="s2">&quot;must be timedelta, datetime, int or NoneType &quot;</span>
-                    <span class="p">)</span>
-
-            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;communication_disabled_until&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_timeout_value</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">communication_disabled_until</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;communication_disabled_until&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_parse_ts</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">add_to_datetime</span><span class="p">(</span>
+                    <span class="n">communication_disabled_until</span>
+                <span class="p">)</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;communication_disabled_until&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_parse_ts</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
@@ -680,7 +667,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">avatar</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;flags&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span> <span class="n">GuildMemberFlags</span> <span class="o">=</span> <span class="n">GuildMemberFlags</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;flags&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pending&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raw_permissions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_int</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;permissions&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nick</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nick&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -692,14 +679,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;&lt;Member id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;global_name=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">global_name</span><span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
         <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">has_avatar</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;avatar&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -712,14 +699,14 @@
 <a class="viewcode-back" href="../../api/member.html#discord_http.member.Member.get_role">[docs]</a>
     <span class="k">def</span> <span class="nf">get_role</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">role</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="n">role</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PartialRole</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a role from the member</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        role: `Union[utils.Snowflake, int]`</span>
+<span class="sd">        role: `Union[Snowflake, int]`</span>
 <span class="sd">            The role to get. Can either be a role object or the Role ID</span>
 
 <span class="sd">        Returns</span>
@@ -782,16 +769,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">bot</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">global_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Gives the global display name of a member if available</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        `Optional[str]`</span>
-<span class="sd">            Returns the global display name of a member if available, bots will return None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">global_name</span>
+    <span class="k">def</span> <span class="nf">system</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `bool`: Returns whether the member is a system user &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">system</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">discriminator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -822,6 +802,23 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">avatar_decoration</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">global_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        `Optional[str]`: Gives the global display name of a member if available</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">global_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">global_avatar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: Shortcut for `User.avatar` &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">avatar</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">global_banner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: Shortcut for `User.banner` &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">banner</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `str`: Returns the display name of the member &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nick</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
@@ -829,17 +826,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">display_avatar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: Returns the display avatar of the member &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">avatar</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">avatar</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">original_avatar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: Shortcut for `User.original_avatar` &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">original_avatar</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">original_banner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Asset</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[Asset]`: Shortcut for `User.original_banner` &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">original_banner</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">avatar</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span><span class="o">.</span><span class="n">avatar</span></div>
 
 </pre></div>
         </article>

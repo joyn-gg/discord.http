@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -255,16 +254,22 @@
     <span class="s2">&quot;DefaultNotificationLevel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;EntitlementOwnerType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;EntitlementType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ForumLayoutType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;IntegrationType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;InteractionType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;InviteType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;MFALevel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ResponseType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;SKUType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScheduledEventEntityType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScheduledEventPrivacyType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ScheduledEventStatusType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SortOrderType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;StickerFormatType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;StickerType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;TextStyles&quot;</span><span class="p">,</span>
     <span class="s2">&quot;VerificationLevel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;VideoQualityType&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -320,6 +325,32 @@
 
 
 
+<div class="viewcode-block" id="ScheduledEventPrivacyType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.ScheduledEventPrivacyType">[docs]</a>
+<span class="k">class</span> <span class="nc">ScheduledEventPrivacyType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">guild_only</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="ScheduledEventEntityType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.ScheduledEventEntityType">[docs]</a>
+<span class="k">class</span> <span class="nc">ScheduledEventEntityType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">stage_instance</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">voice</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">external</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+
+<div class="viewcode-block" id="ScheduledEventStatusType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.ScheduledEventStatusType">[docs]</a>
+<span class="k">class</span> <span class="nc">ScheduledEventStatusType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">scheduled</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">completed</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">canceled</span> <span class="o">=</span> <span class="mi">4</span></div>
+
+
+
 <div class="viewcode-block" id="VerificationLevel">
 <a class="viewcode-back" href="../../api/enums.html#discord_http.enums.VerificationLevel">[docs]</a>
 <span class="k">class</span> <span class="nc">VerificationLevel</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -334,6 +365,7 @@
 <div class="viewcode-block" id="ChannelType">
 <a class="viewcode-back" href="../../api/enums.html#discord_http.enums.ChannelType">[docs]</a>
 <span class="k">class</span> <span class="nc">ChannelType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">guild_text</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">dm</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">guild_voice</span> <span class="o">=</span> <span class="mi">2</span>
@@ -377,6 +409,31 @@
     <span class="n">update_message</span> <span class="o">=</span> <span class="mi">7</span>
     <span class="n">application_command_autocomplete_result</span> <span class="o">=</span> <span class="mi">8</span>
     <span class="n">modal</span> <span class="o">=</span> <span class="mi">9</span></div>
+
+
+
+<div class="viewcode-block" id="VideoQualityType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.VideoQualityType">[docs]</a>
+<span class="k">class</span> <span class="nc">VideoQualityType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">auto</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="ForumLayoutType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.ForumLayoutType">[docs]</a>
+<span class="k">class</span> <span class="nc">ForumLayoutType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">not_set</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">list_view</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">gallery_view</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="SortOrderType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.SortOrderType">[docs]</a>
+<span class="k">class</span> <span class="nc">SortOrderType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">latest_activity</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">creation_date</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 
 

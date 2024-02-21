@@ -194,7 +194,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/tasks.html">Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/user.html">User</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/view.html">View</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/voice.html">Voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/webhook.html">Webhook</a></li>
 </ul>
 </li>
@@ -417,7 +416,11 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">decoration</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="n">animated</span> <span class="o">=</span> <span class="n">decoration</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v2_a_&quot;</span><span class="p">)</span>
+        <span class="n">animated</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">decoration</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;v2_a_&quot;</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="n">decoration</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;a_&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">BASE</span><span class="si">}</span><span class="s2">/avatar-decoration-presets/</span><span class="si">{</span><span class="n">decoration</span><span class="si">}</span><span class="s2">.png?size=96&amp;passthrough=true&quot;</span><span class="p">,</span>
             <span class="n">key</span><span class="o">=</span><span class="n">decoration</span><span class="p">,</span>
