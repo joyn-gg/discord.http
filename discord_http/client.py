@@ -253,12 +253,6 @@ class Client:
         """
         Get the context for a command, while allowing custom context as well
 
-        Parameters
-        ----------
-        cls: `Optional[Callable]`
-            The context to use for commands.
-            Leave empty to use the default context.
-
         Example of making one:
 
         .. code-block:: python
@@ -270,6 +264,12 @@ class Client:
                     super().__init__(*args, **kwargs)
 
             Client.set_context(cls=CustomContext)
+
+        Parameters
+        ----------
+        cls: `Optional[Callable]`
+            The context to use for commands.
+            Leave empty to use the default context.
         """
         if cls is None:
             cls = Context
@@ -284,12 +284,6 @@ class Client:
         """
         Set the backend to use for the bot
 
-        Parameters
-        ----------
-        cls: `Optional[Callable]`
-            The backend to use for everything.
-            Leave empty to use the default backend.
-
         Example of making one:
 
         .. code-block:: python
@@ -301,6 +295,12 @@ class Client:
                     super().__init__(*args, **kwargs)
 
             Client.set_backend(cls=CustomBackend)
+
+        Parameters
+        ----------
+        cls: `Optional[Callable]`
+            The backend to use for everything.
+            Leave empty to use the default backend.
         """
         if cls is None:
             cls = DiscordHTTP
