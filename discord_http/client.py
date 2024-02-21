@@ -2,7 +2,6 @@ import asyncio
 import importlib
 import inspect
 import logging
-import re
 
 from typing import Dict, Optional, Any, Callable, Union
 
@@ -13,12 +12,13 @@ from .commands import Command, Interaction, Listener, Cog, SubGroup
 from .context import Context
 from .entitlements import SKU, PartialEntitlements, Entitlements
 from .enums import ApplicationCommandType
-from .guild import PartialGuild, Guild
+from .guild import PartialGuild, Guild, PartialScheduledEvent, ScheduledEvent
 from .http import DiscordAPI
 from .invite import PartialInvite, Invite
 from .member import PartialMember, Member
 from .mentions import AllowedMentions
 from .message import PartialMessage, Message
+from .object import Snowflake
 from .role import PartialRole
 from .sticker import PartialSticker, Sticker
 from .user import User, PartialUser
@@ -107,12 +107,13 @@ class Client:
         )
 
         self.commands: Dict[str, Command] = {}
-        self.interactions: Dict[str, Interaction] = {}
         self.listeners: list[Listener] = []
+        self.interactions: Dict[str, Interaction] = {}
+        self.interactions_regex: Dict[str, Interaction] = {}
 
         self._ready: Optional[asyncio.Event] = asyncio.Event()
-        self.backend: DiscordHTTP = DiscordHTTP(client=self)
         self._context: Callable = Context
+        self.backend: DiscordHTTP = DiscordHTTP(client=self)
 
         self._view_storage: dict[int, InteractionStorage] = {}
         self._default_allowed_mentions = allowed_mentions
@@ -145,37 +146,11 @@ class Client:
             except asyncio.CancelledError:
                 pass
 
-    def is_ready(self) -> bool:
-        """ `bool`: Indicates if the client is ready. """
-        return (
-            self._ready is not None and
-            self._ready.is_set()
-        )
-
-    def set_context(
-        self,
-        *,
-        cls: Callable
-    ) -> None:
-        """
-        Get the context for a command, while allowing custom context as well
-
-        Example of making one:
-
-        .. code-block:: python
-
-            from discord_http import commands
-
-            class CustomContext(commands.Context):
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-
-            DiscordHTTP.set_context(cls=CustomContext)
-        """
-        self._context = cls
-
     async def _prepare_bot(self) -> None:
-        """ This will run prepare_setup() before boot to make the user set up needed vars """
+        """
+        This will run prepare_setup() before boot
+        to make the user set up needed vars
+        """
         client_object = await self._prepare_me()
 
         await self.setup_hook()
@@ -195,6 +170,142 @@ class Client:
                 "✨ Your bot invite URL: "
                 f"{utils.oauth_url(self.application_id)}"
             )
+
+    def _update_ids(self, data: dict) -> None:
+        for g in data:
+            cmd = self.commands.get(g["name"], None)
+            if not cmd:
+                continue
+            cmd.id = int(g["id"])
+
+    def _schedule_event(
+        self,
+        listener: "Listener",
+        event_name: str,
+        *args: Any,
+        **kwargs: Any
+    ) -> asyncio.Task:
+        """ Schedules an event to be dispatched. """
+        wrapped = self._run_event(
+            listener, event_name,
+            *args, **kwargs
+        )
+
+        return self.loop.create_task(
+            wrapped, name=f"discord.quart: {event_name}"
+        )
+
+    async def _prepare_me(self) -> User:
+        """ Gets the bot's user data, mostly used to validate token """
+        try:
+            self.user = await self.state.me()
+        except KeyError:
+            raise RuntimeError("Invalid token")
+
+        _log.debug(f"/users/@me verified: {self.user} ({self.user.id})")
+
+        return self.user
+
+    async def _prepare_commands(self) -> None:
+        if self.sync:
+            data = await self.state.update_commands(
+                data=[
+                    v.to_dict()
+                    for v in self.commands.values()
+                    if not v.guild_ids
+                ],
+                guild_id=self.guild_id
+            )
+
+            guild_ids = []
+            for cmd in self.commands.values():
+                if cmd.guild_ids:
+                    guild_ids.extend([int(gid) for gid in cmd.guild_ids])
+            guild_ids = list(set(guild_ids))
+
+            for g in guild_ids:
+                await self.state.update_commands(
+                    data=[
+                        v.to_dict()
+                        for v in self.commands.values()
+                        if g in v.guild_ids
+                    ],
+                    guild_id=g
+                )
+
+            self._update_ids(data)
+        else:
+            data = await self.state.fetch_commands(guild_id=self.guild_id)
+            self._update_ids(data)
+
+    def is_ready(self) -> bool:
+        """ `bool`: Indicates if the client is ready. """
+        return (
+            self._ready is not None and
+            self._ready.is_set()
+        )
+
+    def set_context(
+        self,
+        *,
+        cls: Optional[Callable] = None
+    ) -> None:
+        """
+        Get the context for a command, while allowing custom context as well
+
+        Parameters
+        ----------
+        cls: `Optional[Callable]`
+            The context to use for commands.
+            Leave empty to use the default context.
+
+        Example of making one:
+
+        .. code-block:: python
+
+            from discord_http import Context
+
+            class CustomContext(Context):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+
+            Client.set_context(cls=CustomContext)
+        """
+        if cls is None:
+            cls = Context
+
+        self._context = cls
+
+    def set_backend(
+        self,
+        *,
+        cls: Optional[Callable] = None
+    ) -> None:
+        """
+        Set the backend to use for the bot
+
+        Parameters
+        ----------
+        cls: `Optional[Callable]`
+            The backend to use for everything.
+            Leave empty to use the default backend.
+
+        Example of making one:
+
+        .. code-block:: python
+
+            from discord_http import DiscordHTTP
+
+            class CustomBackend(DiscordHTTP):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+
+            Client.set_backend(cls=CustomBackend)
+        """
+        if cls is None:
+            cls = DiscordHTTP
+
+        self.backend = cls(client=self)
 
     async def setup_hook(self) -> None:
         """
@@ -245,30 +356,6 @@ class Client:
                 "Client has not been initialized yet, "
                 "please use Client.start() to initialize the client."
             )
-
-    def _update_ids(self, data: dict) -> None:
-        for g in data:
-            cmd = self.commands.get(g["name"], None)
-            if not cmd:
-                continue
-            cmd.id = int(g["id"])
-
-    def _schedule_event(
-        self,
-        listener: "Listener",
-        event_name: str,
-        *args: Any,
-        **kwargs: Any
-    ):
-        """ Schedules an event to be dispatched. """
-        wrapped = self._run_event(
-            listener, event_name,
-            *args, **kwargs
-        )
-
-        return self.loop.create_task(
-            wrapped, name=f"discord.quart: {event_name}"
-        )
 
     def dispatch(
         self,
@@ -341,7 +428,7 @@ class Client:
             return None
         await setup(self)
 
-    async def add_cog(self, cog: "Cog"):
+    async def add_cog(self, cog: "Cog") -> None:
         """
         Adds a cog to the bot.
 
@@ -352,54 +439,11 @@ class Client:
         """
         await cog._inject(self)
 
-    async def _prepare_me(self) -> User:
-        """ Gets the bot's user data, mostly used to validate token """
-        try:
-            self.user = await self.state.me()
-        except KeyError:
-            raise RuntimeError("Invalid token")
-
-        _log.debug(f"/users/@me verified: {self.user} ({self.user.id})")
-
-        return self.user
-
-    async def _prepare_commands(self) -> None:
-        if self.sync:
-            data = await self.state.update_commands(
-                data=[
-                    v.to_dict()
-                    for v in self.commands.values()
-                    if not v.guild_ids
-                ],
-                guild_id=self.guild_id
-            )
-
-            guild_ids = []
-            for cmd in self.commands.values():
-                if cmd.guild_ids:
-                    guild_ids.extend([int(gid) for gid in cmd.guild_ids])
-            guild_ids = list(set(guild_ids))
-
-            for g in guild_ids:
-                await self.state.update_commands(
-                    data=[
-                        v.to_dict()
-                        for v in self.commands.values()
-                        if g in v.guild_ids
-                    ],
-                    guild_id=g
-                )
-
-            self._update_ids(data)
-        else:
-            data = await self.state.fetch_commands(guild_id=self.guild_id)
-            self._update_ids(data)
-
     def command(
         self,
         name: Optional[str] = None,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None
     ):
         """
         Used to register a command
@@ -410,7 +454,7 @@ class Client:
             Name of the command, if not provided, it will use the function name
         description: `Optional[str]`
             Description of the command, if not provided, it will use the function docstring
-        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
         """
         def decorator(func):
@@ -422,13 +466,14 @@ class Client:
             )
             self.add_command(command)
             return command
+
         return decorator
 
     def user_command(
         self,
         name: Optional[str] = None,
         *,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None,
     ):
         """
         Used to register a user command
@@ -445,7 +490,7 @@ class Client:
         ----------
         name: `Optional[str]`
             Name of the command, if not provided, it will use the function name
-        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
         """
         def decorator(func):
@@ -457,13 +502,14 @@ class Client:
             )
             self.add_command(command)
             return command
+
         return decorator
 
     def message_command(
         self,
         name: Optional[str] = None,
         *,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None,
     ):
         """
         Used to register a message command
@@ -480,7 +526,7 @@ class Client:
         ----------
         name: `Optional[str]`
             Name of the command, if not provided, it will use the function name
-        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
         """
         def decorator(func):
@@ -492,6 +538,7 @@ class Client:
             )
             self.add_command(command)
             return command
+
         return decorator
 
     def group(
@@ -516,6 +563,7 @@ class Client:
             )
             self.add_command(subgroup)
             return subgroup
+
         return decorator
 
     def add_group(self, name: str) -> SubGroup:
@@ -556,9 +604,12 @@ class Client:
         """
         def decorator(func):
             command = self.add_interaction(Interaction(
-                func, custom_id=custom_id, regex=regex
+                func,
+                custom_id=custom_id,
+                regex=regex
             ))
             return command
+
         return decorator
 
     def listener(
@@ -1054,6 +1105,27 @@ class Client:
             for g in r.response
         ]
 
+    def get_partial_scheduled_event(
+        self,
+        id: int,
+        guild_id: int
+    ) -> PartialScheduledEvent:
+        return PartialScheduledEvent(
+            state=self.state,
+            id=id,
+            guild_id=guild_id
+        )
+
+    async def fetch_scheduled_event(
+        self,
+        id: int,
+        guild_id: int
+    ) -> ScheduledEvent:
+        event = self.get_partial_scheduled_event(
+            id, guild_id
+        )
+        return await event.fetch()
+
     def get_partial_guild(
         self,
         guild_id: int
@@ -1133,21 +1205,28 @@ class Client:
         ----------
         custom_id: `str`
             The Custom ID to find the interaction with.
-            Will automatically convert to regex if some interaction Custom IDs are regex.
+            Will automatically convert to regex matching
+            if some interaction Custom IDs are regex.
 
         Returns
         -------
         `Optional[Interaction]`
             The interaction that was found if any.
         """
-        for name, inter in self.interactions.items():
-            if inter.is_regex and re.match(name, custom_id):
-                return self.interactions[name]
-            elif name == custom_id:
-                return self.interactions[name]
+        inter = self.interactions.get(custom_id, None)
+        if inter:
+            return inter
+
+        for _, inter in self.interactions_regex.items():
+            if inter.match(custom_id):
+                return inter
+
         return None
 
-    def add_listener(self, func: "Listener"):
+    def add_listener(
+        self,
+        func: "Listener"
+    ) -> "Listener":
         """
         Adds a listener to the bot.
 
@@ -1157,8 +1236,12 @@ class Client:
             The listener to add to the bot.
         """
         self.listeners.append(func)
+        return func
 
-    def add_command(self, command: "Command"):
+    def add_command(
+        self,
+        func: "Command"
+    ) -> "Command":
         """
         Adds a command to the bot.
 
@@ -1166,16 +1249,14 @@ class Client:
         ----------
         command: `Command`
             The command to add to the bot.
-
-        Returns
-        -------
-        `Command`
-            The command that was added.
         """
-        self.commands[command.name] = command
-        return command
+        self.commands[func.name] = func
+        return func
 
-    def add_interaction(self, interaction: "Interaction"):
+    def add_interaction(
+        self,
+        func: "Interaction"
+    ) -> "Interaction":
         """
         Adds an interaction to the bot.
 
@@ -1183,11 +1264,10 @@ class Client:
         ----------
         interaction: `Interaction`
             The interaction to add to the bot.
-
-        Returns
-        -------
-        `Interaction`
-            The interaction that was added.
         """
-        self.interactions[interaction.custom_id] = interaction
-        return interaction
+        if func.regex:
+            self.interactions_regex[func.custom_id] = func
+        else:
+            self.interactions[func.custom_id] = func
+
+        return func

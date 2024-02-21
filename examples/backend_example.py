@@ -9,7 +9,9 @@ client = Client(
 
 
 async def custom_test():
-    return {"information": f"Logged in as {client.user}"}
+    return {
+        "information": f"Logged in as {client.user}"
+    }
 
 
 @client.command()
@@ -19,5 +21,7 @@ async def ping(ctx: Context):
 
 
 # This will create http://localhost:8080/test
+# It also has to be added before the client starts
 client.backend.add_url_rule("/test", "test", custom_test, methods=["GET"])
+
 client.start(host="127.0.0.1", port=8080)

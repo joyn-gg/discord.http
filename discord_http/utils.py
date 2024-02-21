@@ -7,10 +7,11 @@ import traceback
 import unicodedata
 
 from base64 import b64encode
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional, Any, Union, Iterator, Self
 
 from .file import File
+from .object import Snowflake
 
 DISCORD_EPOCH = 1420070400000
 
@@ -18,14 +19,17 @@ DISCORD_EPOCH = 1420070400000
 re_channel: re.Pattern = re.compile(r"<#([0-9]{15,20})>")
 re_role: re.Pattern = re.compile(r"<@&([0-9]{15,20})>")
 re_mention: re.Pattern = re.compile(r"<@!?([0-9]{15,20})>")
-re_emoji: re.Pattern = re.compile(r"<(a)?:([a-zA-Z0-9_]+):(\d+)>")
+re_emoji: re.Pattern = re.compile(r"<(a)?:([a-zA-Z0-9_]+):([0-9]{15,20})>")
 re_hex = re.compile(r"^(?:#)?(?:[0-9a-fA-F]{3}){1,2}$")
 re_jump_url: re.Pattern = re.compile(
     r"https:\/\/(?:.*\.)?discord\.com\/channels\/([0-9]{15,20}|@me)\/([0-9]{15,20})(?:\/([0-9]{15,20}))?"
 )
 
 
-def traceback_maker(err: Exception, advance: bool = True) -> str:
+def traceback_maker(
+    err: Exception,
+    advance: bool = True
+) -> str:
     """
     Takes a traceback from an error and returns it as a string
 
@@ -43,12 +47,12 @@ def traceback_maker(err: Exception, advance: bool = True) -> str:
     `str`
         The traceback of the error
     """
-    _traceback = ''.join(traceback.format_tb(err.__traceback__))
+    _traceback = "".join(traceback.format_tb(err.__traceback__))
     error = f"{_traceback}{type(err).__name__}: {err}"
     return error if advance else f"{type(err).__name__}: {err}"
 
 
-def snowflake_time(id: Union[int, "Snowflake"]) -> datetime:
+def snowflake_time(id: Union[int, Snowflake]) -> datetime:
     """
     Get the datetime from a discord snowflake
 
@@ -68,7 +72,11 @@ def snowflake_time(id: Union[int, "Snowflake"]) -> datetime:
     )
 
 
-def time_snowflake(dt: datetime, *, high: bool = False) -> int:
+def time_snowflake(
+    dt: datetime,
+    *,
+    high: bool = False
+) -> int:
     """
     Get a discord snowflake from a datetime
 
@@ -140,7 +148,7 @@ def unicode_name(text: str) -> str:
 
 
 def oauth_url(
-    client_id: Union["Snowflake", int],
+    client_id: Union[Snowflake, int],
     /,
     scope: Optional[str] = None,
     **kwargs: str
@@ -179,7 +187,10 @@ def oauth_url(
     return output
 
 
-def divide_chunks(array: list[Any], n: int) -> list[list[Any]]:
+def divide_chunks(
+    array: list[Any],
+    n: int
+) -> list[list[Any]]:
     """
     Divide a list into chunks
 
@@ -199,6 +210,69 @@ def divide_chunks(array: list[Any], n: int) -> list[list[Any]]:
         array[i:i + n]
         for i in range(0, len(array), n)
     ]
+
+
+def utcnow() -> datetime:
+    """
+    Alias for `datetime.now(timezone.utc)`
+
+    Returns
+    -------
+    `datetime`
+        The current time in UTC
+    """
+    return datetime.now(timezone.utc)
+
+
+def add_to_datetime(
+    ts: Union[datetime, timedelta, int]
+) -> datetime:
+    """
+    Converts different Python timestamps to a `datetime` object
+
+    Parameters
+    ----------
+    ts: `Union[datetime, timedelta, dtime, int]`
+        The timestamp to convert
+        - `datetime`: Returns the datetime, but in UTC format
+        - `timedelta`: Adds the timedelta to the current time
+        - `int`: Adds seconds to the current time
+
+    Returns
+    -------
+    `datetime`
+        The timestamp in UTC format
+
+    Raises
+    ------
+    `ValueError`
+        `datetime` object must be timezone aware
+    `TypeError`
+        Invalid type for timestamp provided
+    """
+    match ts:
+        case x if isinstance(x, datetime):
+            if x.tzinfo is None:
+                raise ValueError(
+                    "datetime object must be timezone aware"
+                )
+
+            if x.tzinfo is timezone.utc:
+                return x
+
+            return x.astimezone(timezone.utc)
+
+        case x if isinstance(x, timedelta):
+            return utcnow() + x
+
+        case x if isinstance(x, int):
+            return utcnow() + timedelta(seconds=x)
+
+        case _:
+            raise TypeError(
+                "Invalid type for timestamp, expected "
+                f"datetime, timedelta or int, got {type(ts)} instead"
+            )
 
 
 def mime_type_image(image: bytes) -> str:
@@ -223,12 +297,16 @@ def mime_type_image(image: bytes) -> str:
     match image:
         case x if x.startswith(b"\xff\xd8\xff"):
             return "image/jpeg"
+
         case x if x.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
             return "image/png"
+
         case x if x.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
             return "image/gif"
+
         case x if x.startswith(b"RIFF") and x[8:12] == b"WEBP":
             return "image/webp"
+
         case _:
             raise ValueError("Image bytes provided is not supported sadly")
 
@@ -351,81 +429,6 @@ class _MissingType:
 MISSING: Any = _MissingType()
 
 
-class Snowflake:
-    """ A class to represent a Discord Snowflake """
-    def __init__(self, *, id: int):
-        if not isinstance(id, int):
-            raise TypeError("id must be an integer")
-        self.id: int = id
-
-    def __str__(self) -> str:
-        return str(self.id)
-
-    def __int__(self) -> int:
-        return self.id
-
-    def __repr__(self) -> str:
-        return f"<Snowflake id={self.id}>"
-
-    def __eq__(self, other) -> bool:
-        match other:
-            case x if isinstance(x, Snowflake):
-                return self.id == other.id
-            case x if isinstance(x, int):
-                return self.id == other
-            case _:
-                return False
-
-    def __gt__(self, other) -> bool:
-        match other:
-            case x if isinstance(x, Snowflake):
-                return self.id > other.id
-            case x if isinstance(x, int):
-                return self.id > other
-            case _:
-                raise TypeError(
-                    f"Cannot compare 'Snowflake' to '{type(other).__name__}'"
-                )
-
-    def __lt__(self, other) -> bool:
-        match other:
-            case x if isinstance(x, Snowflake):
-                return self.id < other.id
-            case x if isinstance(x, int):
-                return self.id < other
-            case _:
-                raise TypeError(
-                    f"Cannot compare 'Snowflake' to '{type(other).__name__}'"
-                )
-
-    def __ge__(self, other) -> bool:
-        match other:
-            case x if isinstance(x, Snowflake):
-                return self.id >= other.id
-            case x if isinstance(x, int):
-                return self.id >= other
-            case _:
-                raise TypeError(
-                    f"Cannot compare 'Snowflake' to '{type(other).__name__}'"
-                )
-
-    def __le__(self, other) -> bool:
-        match other:
-            case x if isinstance(x, Snowflake):
-                return self.id <= other.id
-            case x if isinstance(x, int):
-                return self.id <= other
-            case _:
-                raise TypeError(
-                    f"Cannot compare 'Snowflake' to '{type(other).__name__}'"
-                )
-
-    @property
-    def created_at(self) -> datetime:
-        """ `datetime`: The datetime of the snowflake """
-        return snowflake_time(self.id)
-
-
 class Enum(enum.Enum):
     """ Enum, but with more comparison operators to make life easier """
     @classmethod
@@ -538,12 +541,18 @@ class CustomFormatter(logging.Formatter):
         super().__init__()
         self._datefmt = datefmt
 
-    def _prefix_fmt(self, name: str, primary: str, secondary: str) -> str:
-        if len(name) > 5:
-            name = name[:5]
+    def _prefix_fmt(
+        self,
+        name: str,
+        primary: str,
+        secondary: str
+    ) -> str:
+        # Cut name if longer than 5 characters
+        # If shorter, right-justify it to 5 characters
+        name = name[:5].rjust(5)
 
         return (
-            f"{secondary}[ {primary}{name.rjust(5)}{self.reset} "
+            f"{secondary}[ {primary}{name}{self.reset} "
             f"{secondary}]{self.reset}"
         )
 

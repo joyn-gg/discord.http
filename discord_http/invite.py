@@ -104,12 +104,6 @@ class Invite(PartialInvite):
     def __repr__(self) -> str:
         return f"<Invite code='{self.code}' uses='{self.uses}'>"
 
-    def is_vanity(self) -> bool:
-        """ `bool`: Whether the invite is a vanity invite """
-        if not self.guild:
-            return False
-        return self.guild.vanity_url_code == self.code
-
     def _from_data(self, data: dict) -> None:
         if data["expires_at"]:
             self.expires_at = utils.parse_time(data["expires_at"])
@@ -127,3 +121,9 @@ class Invite(PartialInvite):
 
         if data.get("inviter", None):
             self.inviter = User(state=self._state, data=data["inviter"])
+
+    def is_vanity(self) -> bool:
+        """ `bool`: Whether the invite is a vanity invite """
+        if not self.guild:
+            return False
+        return self.guild.vanity_url_code == self.code

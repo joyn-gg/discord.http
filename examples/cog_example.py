@@ -6,7 +6,7 @@ from discord_http import Client
 class CustomClient(Client):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config = True
+        self.config: dict = {"hello": True}
 
     async def setup_hook(self):
         for file in os.listdir("./cogs"):

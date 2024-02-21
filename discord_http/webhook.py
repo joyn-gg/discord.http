@@ -278,11 +278,11 @@ class Webhook(PartialWebhook):
 
         self._from_data(data)
 
-    def __str__(self) -> str:
-        return self.name or "Unknown"
-
     def __repr__(self) -> str:
         return f"<Webhook id={self.id} name='{self.name}'>"
+
+    def __str__(self) -> str:
+        return self.name or "Unknown"
 
     def _from_data(self, data: dict) -> None:
         self.user: Optional[User] = None

@@ -731,6 +731,12 @@ class Message(PartialMessage):
 
         self._from_data(data)
 
+    def __repr__(self) -> str:
+        return f"<Message id={self.id} author={self.author}>"
+
+    def __str__(self) -> str:
+        return self.content or ""
+
     def _from_data(self, data: dict):
         if data.get("message_reference", None):
             self.message_reference = MessageReference(
@@ -747,12 +753,6 @@ class Message(PartialMessage):
 
         if data.get("edited_timestamp", None):
             self.edited_timestamp = utils.parse_time(data["edited_timestamp"])
-
-    def __str__(self) -> str:
-        return self.content or ""
-
-    def __repr__(self) -> str:
-        return f"<Message id={self.id} author={self.author}>"
 
     @property
     def emojis(self) -> list[PartialEmoji]:

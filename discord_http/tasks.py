@@ -7,6 +7,8 @@ from datetime import time as dtime
 from datetime import timedelta, datetime, timezone
 from typing import Callable, Optional, Union, Sequence
 
+from . import utils
+
 _log = logging.getLogger(__name__)
 
 
@@ -15,7 +17,7 @@ class Sleeper:
         self.loop = loop
         self.future: asyncio.Future = loop.create_future()
         self.handle: asyncio.TimerHandle = loop.call_later(
-            max((dt - datetime.now(timezone.utc)).total_seconds(), 0),
+            max((dt - utils.utcnow()).total_seconds(), 0),
             self.future.set_result,
             True
         )
@@ -23,7 +25,7 @@ class Sleeper:
     def recalculate(self, dt: datetime) -> None:
         self.handle.cancel()
         self.handle: asyncio.TimerHandle = self.loop.call_later(
-            max((dt - datetime.now(timezone.utc)).total_seconds(), 0),
+            max((dt - utils.utcnow()).total_seconds(), 0),
             self.future.set_result,
             True
         )
@@ -141,7 +143,7 @@ class Loop:
         if self._is_explicit_time():
             self._next_loop = self._next_sleep_time()
         else:
-            self._next_loop = datetime.now(timezone.utc)
+            self._next_loop = utils.utcnow()
             await asyncio.sleep(0)
 
         try:
@@ -233,8 +235,10 @@ class Loop:
         def decorator(func: Loop) -> Loop:
             if not inspect.iscoroutinefunction(func):
                 raise TypeError("The error handler must be a coroutine function")
+
             self._error = func
             return func
+
         return decorator
 
     def before_loop(self) -> Callable:
@@ -242,8 +246,10 @@ class Loop:
         def decorator(func: Loop) -> Loop:
             if not inspect.iscoroutinefunction(func):
                 raise TypeError("The before_loop must be a coroutine function")
+
             self._before_loop = func
             return func
+
         return decorator
 
     def after_loop(self) -> Callable:
@@ -251,8 +257,10 @@ class Loop:
         def decorator(func: Loop) -> Loop:
             if not inspect.iscoroutinefunction(func):
                 raise TypeError("The after_loop must be a coroutine function")
+
             self._after_loop = func
             return func
+
         return decorator
 
     def is_running(self) -> bool:
@@ -433,7 +441,7 @@ class Loop:
             return self._last_loop + timedelta(seconds=self._sleep)
 
         if now is None:
-            now = datetime.now(timezone.utc)
+            now = utils.utcnow()
 
         index = self._find_time_index(now)
 

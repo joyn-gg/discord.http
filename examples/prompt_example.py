@@ -38,8 +38,10 @@ async def confirm(ctx: Context):
         match ctx.custom_id:
             case "yes":
                 output = "Glad you are 100% sure!"
+
             case "no":
                 output = "Oh no, maybe try again later?"
+
             case _:
                 output = "should never get here, otherwise something's really wrong"
 

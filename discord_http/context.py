@@ -71,6 +71,15 @@ class SelectValues:
 
         self._from_data(ctx, data)
 
+    def _from_data(self, ctx: "Context", data: dict):
+        self._parsed_data["strings"] = data.get("data", {}).get("values", [])
+
+        _resolved = data.get("data", {}).get("resolved", {})
+        data_to_resolve = ["members", "users", "channels", "roles"]
+
+        for key in data_to_resolve:
+            self._parse_resolved(ctx, key, _resolved)
+
     @classmethod
     def none(cls, ctx: "Context") -> Self:
         """ `SelectValues`: with no values """
@@ -121,25 +130,20 @@ class SelectValues:
                     if not ctx.guild:
                         raise ValueError("While parsing members, guild object was not available")
                     to_append.append(Member(state=ctx.bot.state, guild=ctx.guild, data=_data))
+
                 case "users":
                     to_append.append(User(state=ctx.bot.state, data=_data))
+
                 case "channels":
                     to_append.append(channel_types[g["type"]](state=ctx.bot.state, data=_data))
+
                 case "roles":
                     if not ctx.guild:
                         raise ValueError("While parsing roles, guild object was not available")
                     to_append.append(Role(state=ctx.bot.state, guild=ctx.guild, data=_data))
+
                 case _:
                     pass
-
-    def _from_data(self, ctx: "Context", data: dict):
-        self._parsed_data["strings"] = data.get("data", {}).get("values", [])
-
-        _resolved = data.get("data", {}).get("resolved", {})
-        data_to_resolve = ["members", "users", "channels", "roles"]
-
-        for key in data_to_resolve:
-            self._parse_resolved(ctx, key, _resolved)
 
 
 class InteractionResponse:
@@ -526,6 +530,7 @@ class Context:
         match self.type:
             case InteractionType.message_component:
                 self.select_values = SelectValues(self, data)
+
             case InteractionType.modal_submit:
                 for comp in data["data"]["components"]:
                     ans = comp["components"][0]
@@ -555,7 +560,7 @@ class Context:
 
     def is_expired(self) -> bool:
         """ `bool` Returns whether the interaction is expired """
-        return datetime.utcnow() >= self.expires_at
+        return utils.utcnow() >= self.expires_at
 
     @property
     def response(self) -> InteractionResponse:

@@ -1,4 +1,4 @@
-__version__ = "1.2.2"
+__version__ = "1.3.0"
 
 # flake8: noqa: F401
 from .asset import *
@@ -27,7 +27,6 @@ from .response import *
 from .role import *
 from .sticker import *
 from .user import *
-from .utils import MISSING, DISCORD_EPOCH, _MissingType, Snowflake
+from .utils import MISSING, DISCORD_EPOCH, _MissingType
 from .view import *
-from .voice import *
 from .webhook import *

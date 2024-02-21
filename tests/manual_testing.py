@@ -9,8 +9,8 @@ import json
 import logging
 import secrets
 
+from datetime import time
 from typing import Union, Optional
-from datetime import time, datetime
 
 from discord_http import (
     Context, Embed, File, Member,
@@ -43,7 +43,7 @@ client = Client(
 
 test_group = client.add_group(name="test_group")
 test_group_command2 = test_group.add_group(name="test2")
-now = datetime.utcnow()
+now = utils.utcnow()
 
 
 @tasks.loop(seconds=5)
@@ -412,7 +412,7 @@ async def test_embed(ctx: Context):
         inline=False
     )
 
-    embed.set_thumbnail(url=ctx.user.original_avatar)
+    embed.set_thumbnail(url=ctx.user.global_avatar)
 
     return ctx.response.send_message(embed=embed)
 

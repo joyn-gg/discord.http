@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Union, Optional
 
 from . import utils
 from .asset import Asset
-from .object import PartialBase
+from .object import PartialBase, Snowflake
 from .role import PartialRole
 
 if TYPE_CHECKING:
@@ -158,7 +158,7 @@ class Emoji(PartialBase):
         if isinstance(roles, list):
             payload["roles"] = [
                 int(r) for r in roles
-                if isinstance(r, utils.Snowflake)
+                if isinstance(r, Snowflake)
             ]
 
         r = await self._state.query(

@@ -1,6 +1,7 @@
 import inspect
 import itertools
 import logging
+import re
 
 from typing import get_args as get_type_args
 from typing import (
@@ -21,7 +22,7 @@ from .errors import UserMissingPermissions, BotMissingPermissions, CheckFailed
 from .flag import Permissions
 from .member import Member
 from .message import Attachment
-from .object import PartialBase
+from .object import PartialBase, Snowflake
 from .response import BaseResponse, AutocompleteResponse
 from .role import Role
 from .user import User
@@ -83,16 +84,20 @@ class Cog:
         interactions = {}
 
         for base in reversed(cls.__mro__):
-            for elem, value in base.__dict__.items():
+            for _, value in base.__dict__.items():
                 match value:
                     case x if isinstance(x, SubCommand):
                         continue  # Do not overwrite commands just in case
+
                     case x if isinstance(x, Command):
                         commands[value.name] = value
+
                     case x if isinstance(x, SubGroup):
                         commands[value.name] = value
+
                     case x if isinstance(x, Interaction):
                         interactions[value.custom_id] = value
+
                     case x if isinstance(x, Listener):
                         listeners[value.name] = value
 
@@ -156,7 +161,7 @@ class Command:
         command: Callable,
         name: str,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None,
         type: ApplicationCommandType = ApplicationCommandType.chat_input,
     ):
         self.id: Optional[int] = None
@@ -172,7 +177,7 @@ class Command:
         self.description_localizations: Dict[LocaleTypes, str] = {}
 
         self.list_autocompletes: Dict[str, Callable] = {}
-        self.guild_ids: list[Union[utils.Snowflake, int]] = guild_ids or []
+        self.guild_ids: list[Union[Snowflake, int]] = guild_ids or []
         self.__list_choices: list[str] = []
 
         if self.type == ApplicationCommandType.chat_input:
@@ -563,7 +568,7 @@ class SubCommand(Command):
         *,
         name: str,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None
     ):
         super().__init__(
             func,
@@ -582,11 +587,11 @@ class SubGroup(Command):
         *,
         name: str,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None
     ):
         self.name = name
         self.description = description or "..."  # Only used to make Discord happy
-        self.guild_ids: list[Union[utils.Snowflake, int]] = guild_ids or []
+        self.guild_ids: list[Union[Snowflake, int]] = guild_ids or []
         self.type = int(ApplicationCommandType.chat_input)
         self.cog: Optional["Cog"] = None
         self.subcommands: Dict[str, Union[SubCommand, SubGroup]] = {}
@@ -599,7 +604,7 @@ class SubGroup(Command):
         self,
         name: Optional[str] = None,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None,
     ):
         """
         Decorator to add a subcommand to a subcommand group
@@ -610,7 +615,7 @@ class SubGroup(Command):
             Name of the command (defaults to the function name)
         description: `Optional[str]`
             Description of the command (defaults to the function docstring)
-        guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+        guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
         """
         def decorator(func):
@@ -622,6 +627,7 @@ class SubGroup(Command):
             )
             self.subcommands[subcommand.name] = subcommand
             return subcommand
+
         return decorator
 
     def group(self, name: Optional[str] = None):
@@ -637,6 +643,7 @@ class SubGroup(Command):
             subgroup = SubGroup(name=name or func.__name__)
             self.subcommands[subgroup.name] = subgroup
             return subgroup
+
         return decorator
 
     def add_group(self, name: str) -> "SubGroup":
@@ -679,16 +686,40 @@ class Interaction:
         *,
         regex: bool = False
     ):
-        self.func = func
-        self.custom_id = custom_id
+        self.func: Callable = func
+        self.custom_id: str = custom_id
+        self.regex: bool = regex
+
         self.cog: Optional["Cog"] = None
-        self.is_regex: bool = regex
+
+        self._pattern: Optional[re.Pattern] = None
+        if self.regex:
+            self._pattern = re.compile(custom_id)
 
     def __repr__(self) -> str:
         return (
             f"<Interaction custom_id='{self.custom_id}' "
-            f"is_regex={self.is_regex}>"
+            f"regex={self.regex}>"
         )
+
+    def match(self, custom_id: str) -> bool:
+        """
+        Matches the custom ID with the interaction.
+        Will always return False if the interaction is not a regex.
+
+        Parameters
+        ----------
+        custom_id: `str`
+            The custom ID to match.
+
+        Returns
+        -------
+        `bool`
+            Whether the custom ID matched or not.
+        """
+        if not self.regex:
+            return False
+        return bool(self._pattern.match(custom_id))
 
     async def run(self, context: "Context") -> BaseResponse:
         """
@@ -799,10 +830,13 @@ class Range:
         match obj_type:
             case x if x is str:
                 opt = CommandOptionType.string
+
             case x if x is int:
                 opt = CommandOptionType.integer
+
             case x if x is float:
                 opt = CommandOptionType.number
+
             case _:
                 raise TypeError(
                     "Range type must be str, int, "
@@ -825,7 +859,7 @@ def command(
     name: Optional[str] = None,
     *,
     description: Optional[str] = None,
-    guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+    guild_ids: Optional[list[Union[Snowflake, int]]] = None,
 ):
     """
     Decorator to register a command.
@@ -836,7 +870,7 @@ def command(
         Name of the command (defaults to the function name)
     description: `Optional[str]`
         Description of the command (defaults to the function docstring)
-    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+    guild_ids: `Optional[list[Union[Snowflake, int]]]`
         List of guild IDs to register the command in
     """
     def decorator(func):
@@ -846,13 +880,14 @@ def command(
             description=description,
             guild_ids=guild_ids,
         )
+
     return decorator
 
 
 def user_command(
     name: Optional[str] = None,
     *,
-    guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+    guild_ids: Optional[list[Union[Snowflake, int]]] = None,
 ):
     """
     Decorator to register a user command.
@@ -869,7 +904,7 @@ def user_command(
     ----------
     name: `Optional[str]`
         Name of the command (defaults to the function name)
-    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+    guild_ids: `Optional[list[Union[Snowflake, int]]]`
         List of guild IDs to register the command in
     """
     def decorator(func):
@@ -879,13 +914,14 @@ def user_command(
             type=ApplicationCommandType.user,
             guild_ids=guild_ids,
         )
+
     return decorator
 
 
 def message_command(
     name: Optional[str] = None,
     *,
-    guild_ids: Optional[list[Union[utils.Snowflake, int]]] = None,
+    guild_ids: Optional[list[Union[Snowflake, int]]] = None,
 ):
     """
     Decorator to register a message command.
@@ -902,7 +938,7 @@ def message_command(
     ----------
     name: `Optional[str]`
         Name of the command (defaults to the function name)
-    guild_ids: `Optional[list[Union[utils.Snowflake, int]]]`
+    guild_ids: `Optional[list[Union[Snowflake, int]]]`
         List of guild IDs to register the command in
     """
     def decorator(func):
@@ -912,6 +948,7 @@ def message_command(
             type=ApplicationCommandType.message,
             guild_ids=guild_ids
         )
+
     return decorator
 
 
@@ -1019,6 +1056,7 @@ def group(
             name=name or func.__name__,
             description=description
         )
+
     return decorator
 
 
@@ -1038,6 +1076,7 @@ def describe(**kwargs):
     def decorator(func):
         func.__describe_params__ = kwargs
         return func
+
     return decorator
 
 
@@ -1065,6 +1104,7 @@ def choices(**kwargs):
 
         func.__choices_params__ = kwargs
         return func
+
     return decorator
 
 
@@ -1073,6 +1113,7 @@ def guild_only():
     def decorator(func):
         func.__dm_permission__ = False
         return func
+
     return decorator
 
 
@@ -1081,6 +1122,7 @@ def is_nsfw():
     def decorator(func):
         func.__nsfw__ = True
         return func
+
     return decorator
 
 
@@ -1089,6 +1131,7 @@ def default_permissions(*args):
     def decorator(func):
         func.__default_permissions__ = str(Permissions.from_names(*args).value)
         return func
+
     return decorator
 
 
@@ -1108,6 +1151,7 @@ def has_permissions(*args: str):
     def decorator(func):
         func.__has_permissions__ = Permissions.from_names(*args)
         return func
+
     return decorator
 
 
@@ -1127,6 +1171,7 @@ def bot_has_permissions(*args: str):
     def decorator(func):
         func.__bot_has_permissions__ = Permissions.from_names(*args)
         return func
+
     return decorator
 
 
@@ -1151,10 +1196,15 @@ def check(predicate: Union[Callable, Coroutine]):
         _check_list.append(predicate)
         func.__checks__ = _check_list
         return func
+
     return decorator
 
 
-def interaction(custom_id: str, *, regex: bool = False):
+def interaction(
+    custom_id: str,
+    *,
+    regex: bool = False
+):
     """
     Decorator to register an interaction.
 
@@ -1169,8 +1219,11 @@ def interaction(custom_id: str, *, regex: bool = False):
     """
     def decorator(func):
         return Interaction(
-            func, custom_id=custom_id, regex=regex
+            func,
+            custom_id=custom_id,
+            regex=regex
         )
+
     return decorator
 
 
