@@ -3,12 +3,14 @@ import sys
 from enum import Flag, CONFORM
 from typing import Union, Self, Optional
 
-from . import utils
-from .role import PartialRole
 from .enums import PermissionType
+from .object import Snowflake
+from .role import PartialRole
 
 __all__ = (
     "BaseFlag",
+    "ChannelFlags",
+    "GuildMemberFlags",
     "MessageFlags",
     "PermissionOverwrite",
     "Permissions",
@@ -182,6 +184,19 @@ class SKUFlags(BaseFlag):
     user_subscription = 1 << 8
 
 
+class GuildMemberFlags(BaseFlag):
+    did_rejoin = 1 << 0
+    completed_onboarding = 1 << 1
+    bypasses_verification = 1 << 2
+    started_onboarding = 1 << 3
+
+
+class ChannelFlags(BaseFlag):
+    pinned = 1 << 1
+    require_tag = 1 << 4
+    hide_media_download_options = 1 << 15
+
+
 class PublicFlags(BaseFlag):
     staff = 1 << 0
     partner = 1 << 1
@@ -260,7 +275,7 @@ class Permissions(BaseFlag):
 class PermissionOverwrite:
     def __init__(
         self,
-        target: Union[utils.Snowflake, int],
+        target: Union[Snowflake, int],
         *,
         allow: Optional[Permissions] = None,
         deny: Optional[Permissions] = None,
@@ -281,7 +296,7 @@ class PermissionOverwrite:
             )
 
         if isinstance(target, int):
-            target = utils.Snowflake(id=target)
+            target = Snowflake(id=target)
 
         self.target = target
         self.target_type = (

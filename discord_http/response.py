@@ -7,12 +7,13 @@ from .file import File
 from .flag import MessageFlags
 from .mentions import AllowedMentions
 from .multipart import MultipartData
+from .object import Snowflake
 from .view import View, Modal
 
 if TYPE_CHECKING:
     from .http import DiscordAPI
     from .message import MessageReference
-    from .user import User
+    from .user import PartialUser, User
 
 MISSING = utils.MISSING
 
@@ -24,25 +25,29 @@ __all__ = (
 )
 
 
-class Ping:
+class Ping(Snowflake):
     def __init__(
         self,
         *,
         state: "DiscordAPI",
         data: dict
     ):
+        super().__init__(id=int(data["id"]))
+
         self._state = state
         self._raw_user = data["user"]
 
-        self.id: int = int(data["id"])
         self.application_id: int = int(data["application_id"])
         self.version: int = int(data["version"])
 
     def __repr__(self) -> str:
-        return f"<Ping application_id={self.application_id} user='{self.user}'>"
+        return f"<Ping application={self.application} user='{self.user}'>"
 
-    def __int__(self) -> int:
-        return self.id
+    @property
+    def application(self) -> "PartialUser":
+        """ `User`: Returns the user object of the bot """
+        from .user import PartialUser
+        return PartialUser(state=self._state, id=self.application_id)
 
     @property
     def user(self) -> "User":

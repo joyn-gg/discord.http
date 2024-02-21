@@ -10,16 +10,22 @@ __all__ = (
     "DefaultNotificationLevel",
     "EntitlementOwnerType",
     "EntitlementType",
+    "ForumLayoutType",
     "IntegrationType",
     "InteractionType",
     "InviteType",
     "MFALevel",
     "ResponseType",
     "SKUType",
+    "ScheduledEventEntityType",
+    "ScheduledEventPrivacyType",
+    "ScheduledEventStatusType",
+    "SortOrderType",
     "StickerFormatType",
     "StickerType",
     "TextStyles",
     "VerificationLevel",
+    "VideoQualityType",
 )
 
 
@@ -57,6 +63,23 @@ class ContentFilterLevel(Enum):
     all_members = 2
 
 
+class ScheduledEventPrivacyType(Enum):
+    guild_only = 2
+
+
+class ScheduledEventEntityType(Enum):
+    stage_instance = 1
+    voice = 2
+    external = 3
+
+
+class ScheduledEventStatusType(Enum):
+    scheduled = 1
+    active = 2
+    completed = 3
+    canceled = 4
+
+
 class VerificationLevel(Enum):
     none = 0
     low = 1
@@ -66,6 +89,7 @@ class VerificationLevel(Enum):
 
 
 class ChannelType(Enum):
+    unknown = -1
     guild_text = 0
     dm = 1
     guild_voice = 2
@@ -103,6 +127,22 @@ class ResponseType(Enum):
     update_message = 7
     application_command_autocomplete_result = 8
     modal = 9
+
+
+class VideoQualityType(Enum):
+    auto = 1
+    full = 2
+
+
+class ForumLayoutType(Enum):
+    not_set = 0
+    list_view = 1
+    gallery_view = 2
+
+
+class SortOrderType(Enum):
+    latest_activity = 0
+    creation_date = 1
 
 
 class EntitlementType(Enum):

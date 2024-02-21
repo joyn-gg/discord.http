@@ -1,6 +1,6 @@
 from typing import Union, Optional, Self
 
-from . import utils
+from .object import Snowflake
 
 __all__ = (
     "AllowedMentions",
@@ -12,13 +12,13 @@ class AllowedMentions:
         self,
         *,
         everyone: bool = True,
-        users: Optional[Union[bool, list[utils.Snowflake]]] = True,
-        roles: Optional[Union[bool, list[utils.Snowflake]]] = True,
+        users: Optional[Union[bool, list[Snowflake]]] = True,
+        roles: Optional[Union[bool, list[Snowflake]]] = True,
         replied_user: bool = True,
     ):
         self.everyone: bool = everyone
-        self.users: Optional[Union[bool, list[utils.Snowflake]]] = users
-        self.roles: Optional[Union[bool, list[utils.Snowflake]]] = roles
+        self.users: Optional[Union[bool, list[Snowflake]]] = users
+        self.roles: Optional[Union[bool, list[Snowflake]]] = roles
         self.reply_user: bool = replied_user
 
     @classmethod

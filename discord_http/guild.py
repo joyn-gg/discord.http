@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Union, Optional, AsyncIterator
 
 from . import utils
@@ -6,32 +7,37 @@ from .asset import Asset
 from .colour import Colour, Color
 from .enums import (
     ChannelType, VerificationLevel,
-    DefaultNotificationLevel, ContentFilterLevel
+    DefaultNotificationLevel, ContentFilterLevel,
+    ScheduledEventEntityType, ScheduledEventPrivacyType,
+    ScheduledEventStatusType
 )
 from .emoji import Emoji
 from .file import File
 from .flag import Permissions, SystemChannelFlags, PermissionOverwrite
 from .multipart import MultipartData
-from .object import PartialBase
+from .object import PartialBase, Snowflake
 from .role import Role, PartialRole
 from .sticker import Sticker
-from .voice import VoiceRegion
 
 if TYPE_CHECKING:
     from .channel import (
         TextChannel, VoiceChannel,
         PartialChannel, BaseChannel,
-        CategoryChannel
+        CategoryChannel, PublicThread,
+        VoiceRegion
     )
     from .http import DiscordAPI
     from .invite import Invite
     from .member import PartialMember, Member
+    from .user import User
 
 MISSING = utils.MISSING
 
 __all__ = (
     "Guild",
     "PartialGuild",
+    "PartialScheduledEvent",
+    "ScheduledEvent",
 )
 
 
@@ -42,6 +48,220 @@ class _GuildLimits:
     filesize: int
     soundboards: int
     stickers: int
+
+
+class PartialScheduledEvent(PartialBase):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        id: int,
+        guild_id: int
+    ):
+        super().__init__(id=int(id))
+        self.guild_id: int = guild_id
+
+        self._state = state
+
+    def __repr__(self) -> str:
+        return f"<PartialScheduledEvent id={self.id}>"
+
+    @property
+    def guild(self) -> "PartialGuild":
+        """ `PartialGuild`: The guild object this event is in """
+        return PartialGuild(state=self._state, id=self.guild_id)
+
+    async def fetch(self) -> "ScheduledEvent":
+        """ `ScheduledEvent`: Fetches more information about the event """
+        r = await self._state.query(
+            "GET",
+            f"/guilds/{self.guild_id}/scheduled-events/{self.id}"
+        )
+
+        return ScheduledEvent(
+            state=self._state,
+            data=r.response
+        )
+
+    async def delete(self) -> None:
+        """ Delete the event (the bot must own the event) """
+        await self._state.query(
+            "DELETE",
+            f"/guilds/{self.guild_id}/scheduled-events/{self.id}",
+            res_method="text"
+        )
+
+    async def edit(
+        self,
+        *,
+        name: Optional[str] = MISSING,
+        description: Optional[str] = MISSING,
+        channel: Optional[Union["PartialChannel", int]] = MISSING,
+        external_location: Optional[str] = MISSING,
+        privacy_level: Optional[ScheduledEventPrivacyType] = MISSING,
+        entity_type: Optional[ScheduledEventEntityType] = MISSING,
+        status: Optional[ScheduledEventStatusType] = MISSING,
+        start_time: Optional[Union[datetime, timedelta, int]] = MISSING,
+        end_time: Optional[Union[datetime, timedelta, int]] = MISSING,
+        image: Optional[Union[File, bytes]] = MISSING,
+        reason: Optional[str] = None
+    ) -> "ScheduledEvent":
+        """
+        Edit the event
+
+        Parameters
+        ----------
+        name: `Optional[str]`
+            New name of the event
+        description: `Optional[str]`
+            New description of the event
+        channel: `Optional[Union[&quot;PartialChannel&quot;, int]]`
+            New channel of the event
+        privacy_level: `Optional[ScheduledEventPrivacyType]`
+            New privacy level of the event
+        entity_type: `Optional[ScheduledEventEntityType]`
+            New entity type of the event
+        status: `Optional[ScheduledEventStatusType]`
+            New status of the event
+        start_time: `Optional[Union[datetime, timedelta, int]]`
+            New start time of the event
+        end_time: `Optional[Union[datetime, timedelta, int]]`
+            New end time of the event (only for external events)
+        image: `Optional[Union[File, bytes]]`
+            New image of the event
+        reason: `Optional[str]`
+            The reason for editing the event
+
+        Returns
+        -------
+        `ScheduledEvent`
+            The edited event
+
+        Raises
+        ------
+        `ValueError`
+            If the start_time is None
+        """
+        payload = {}
+
+        if name is not MISSING:
+            payload["name"] = name
+
+        if description is not MISSING:
+            payload["description"] = description
+
+        if channel is not MISSING:
+            payload["channel_id"] = str(int(channel)) if channel else None
+
+        if external_location is not MISSING:
+            if external_location is None:
+                payload["entity_metadata"] = None
+            else:
+                payload["entity_metadata"] = {
+                    "location": external_location
+                }
+
+        if privacy_level is not MISSING:
+            payload["privacy_level"] = int(
+                privacy_level or
+                ScheduledEventPrivacyType.guild_only
+            )
+
+        if entity_type is not MISSING:
+            payload["entity_type"] = int(
+                entity_type or
+                ScheduledEventEntityType.voice
+            )
+
+        if status is not MISSING:
+            payload["status"] = int(
+                status or
+                ScheduledEventStatusType.scheduled
+            )
+
+        if start_time is not MISSING:
+            if start_time is None:
+                raise ValueError("start_time cannot be None")
+            payload["scheduled_start_time"] = utils.add_to_datetime(start_time).isoformat()
+
+        if end_time is not MISSING:
+            if end_time is None:
+                payload["scheduled_end_time"] = None
+            else:
+                payload["scheduled_end_time"] = utils.add_to_datetime(end_time).isoformat()
+
+        if image is not MISSING:
+            if image is None:
+                payload["image"] = None
+            else:
+                payload["image"] = utils.bytes_to_base64(image)
+
+        r = await self._state.query(
+            "PATCH",
+            f"/guilds/{self.guild_id}/scheduled-events/{self.id}",
+            json=payload,
+            reason=reason
+        )
+
+        return ScheduledEvent(
+            state=self._state,
+            data=r.response,
+        )
+
+
+class ScheduledEvent(PartialScheduledEvent):
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        data: dict
+    ):
+        super().__init__(
+            state=state,
+            id=int(data["id"]),
+            guild_id=int(data["guild_id"])
+        )
+
+        self.name: str = data["name"]
+        self.description: Optional[str] = data.get("description", None)
+        self.user_count: Optional[int] = utils.get_int(data, "user_count")
+
+        self.privacy_level: ScheduledEventPrivacyType = ScheduledEventPrivacyType(data["privacy_level"])
+        self.status: ScheduledEventStatusType = ScheduledEventStatusType(data["status"])
+        self.entity_type: ScheduledEventEntityType = ScheduledEventEntityType(data["entity_type"])
+
+        self.channel: Optional[PartialChannel] = None
+        self.creator: Optional["User"] = None
+
+        self.start_time: datetime = utils.parse_time(data["scheduled_start_time"])
+        self.end_time: Optional[datetime] = None
+
+        self._from_data(data)
+
+    def __repr__(self) -> str:
+        return f"<ScheduledEvent id={self.id} name='{self.name}'>"
+
+    def _from_data(self, data: dict):
+        if data.get("creator", None):
+            from .user import User
+            self.creator = User(
+                state=self._state,
+                data=data["creator"]
+            )
+
+        if data.get("scheduled_end_time", None):
+            self.end_time = utils.parse_time(data["scheduled_end_time"])
+
+        if data.get("entity_id", None) in [
+            ScheduledEventEntityType.stage_instance,
+            ScheduledEventEntityType.voice
+        ]:
+            from .channel import PartialChannel
+            self.channel = PartialChannel(
+                state=self._state,
+                id=int(data["entity_id"]),
+                guild_id=self.guild_id
+            )
 
 
 class PartialGuild(PartialBase):
@@ -91,6 +311,21 @@ class PartialGuild(PartialBase):
             Sticker(
                 state=self._state,
                 guild=self,
+                data=data
+            )
+            for data in r.response
+        ]
+
+    async def fetch_scheduled_events(self) -> list[ScheduledEvent]:
+        """ `list[ScheduledEvent]`: Fetches all the scheduled events in the guild """
+        r = await self._state.query(
+            "GET",
+            f"/guilds/{self.id}/scheduled-events?with_user_count=true"
+        )
+
+        return [
+            ScheduledEvent(
+                state=self._state,
                 data=data
             )
             for data in r.response
@@ -232,6 +467,99 @@ class PartialGuild(PartialBase):
             data=r.response
         )
 
+    async def create_scheduled_event(
+        self,
+        *,
+        name: str,
+        start_time: Union[datetime, timedelta, int],
+        end_time: Optional[Union[datetime, timedelta, int]] = None,
+        channel: Optional[Union["PartialChannel", int]] = None,
+        description: Optional[str] = None,
+        privacy_level: Optional[ScheduledEventPrivacyType] = None,
+        entity_type: Optional[ScheduledEventEntityType] = None,
+        external_location: Optional[str] = None,
+        image: Optional[Union[File, bytes]] = None,
+        reason: Optional[str] = None
+    ) -> "ScheduledEvent":
+        """
+        Create a scheduled event
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the event
+        start_time: `Union[datetime, timedelta, int]`
+            The start time of the event
+        end_time: `Optional[Union[datetime, timedelta, int]]`
+            The end time of the event
+        channel: `Optional[Union[PartialChannel, int]]`
+            The channel of the event
+        description: `Optional[str]`
+            The description of the event
+        privacy_level: `Optional[ScheduledEventPrivacyType]`
+            The privacy level of the event (default is guild_only)
+        entity_type: `Optional[ScheduledEventEntityType]`
+            The entity type of the event (default is voice)
+        external_location: `Optional[str]`
+            The external location of the event
+        image: `Optional[Union[File, bytes]]`
+            The image of the event
+        reason: `Optional[str]`
+            The reason for creating the event
+
+        Returns
+        -------
+        `ScheduledEvent`
+            The created event
+        """
+        if entity_type is ScheduledEventEntityType.external:
+            if end_time is None:
+                raise ValueError("end_time cannot be None for external events")
+            if not external_location:
+                raise ValueError("external_location cannot be None for external events")
+            if channel:
+                raise ValueError("channel cannot be set for external events")
+
+        payload = {
+            "name": name,
+            "privacy_level": int(
+                privacy_level or
+                ScheduledEventPrivacyType.guild_only
+            ),
+            "scheduled_start_time": utils.add_to_datetime(start_time).isoformat(),
+            "channel_id": str(int(channel)) if channel else None,
+            "entity_type": int(
+                entity_type or
+                ScheduledEventEntityType.voice
+            )
+        }
+
+        if description is not None:
+            payload["description"] = str(description)
+
+        if end_time is not None:
+            payload["scheduled_end_time"] = utils.add_to_datetime(end_time).isoformat()
+
+        if external_location is not None:
+            payload["entity_metadata"] = {
+                "location": str(external_location)
+            }
+
+        if image is not None:
+            payload["image"] = utils.bytes_to_base64(image)
+
+        r = await self._state.query(
+            "POST",
+            f"/guilds/{self.id}/scheduled-events",
+            json=payload,
+            reason=reason
+        )
+
+        return ScheduledEvent(
+            state=self._state,
+            data=r.response
+        )
+
     async def create_category(
         self,
         *,
@@ -294,7 +622,7 @@ class PartialGuild(PartialBase):
         position: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
         overwrites: Optional[list[PermissionOverwrite]] = None,
-        parent_id: Optional[Union[utils.Snowflake, int]] = None,
+        parent_id: Optional[Union[Snowflake, int]] = None,
         nsfw: Optional[bool] = None,
         reason: Optional[str] = None
     ) -> "TextChannel":
@@ -370,7 +698,7 @@ class PartialGuild(PartialBase):
         rate_limit_per_user: Optional[int] = None,
         overwrites: Optional[list[PermissionOverwrite]] = None,
         position: Optional[int] = None,
-        parent_id: Union[utils.Snowflake, int, None] = None,
+        parent_id: Union[Snowflake, int, None] = None,
         nsfw: Optional[bool] = None,
         reason: Optional[str] = None
     ) -> "VoiceChannel":
@@ -652,11 +980,26 @@ class PartialGuild(PartialBase):
             data=r.response
         )
 
+    async def fetch_public_threads(self) -> list["PublicThread"]:
+        r = await self._state.query(
+            "GET",
+            f"/guilds/{self.id}/threads/active"
+        )
+
+        from .channel import PublicThread
+        return [
+            PublicThread(
+                state=self._state,
+                data=data
+            )
+            for data in r.response
+        ]
+
     async def fetch_members(
         self,
         *,
         limit: Optional[int] = 1000,
-        after: Optional[Union[utils.Snowflake, int]] = None
+        after: Optional[Union[Snowflake, int]] = None
     ) -> AsyncIterator["Member"]:
         from .member import Member
 
@@ -666,7 +1009,7 @@ class PartialGuild(PartialBase):
                 break
 
             after_id = after or 0
-            if isinstance(after, utils.Snowflake):
+            if isinstance(after, Snowflake):
                 after_id = after.id
 
             data = await self._state.query(
@@ -689,7 +1032,7 @@ class PartialGuild(PartialBase):
                     data=member_data
                 )
 
-    async def fetch_regions(self) -> list[VoiceRegion]:
+    async def fetch_regions(self) -> list["VoiceRegion"]:
         """ `list[VoiceRegion]`: Fetches all the voice regions for the guild """
         r = await self._state.query(
             "GET",
@@ -697,9 +1040,7 @@ class PartialGuild(PartialBase):
         )
 
         return [
-            VoiceRegion(
-                data=data
-            )
+            VoiceRegion(data=data)
             for data in r.response
         ]
 

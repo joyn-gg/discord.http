@@ -49,7 +49,10 @@ class HTTPResponse(Generic[ResponseT]):
         self.headers = headers
 
     def __repr__(self) -> str:
-        return f"<HTTPResponse status={self.status} res_method='{self.res_method}'>"
+        return (
+            f"<HTTPResponse status={self.status} "
+            f"res_method='{self.res_method}'>"
+        )
 
 
 @overload
@@ -423,10 +426,13 @@ class DiscordAPI:
                         # The lovely exception hell
                         case x if x >= 500:
                             raise DiscordServerError(r)
+
                         case 403:
                             raise Forbidden(r)
+
                         case 404:
                             raise NotFound(r)
+
                         case _:
                             raise HTTPException(r)
 

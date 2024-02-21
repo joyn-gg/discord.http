@@ -157,6 +157,7 @@ class User(PartialUser):
 
         self.name: str = data["username"]
         self.bot: bool = data.get("bot", False)
+        self.system: bool = data.get("system", False)
 
         # This section is ONLY here because bots still have a discriminator
         self.discriminator: Optional[str] = data.get("discriminator", None)
@@ -174,16 +175,16 @@ class User(PartialUser):
 
         self._from_data(data)
 
-    def __str__(self) -> str:
-        if self.discriminator:
-            return f"{self.name}#{self.discriminator}"
-        return self.name
-
     def __repr__(self) -> str:
         return (
             f"<User id={self.id} name='{self.name}' "
             f"global_name='{self.global_name}'>"
         )
+
+    def __str__(self) -> str:
+        if self.discriminator:
+            return f"{self.name}#{self.discriminator}"
+        return self.name
 
     def _from_data(self, data: dict):
         if data.get("avatar", None):
@@ -211,11 +212,6 @@ class User(PartialUser):
             self.public_flags = PublicFlags(data["public_flags"])
 
     @property
-    def original_avatar(self) -> Optional[Asset]:
-        """ `Optional[Asset]`: Returns the original avatar of the member if available """
+    def global_avatar(self) -> Optional[Asset]:
+        """ `Asset`: Alias for `User.avatar` """
         return self.avatar
-
-    @property
-    def original_banner(self) -> Optional[Asset]:
-        """ `Optional[Asset]`: Returns the original banner of the member if available """
-        return self.banner

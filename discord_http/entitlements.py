@@ -5,7 +5,7 @@ from . import utils
 from .enums import EntitlementType, EntitlementOwnerType, SKUType
 from .flag import SKUFlags
 from .guild import PartialGuild
-from .object import PartialBase
+from .object import PartialBase, Snowflake
 from .user import PartialUser
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ class PartialSKU(PartialBase):
     async def create_test_entitlement(
         self,
         *,
-        owner_id: Union[utils.Snowflake, int],
+        owner_id: Union[Snowflake, int],
         owner_type: Union[EntitlementOwnerType, int],
     ) -> "PartialEntitlements":
         """
@@ -43,7 +43,7 @@ class PartialSKU(PartialBase):
 
         Parameters
         ----------
-        owner_id: `Union[utils.Snowflake, int]`
+        owner_id: `Union[Snowflake, int]`
             The ID of the owner, can be GuildID or UserID.
         owner_type: `Union[EntitlementOwnerType, int]`
             The type of the owner.

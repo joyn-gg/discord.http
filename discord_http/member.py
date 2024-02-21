@@ -5,10 +5,10 @@ from . import utils
 from .asset import Asset
 from .embeds import Embed
 from .file import File
-from .flag import Permissions, PublicFlags
+from .flag import Permissions, PublicFlags, GuildMemberFlags
 from .guild import PartialGuild
 from .mentions import AllowedMentions
-from .object import PartialBase
+from .object import PartialBase, Snowflake
 from .response import ResponseType
 from .role import PartialRole, Role
 from .user import User, PartialUser
@@ -275,25 +275,13 @@ class PartialMember(PartialBase):
         if channel_id is not MISSING:
             payload["channel_id"] = channel_id
         if communication_disabled_until is not MISSING:
-            _timeout_value = None
-            _now = datetime.utcnow()
-
-            match communication_disabled_until:
-                case x if isinstance(x, timedelta):
-                    _timeout_value = _now + x
-                case x if isinstance(x, datetime):
-                    _timeout_value = x
-                case x if isinstance(x, int):
-                    _timeout_value = _now + timedelta(seconds=x)
-                case None:
-                    _timeout_value = None
-                case _:
-                    raise TypeError(
-                        "Invalid type for communication_disabled_until, "
-                        "must be timedelta, datetime, int or NoneType "
-                    )
-
-            payload["communication_disabled_until"] = _timeout_value.isoformat()
+            if communication_disabled_until is None:
+                payload["communication_disabled_until"] = None
+            else:
+                _parse_ts = utils.add_to_datetime(
+                    communication_disabled_until
+                )
+                payload["communication_disabled_until"] = _parse_ts.isoformat()
 
         r = await self._state.query(
             "PATCH",
@@ -400,7 +388,7 @@ class Member(PartialMember):
 
         self.avatar: Optional[Asset] = None
 
-        self.flags: int = data["flags"]
+        self.flags: GuildMemberFlags = GuildMemberFlags(data["flags"])
         self.pending: bool = data.get("pending", False)
         self._raw_permissions: Optional[int] = utils.get_int(data, "permissions")
         self.nick: Optional[str] = data.get("nick", None)
@@ -412,14 +400,14 @@ class Member(PartialMember):
 
         self._from_data(data)
 
-    def __str__(self) -> str:
-        return str(self._user)
-
     def __repr__(self) -> str:
         return (
             f"<Member id={self.id} name='{self.name}' "
             f"global_name='{self._user.global_name}'>"
         )
+
+    def __str__(self) -> str:
+        return str(self._user)
 
     def _from_data(self, data: dict) -> None:
         has_avatar = data.get("avatar", None)
@@ -430,14 +418,14 @@ class Member(PartialMember):
 
     def get_role(
         self,
-        role: Union[utils.Snowflake, int]
+        role: Union[Snowflake, int]
     ) -> Optional[PartialRole]:
         """
         Get a role from the member
 
         Parameters
         ----------
-        role: `Union[utils.Snowflake, int]`
+        role: `Union[Snowflake, int]`
             The role to get. Can either be a role object or the Role ID
 
         Returns
@@ -496,16 +484,9 @@ class Member(PartialMember):
         return self._user.bot
 
     @property
-    def global_name(self) -> Optional[str]:
-        """
-        Gives the global display name of a member if available
-
-        Returns
-        -------
-        `Optional[str]`
-            Returns the global display name of a member if available, bots will return None
-        """
-        return self._user.global_name
+    def system(self) -> bool:
+        """ `bool`: Returns whether the member is a system user """
+        return self._user.system
 
     @property
     def discriminator(self) -> Optional[str]:
@@ -536,6 +517,23 @@ class Member(PartialMember):
         return self._user.avatar_decoration
 
     @property
+    def global_name(self) -> Optional[str]:
+        """
+        `Optional[str]`: Gives the global display name of a member if available
+        """
+        return self._user.global_name
+
+    @property
+    def global_avatar(self) -> Optional[Asset]:
+        """ `Optional[Asset]`: Shortcut for `User.avatar` """
+        return self._user.avatar
+
+    @property
+    def global_banner(self) -> Optional[Asset]:
+        """ `Optional[Asset]`: Shortcut for `User.banner` """
+        return self._user.banner
+
+    @property
     def display_name(self) -> str:
         """ `str`: Returns the display name of the member """
         return self.nick or self.global_name or self.name
@@ -544,13 +542,3 @@ class Member(PartialMember):
     def display_avatar(self) -> Optional[Asset]:
         """ `Optional[Asset]`: Returns the display avatar of the member """
         return self.avatar or self._user.avatar
-
-    @property
-    def original_avatar(self) -> Optional[Asset]:
-        """ `Optional[Asset]`: Shortcut for `User.original_avatar` """
-        return self._user.original_avatar
-
-    @property
-    def original_banner(self) -> Optional[Asset]:
-        """ `Optional[Asset]`: Shortcut for `User.original_banner` """
-        return self._user.original_banner
