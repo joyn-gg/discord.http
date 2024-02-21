@@ -3,12 +3,17 @@ from typing import Union, TYPE_CHECKING, Optional, AsyncIterator, Callable, Self
 
 from . import utils
 from .embeds import Embed
-from .enums import ChannelType, ResponseType
+from .emoji import PartialEmoji
+from .enums import (
+    ChannelType, ResponseType, VideoQualityType,
+    SortOrderType, ForumLayoutType
+)
 from .file import File
-from .flag import PermissionOverwrite
+from .flag import PermissionOverwrite, ChannelFlags
 from .member import ThreadMember
 from .mentions import AllowedMentions
-from .object import PartialBase
+from .multipart import MultipartData
+from .object import PartialBase, Snowflake
 from .response import MessageResponse
 from .view import View
 from .webhook import Webhook
@@ -28,6 +33,8 @@ __all__ = (
     "DMChannel",
     "DirectoryChannel",
     "ForumChannel",
+    "ForumTag",
+    "ForumThread",
     "GroupDMChannel",
     "NewsChannel",
     "NewsThread",
@@ -38,6 +45,7 @@ __all__ = (
     "StoreChannel",
     "TextChannel",
     "VoiceChannel",
+    "VoiceRegion",
 )
 
 
@@ -53,6 +61,8 @@ class PartialChannel(PartialBase):
         self._state = state
         self.guild_id: Optional[int] = guild_id
 
+        self._raw_type: ChannelType = ChannelType.unknown
+
     def __repr__(self) -> str:
         return f"<PartialChannel id={self.id}>"
 
@@ -64,6 +74,11 @@ class PartialChannel(PartialBase):
         if self.guild_id:
             return PartialGuild(state=self._state, id=self.guild_id)
         return None
+
+    @property
+    def type(self) -> ChannelType:
+        """ `ChannelType`: Returns the channel's type """
+        return self._raw_type
 
     def get_partial_message(self, message_id: int) -> "PartialMessage":
         """
@@ -138,7 +153,7 @@ class PartialChannel(PartialBase):
 
     async def follow_announcement_channel(
         self,
-        source_channel_id: Union[utils.Snowflake, int]
+        source_channel_id: Union[Snowflake, int]
     ) -> None:
         """
         Follow an announcement channel to send messages to the webhook
@@ -154,6 +169,62 @@ class PartialChannel(PartialBase):
             json={"webhook_channel_id": self.id},
             res_method="text"
         )
+
+    async def fetch_archived_public_threads(self) -> list["PublicThread"]:
+        """
+        Fetch all archived public threads
+
+        Returns
+        -------
+        `list[PublicThread]`
+            The list of public threads
+        """
+        r = await self._state.query(
+            "GET",
+            f"/channels/{self.id}/threads/archived/public"
+        )
+
+        from .channel import PublicThread
+        return [
+            PublicThread(
+                state=self._state,
+                data=data
+            )
+            for data in r.response
+        ]
+
+    async def fetch_archived_private_threads(
+        self,
+        *,
+        client: bool = False
+    ) -> list["PrivateThread"]:
+        """
+        Fetch all archived private threads
+
+        Parameters
+        ----------
+        client: `bool`
+            If it should fetch only where the client is a member of the thread
+
+        Returns
+        -------
+        `list[PrivateThread]`
+            The list of private threads
+        """
+        path = f"/channels/{self.id}/threads/archived/private"
+        if client:
+            path = f"/channels/{self.id}/users/@me/threads/archived/private"
+
+        r = await self._state.query("GET", path)
+
+        from .channel import PrivateThread
+        return [
+            PrivateThread(
+                state=self._state,
+                data=data
+            )
+            for data in r.response
+        ]
 
     async def create_invite(
         self,
@@ -276,18 +347,28 @@ class PartialChannel(PartialBase):
         match data["type"]:
             case x if x in (ChannelType.guild_text, ChannelType.guild_news):
                 _class = TextChannel
+
             case ChannelType.guild_voice:
                 _class = VoiceChannel
+
             case ChannelType.guild_category:
                 _class = CategoryChannel
+
             case ChannelType.guild_news_thread:
                 _class = NewsThread
+
             case ChannelType.guild_public_thread:
                 _class = PublicThread
+
             case ChannelType.guild_private_thread:
                 _class = PrivateThread
+
             case ChannelType.guild_stage_voice:
                 _class = StageChannel
+
+            case ChannelType.guild_forum:
+                _class = ForumChannel
+
             case _:
                 _class = BaseChannel
 
@@ -339,30 +420,89 @@ class PartialChannel(PartialBase):
         self,
         *,
         name: Optional[str] = MISSING,
-        category: Union["CategoryChannel", utils.Snowflake, None] = MISSING,
+        type: Optional[Union[ChannelType, int]] = MISSING,
         position: Optional[int] = MISSING,
-        overwrites: Optional[list[PermissionOverwrite]] = MISSING,
+        topic: Optional[str] = MISSING,
         nsfw: Optional[bool] = MISSING,
+        rate_limit_per_user: Optional[int] = MISSING,
+        bitrate: Optional[int] = MISSING,
+        user_limit: Optional[int] = MISSING,
+        overwrites: Optional[list[PermissionOverwrite]] = MISSING,
+        parent_id: Optional[Union[Snowflake, int]] = MISSING,
+        rtc_region: Optional[str] = MISSING,
+        video_quality_mode: Optional[Union[VideoQualityType, int]] = MISSING,
+        default_auto_archive_duration: Optional[int] = MISSING,
+        flags: Optional[ChannelFlags] = MISSING,
+        available_tags: Optional[list["ForumTag"]] = MISSING,
+        default_reaction_emoji: Optional["ForumTag"] = MISSING,
+        default_thread_rate_limit_per_user: Optional[int] = MISSING,
+        default_sort_order: Optional[Union[SortOrderType, int]] = MISSING,
+        default_forum_layout: Optional[Union[ForumLayoutType, int]] = MISSING,
+        archived: Optional[bool] = MISSING,
+        auto_archive_duration: Optional[int] = MISSING,
+        locked: Optional[bool] = MISSING,
+        invitable: Optional[bool] = MISSING,
+        applied_tags: Optional[list[Union["ForumTag", int]]] = MISSING,
         reason: Optional[str] = None,
-        **kwargs
     ) -> Self:
         """
         Edit the channel
 
+        Note that this method globaly edits any channel type.
+        So be sure to use the correct parameters for the channel.
+
         Parameters
         ----------
         name: `Optional[str]`
-            New name of the channel
-        category: `Optional[Union[CategoryChannel, utils.Snowflake]]`
-            Which category the channel should be in
+            New name of the channel (All)
+        type: `Optional[Union[ChannelType, int]]`
+            The new type of the channel (Text, Announcement)
         position: `Optional[int]`
-            The position of the channel
-        overwrites: `Optional[list[PermissionOverwrite]]`
-            The permission overwrites for the channel
+            The new position of the channel (All)
+        topic: `Optional[str]`
+            The new topic of the channel (Text, Announcement, Forum, Media)
         nsfw: `Optional[bool]`
-            If the channel should be NSFW
+            If the channel should be NSFW (Text, Voice, Announcement, Stage, Forum, Media)
+        rate_limit_per_user: `Optional[int]`
+            How long the slowdown should be (Text, Voice, Stage, Forum, Media)
+        bitrate: `Optional[int]`
+            The new bitrate of the channel (Voice, Stage)
+        user_limit: `Optional[int]`
+            The new user limit of the channel (Voice, Stage)
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The new permission overwrites of the channel (All)
+        parent_id: `Optional[Union[Snowflake, int]]`
+            The new parent ID of the channel (Text, Voice, Announcement, Stage, Forum, Media)
+        rtc_region: `Optional[str]`
+            The new RTC region of the channel (Voice, Stage)
+        video_quality_mode: `Optional[Union[VideoQualityType, int]]`
+            The new video quality mode of the channel (Voice, Stage)
+        default_auto_archive_duration: `Optional[int]`
+            The new default auto archive duration of the channel (Text, Announcement, Forum, Media)
+        flags: `Optional[ChannelFlags]`
+            The new flags of the channel (Forum, Media)
+        available_tags: `Optional[list[ForumTag]]`
+            The new available tags of the channel (Forum, Media)
+        default_reaction_emoji: `Optional[ForumTag]`
+            The new default reaction emoji of the channel (Forum, Media)
+        default_thread_rate_limit_per_user: `Optional[int]`
+            The new default thread rate limit per user of the channel (Text, Forum, Media)
+        default_sort_order: `Optional[Union[SortOrderType, int]]`
+            The new default sort order of the channel (Forum, Media)
+        default_forum_layout: `Optional[Union[ForumLayoutType, int]]`
+            The new default forum layout of the channel (Forum)
+        archived: `Optional[bool]`
+            If the thread should be archived (Thread, Forum)
+        auto_archive_duration: `Optional[int]`
+            The new auto archive duration of the thread (Thread, Forum)
+        locked: `Optional[bool]`
+            If the thread should be locked (Thread, Forum)
+        invitable: `Optional[bool]`
+            If the thread should be invitable by everyone (Thread)
+        applied_tags: `Optional[list[Union[ForumTag, int]]`
+            The new applied tags of the forum thread (Forum, Media)
         reason: `Optional[str]`
-            The reason for editing the channel
+            The reason for editing the channel (All)
 
         Returns
         -------
@@ -373,10 +513,30 @@ class PartialChannel(PartialBase):
 
         if name is not MISSING:
             payload["name"] = str(name)
-        if category is not MISSING:
-            payload["parent_id"] = str(category.id)
+
+        if type is not MISSING:
+            payload["type"] = int(type or 0)
+
         if position is not MISSING:
             payload["position"] = int(position or 0)
+
+        if topic is not MISSING:
+            payload["topic"] = topic
+
+        if nsfw is not MISSING:
+            payload["nsfw"] = bool(nsfw)
+
+        if rate_limit_per_user is not MISSING:
+            payload["rate_limit_per_user"] = int(
+                rate_limit_per_user or 0
+            )
+
+        if bitrate is not MISSING:
+            payload["bitrate"] = int(bitrate or 64000)
+
+        if user_limit is not MISSING:
+            payload["user_limit"] = int(user_limit or 0)
+
         if overwrites is not MISSING:
             if overwrites is None:
                 payload["permission_overwrites"] = []
@@ -385,10 +545,84 @@ class PartialChannel(PartialBase):
                     g.to_dict() for g in overwrites
                     if isinstance(g, PermissionOverwrite)
                 ]
-        if nsfw is not MISSING:
-            payload["nsfw"] = bool(nsfw)
 
-        payload.update(kwargs)
+        if parent_id is not MISSING:
+            if parent_id is None:
+                payload["parent_id"] = None
+            else:
+                payload["parent_id"] = str(int(parent_id))
+
+        if rtc_region is not MISSING:
+            payload["rtc_region"] = rtc_region
+
+        if video_quality_mode is not MISSING:
+            payload["video_quality_mode"] = int(
+                video_quality_mode or 1
+            )
+
+        if default_auto_archive_duration is not MISSING:
+            payload["default_auto_archive_duration"] = int(
+                default_auto_archive_duration or 4320
+            )
+
+        if flags is not MISSING:
+            payload["flags"] = int(flags or 0)
+
+        if available_tags is not MISSING:
+            if available_tags is None:
+                payload["available_tags"] = []
+            else:
+                payload["available_tags"] = [
+                    g.to_dict() for g in available_tags
+                    if isinstance(g, ForumTag)
+                ]
+
+        if default_reaction_emoji is not MISSING:
+            if default_reaction_emoji is None:
+                payload["default_reaction_emoji"] = None
+            else:
+                payload["default_reaction_emoji"] = {
+                    "emoji_id": default_reaction_emoji.emoji_id,
+                    "emoji_name": default_reaction_emoji.emoji_name
+                }
+
+        if default_thread_rate_limit_per_user is not MISSING:
+            payload["default_thread_rate_limit_per_user"] = int(
+                default_thread_rate_limit_per_user or 0
+            )
+
+        if default_sort_order is not MISSING:
+            payload["default_sort_order"] = int(
+                default_sort_order or 0
+            )
+
+        if default_forum_layout is not MISSING:
+            payload["default_forum_layout"] = int(
+                default_forum_layout or 0
+            )
+
+        if archived is not MISSING:
+            payload["archived"] = bool(archived)
+
+        if auto_archive_duration is not MISSING:
+            payload["auto_archive_duration"] = int(
+                auto_archive_duration or 4320
+            )
+
+        if locked is not MISSING:
+            payload["locked"] = bool(locked)
+
+        if invitable is not MISSING:
+            payload["invitable"] = bool(invitable)
+
+        if applied_tags is not MISSING:
+            if applied_tags is None:
+                payload["applied_tags"] = []
+            else:
+                payload["applied_tags"] = [
+                    str(int(g))
+                    for g in applied_tags
+                ]
 
         r = await self._state.query(
             "PATCH",
@@ -412,7 +646,7 @@ class PartialChannel(PartialBase):
 
     async def set_permission(
         self,
-        id: Union[utils.Snowflake, int],
+        id: Union[Snowflake, int],
         *,
         overwrite: PermissionOverwrite,
         reason: Optional[str] = None
@@ -422,7 +656,7 @@ class PartialChannel(PartialBase):
 
         Parameters
         ----------
-        id: `Union[utils.Snowflake, int]`
+        id: `Union[Snowflake, int]`
             The ID of the overwrite
         overwrite: `PermissionOverwrite`
             The new overwrite permissions
@@ -439,7 +673,7 @@ class PartialChannel(PartialBase):
 
     async def delete_permission(
         self,
-        id: Union[utils.Snowflake, int],
+        id: Union[Snowflake, int],
         *,
         reason: Optional[str] = None
     ) -> None:
@@ -448,7 +682,7 @@ class PartialChannel(PartialBase):
 
         Parameters
         ----------
-        id: `Union[utils.Snowflake, int]`
+        id: `Union[Snowflake, int]`
             The ID of the overwrite
         reason: `Optional[str]`
             The reason for deleting the overwrite
@@ -556,12 +790,124 @@ class PartialChannel(PartialBase):
 
         return Webhook(state=self._state, data=r.response)
 
+    async def create_forum_or_media(
+        self,
+        name: str,
+        *,
+        content: Optional[str] = None,
+        embed: Optional[Embed] = None,
+        embeds: Optional[list[Embed]] = None,
+        file: Optional[File] = None,
+        files: Optional[list[File]] = None,
+        allowed_mentions: Optional[AllowedMentions] = None,
+        view: Optional[View] = None,
+        auto_archive_duration: Optional[int] = 4320,
+        rate_limit_per_user: Optional[int] = None,
+        applied_tags: Optional[list[Union["ForumTag", int]]] = None
+    ) -> "ForumThread":
+        """
+        Create a forum or media thread in the channel
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the thread
+        content: `Optional[str]`
+            The content of the message
+        embed: `Optional[Embed]`
+            Embed to be sent
+        embeds: `Optional[list[Embed]]`
+            List of embeds to be sent
+        file: `Optional[File]`
+            File to be sent
+        files: `Optional[list[File]]`
+            List of files to be sent
+        allowed_mentions: `Optional[AllowedMentions]`
+            The allowed mentions for the message
+        view: `Optional[View]`
+            The view to be sent
+        auto_archive_duration: `Optional[int]`
+            The duration in minutes to automatically archive the thread after recent activity
+        rate_limit_per_user: `Optional[int]`
+            How long the slowdown should be
+        applied_tags: `Optional[list[Union[&quot;ForumTag&quot;, int]]]`
+            The tags to be applied to the thread
+
+        Returns
+        -------
+        `ForumThread`
+            _description_
+        """
+        payload = {
+            "name": name,
+            "message": {}
+        }
+
+        if auto_archive_duration in (60, 1440, 4320, 10080):
+            payload["auto_archive_duration"] = auto_archive_duration
+
+        if rate_limit_per_user is not None:
+            payload["rate_limit_per_user"] = int(rate_limit_per_user)
+
+        if applied_tags is not None:
+            payload["applied_tags"] = [
+                str(int(g)) for g in applied_tags
+            ]
+
+        temp_msg = MessageResponse(
+            embeds=embeds or ([embed] if embed else None),
+            files=files or ([file] if file else None),
+        )
+
+        if content is not None:
+            payload["message"]["content"] = str(content)
+
+        if allowed_mentions is not None:
+            payload["message"]["allowed_mentions"] = allowed_mentions.to_dict()
+
+        if view is not None:
+            payload["message"]["components"] = view.to_dict()
+
+        if temp_msg.embeds is not None:
+            payload["message"]["embeds"] = [
+                e.to_dict() for e in temp_msg.embeds
+            ]
+
+        if temp_msg.files is not None:
+            multidata = MultipartData()
+
+            for i, file in enumerate(temp_msg.files):
+                multidata.attach(
+                    f"files[{i}]", file,  # type: ignore
+                    filename=file.filename
+                )
+
+            multidata.attach("payload_json", payload)
+
+            r = await self._state.query(
+                "POST",
+                f"/channels/{self.id}/threads",
+                headers={"Content-Type": multidata.content_type},
+                data=multidata.finish(),
+            )
+        else:
+            r = await self._state.query(
+                "POST",
+                f"/channels/{self.id}/threads",
+                json=payload
+            )
+
+        return ForumThread(
+            state=self._state,
+            data=r.response
+        )
+
     async def create_thread(
         self,
         name: str,
         *,
         type: Union[ChannelType, int] = ChannelType.guild_private_thread,
-        auto_archive_duration: Optional[int] = 60,
+        auto_archive_duration: Optional[int] = 4320,
         invitable: bool = True,
         rate_limit_per_user: Optional[Union[timedelta, int]] = None,
         reason: Optional[str] = None
@@ -623,10 +969,13 @@ class PartialChannel(PartialBase):
         match r.response["type"]:
             case ChannelType.guild_public_thread:
                 _class = PublicThread
+
             case ChannelType.guild_private_thread:
                 _class = PrivateThread
+
             case ChannelType.guild_news_thread:
                 _class = NewsThread
+
             case _:
                 raise ValueError("Invalid thread type")
 
@@ -638,9 +987,9 @@ class PartialChannel(PartialBase):
     async def fetch_history(
         self,
         *,
-        before: Optional[Union[datetime, "Message", utils.Snowflake, int]] = None,
-        after: Optional[Union[datetime, "Message", utils.Snowflake, int]] = None,
-        around: Optional[Union[datetime, "Message", utils.Snowflake, int]] = None,
+        before: Optional[Union[datetime, "Message", Snowflake, int]] = None,
+        after: Optional[Union[datetime, "Message", Snowflake, int]] = None,
+        around: Optional[Union[datetime, "Message", Snowflake, int]] = None,
         limit: Optional[int] = 100,
     ) -> AsyncIterator["Message"]:
         """
@@ -648,11 +997,11 @@ class PartialChannel(PartialBase):
 
         Parameters
         ----------
-        before: `Optional[Union[datetime, Message, utils.Snowflake, int]]`
+        before: `Optional[Union[datetime, Message, Snowflake, int]]`
             Get messages before this message
-        after: `Optional[Union[datetime, Message, utils.Snowflake, int]]`
+        after: `Optional[Union[datetime, Message, Snowflake, int]]`
             Get messages after this message
-        around: `Optional[Union[datetime, Message, utils.Snowflake, int]]`
+        around: `Optional[Union[datetime, Message, Snowflake, int]]`
             Get messages around this message
         limit: `int`
             The maximum amount of messages to fetch
@@ -666,16 +1015,21 @@ class PartialChannel(PartialBase):
             match entry:
                 case x if isinstance(x, Message):
                     return x.id
-                case x if isinstance(x, utils.Snowflake):
+
+                case x if isinstance(x, Snowflake):
                     return int(x)
+
                 case x if isinstance(x, int):
                     return x
+
                 case x if isinstance(x, str):
                     if not x.isdigit():
                         raise TypeError("Got a string that was not a Snowflake ID for before/after/around")
                     return int(x)
+
                 case x if isinstance(x, datetime):
                     return utils.time_snowflake(x)
+
                 case _:
                     raise TypeError("Got an unknown type for before/after/around")
 
@@ -867,12 +1221,13 @@ class BaseChannel(PartialChannel):
 
         self.id: int = int(data["id"])
         self.name: Optional[str] = data.get("name", None)
-        self._raw_type: ChannelType = ChannelType(data["type"])
         self.nsfw: bool = data.get("nsfw", False)
         self.topic: Optional[str] = data.get("topic", None)
         self.position: Optional[int] = utils.get_int(data, "position")
         self.last_message_id: Optional[int] = utils.get_int(data, "last_message_id")
         self.parent_id: Optional[int] = utils.get_int(data, "parent_id")
+
+        self._raw_type: ChannelType = ChannelType(data["type"])
 
         self.permission_overwrites: list[PermissionOverwrite] = [
             PermissionOverwrite.from_dict(g)
@@ -902,68 +1257,6 @@ class TextChannel(BaseChannel):
 
     def __repr__(self) -> str:
         return f"<TextChannel id={self.id} name='{self.name}'>"
-
-    async def edit(
-        self,
-        *,
-        name: Optional[str] = MISSING,
-        type: Optional[ChannelType] = MISSING,
-        topic: Optional[str] = MISSING,
-        position: Optional[int] = MISSING,
-        nsfw: Optional[bool] = MISSING,
-        parent_id: Optional[int] = MISSING,
-        reason: Optional[str] = None
-    ) -> Self:
-        """
-        Edit the channel
-
-        Parameters
-        ----------
-        name: `str`
-            Name of the channel
-        type: `ChannelType`
-            Which type the channel should be
-        topic: `str`
-            Topic of the channel
-        position: `int`
-            Position of the channel
-        nsfw: `Optional[bool]`
-            If the channel should be NSFW
-        parent_id: `int`
-            The parent ID of the channel
-        reason: `Optional[str]`
-            The reason for editing the channel
-
-        Returns
-        -------
-        `TextChannel`
-            The channel object
-
-        Raises
-        ------
-        `ValueError`
-            If the type is not guild_text or guild_news
-        """
-        payload = {}
-
-        if reason:
-            payload["reason"] = reason
-        if name is not MISSING:
-            payload["name"] = name
-        if topic is not MISSING:
-            payload["topic"] = topic
-        if position is not MISSING:
-            payload["position"] = position
-        if nsfw is not MISSING:
-            payload["nsfw"] = nsfw
-        if parent_id is not MISSING:
-            payload["parent_id"] = parent_id
-        if type is not MISSING:
-            if type not in (ChannelType.guild_text, ChannelType.guild_news):
-                raise ValueError("Invalid channel type, must be text or news.")
-            payload["type"] = type.value
-
-        return await super().edit(**payload)
 
     @property
     def type(self) -> ChannelType:
@@ -1226,13 +1519,121 @@ class PublicThread(BaseChannel):
         )
 
 
+class ForumTag:
+    def __init__(self, *, data: dict):
+        self.id: Optional[int] = utils.get_int(data, "id")
+
+        self.name: str = data["name"]
+        self.moderated: bool = data["moderated"]
+
+        self.emoji_id: Optional[int] = utils.get_int(data, "emoji_id")
+        self.emoji_name: Optional[str] = data.get("emoji_name", None)
+
+    def __repr__(self) -> str:
+        return f"<ForumTag id={self.id} name='{self.name}'>"
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __int__(self) -> int:
+        return int(self.id or -1)
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        name: Optional[str] = None,
+        emoji_id: Optional[int] = None,
+        emoji_name: Optional[str] = None,
+        moderated: bool = False
+    ) -> "ForumTag":
+        """
+        Create a forum tag, used for editing available_tags
+
+        Parameters
+        ----------
+        name: `Optional[str]`
+            The name of the tag
+        emoji_id: `Optional[int]`
+            The emoji ID of the tag
+        emoji_name: `Optional[str]`
+            The emoji name of the tag
+        moderated: `bool`
+            If the tag is moderated
+
+        Returns
+        -------
+        `ForumTag`
+            The tag object
+        """
+        if emoji_id and emoji_name:
+            raise ValueError("Cannot have both emoji_id and emoji_name defined for a tag.")
+
+        return cls(data={
+            "name": name or "New Tag",
+            "emoji_id": emoji_id,
+            "emoji_name": emoji_name,
+            "moderated": moderated
+        })
+
+    def to_dict(self) -> dict:
+        payload = {
+            "name": self.name,
+            "moderated": self.moderated,
+        }
+
+        if self.id:
+            payload["id"] = str(self.id)
+        if self.emoji_id:
+            payload["emoji_id"] = str(self.emoji_id)
+        if self.emoji_name:
+            payload["emoji_name"] = self.emoji_name
+
+        return payload
+
+
 class ForumChannel(PublicThread):
     def __init__(self, state: "DiscordAPI", data: dict):
         super().__init__(state=state, data=data)
-        self.default_reaction_emoji: str = data["default_auto_archive_duration"]
+        self.default_reaction_emoji: Optional[PartialEmoji] = None
+
+        self.tags: list[ForumTag] = [
+            ForumTag(data=g)
+            for g in data.get("tags", [])
+        ]
+
+        self._from_data(data)
 
     def __repr__(self) -> str:
         return f"<ForumChannel id={self.id} name='{self.name}'>"
+
+    def _from_data(self, data: dict):
+        if data.get("default_reaction_emoji", None):
+            self.default_reaction_emoji = PartialEmoji(
+                data["default_reaction_emoji"]["id"] or
+                data["default_reaction_emoji"]["name"]
+            )
+
+
+class ForumThread(PublicThread):
+    def __init__(self, state: "DiscordAPI", data: dict):
+        super().__init__(state=state, data=data)
+        self._from_data(data)
+
+    def __repr__(self) -> str:
+        return f"<ForumThread id={self.id} name='{self.name}'>"
+
+    def __str__(self) -> str:
+        return self.name
+
+    def _from_data(self, data: dict):
+        from .message import Message
+
+        self.message: Message = Message(
+            state=self._state,
+            data=data["message"],
+            guild=self.guild
+        )
 
 
 class NewsThread(PublicThread):
@@ -1254,6 +1655,22 @@ class PrivateThread(PublicThread):
 
 
 # Voice channels
+
+class VoiceRegion:
+    def __init__(self, *, data: dict):
+        self.id: str = data["id"]
+        self.name: str = data["name"]
+        self.custom: bool = data["custom"]
+        self.deprecated: bool = data["deprecated"]
+        self.optimal: bool = data["optimal"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return f"<VoiceRegion id='{self.id}' name='{self.name}'>"
+
+
 class VoiceChannel(BaseChannel):
     def __init__(self, *, state: "DiscordAPI", data: dict):
         super().__init__(state=state, data=data)
