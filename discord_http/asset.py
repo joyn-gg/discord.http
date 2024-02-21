@@ -164,7 +164,11 @@ class Asset:
         cls,
         decoration: str
     ) -> Self:
-        animated = decoration.startswith("v2_a_")
+        animated = (
+            decoration.startswith("v2_a_") or
+            decoration.startswith("a_")
+        )
+
         return cls(
             url=f"{cls.BASE}/avatar-decoration-presets/{decoration}.png?size=96&passthrough=true",
             key=decoration,
