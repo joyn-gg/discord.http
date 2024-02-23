@@ -966,7 +966,42 @@ class PartialGuild(PartialBase):
         except (KeyError, TypeError):
             return None
 
+    def get_partial_member(self, member_id: int) -> "PartialMember":
+        """
+        Get a partial member object
+
+        Parameters
+        ----------
+        member_id: `int`
+            The ID of the member
+
+        Returns
+        -------
+        `PartialMember`
+            The partial member object
+        """
+        from .member import PartialMember
+
+        return PartialMember(
+            state=self._state,
+            id=member_id,
+            guild_id=self.id
+        )
+
     async def fetch_member(self, member_id: int) -> "Member":
+        """
+        Fetch a member from the guild
+
+        Parameters
+        ----------
+        member_id: `int`
+            The ID of the member
+
+        Returns
+        -------
+        `Member`
+            The member object
+        """
         r = await self._state.query(
             "GET",
             f"/guilds/{self.id}/members/{member_id}"
@@ -981,6 +1016,14 @@ class PartialGuild(PartialBase):
         )
 
     async def fetch_public_threads(self) -> list["PublicThread"]:
+        """
+        Fetches all the public threads in the guild
+
+        Returns
+        -------
+        `list[PublicThread]`
+            The public threads in the guild
+        """
         r = await self._state.query(
             "GET",
             f"/guilds/{self.id}/threads/active"
@@ -1001,6 +1044,21 @@ class PartialGuild(PartialBase):
         limit: Optional[int] = 1000,
         after: Optional[Union[Snowflake, int]] = None
     ) -> AsyncIterator["Member"]:
+        """
+        Fetches all the members in the guild
+
+        Parameters
+        ----------
+        limit: `Optional[int]`
+            The maximum amount of members to return
+        after: `Optional[Union[Snowflake, int]]`
+            The member to start after
+
+        Yields
+        ------
+        `Members`
+            The members in the guild
+        """
         from .member import Member
 
         while True:
