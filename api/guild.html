@@ -716,17 +716,50 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_member">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.Member" title="discord_http.member.Member"><span class="pre">Member</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_member" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Fetch a member from the guild</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>member_id</strong> (<cite>int</cite>) – The ID of the member</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The member object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Member</cite></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_members">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="member.html#discord_http.member.Member" title="discord_http.member.Member"><span class="pre">Member</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_members" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Fetches all the members in the guild</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>limit</strong> (<cite>Optional[int]</cite>) – The maximum amount of members to return</p></li>
+<li><p><strong>after</strong> (<cite>Optional[Union[Snowflake, int]]</cite>) – The member to start after</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>Members</cite> – The members in the guild</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_public_threads">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_public_threads</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="channel.html#discord_http.channel.PublicThread" title="discord_http.channel.PublicThread"><span class="pre">PublicThread</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_public_threads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_public_threads" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Fetches all the public threads in the guild</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The public threads in the guild</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>list[PublicThread]</cite></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_regions">
@@ -750,6 +783,23 @@
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_stickers">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_stickers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="sticker.html#discord_http.sticker.Sticker" title="discord_http.sticker.Sticker"><span class="pre">Sticker</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_stickers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_stickers" title="Link to this definition">#</a></dt>
 <dd><p><cite>list[Sticker]</cite>: Fetches all the stickers in the guild</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.get_partial_member">
+<span class="sig-name descname"><span class="pre">get_partial_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.PartialMember" title="discord_http.member.PartialMember"><span class="pre">PartialMember</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.get_partial_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.get_partial_member" title="Link to this definition">#</a></dt>
+<dd><p>Get a partial member object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>member_id</strong> (<cite>int</cite>) – The ID of the member</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial member object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialMember</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -970,6 +1020,7 @@
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_roles"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_roles()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_scheduled_events"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_scheduled_events()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_stickers"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_stickers()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_member"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_member()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.kick"><code class="docutils literal notranslate"><span class="pre">PartialGuild.kick()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.search_members"><code class="docutils literal notranslate"><span class="pre">PartialGuild.search_members()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.unban"><code class="docutils literal notranslate"><span class="pre">PartialGuild.unban()</span></code></a></li>

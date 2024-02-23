@@ -1272,9 +1272,47 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="PartialGuild.get_partial_member">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.get_partial_member">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PartialMember&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a partial member object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        member_id: `int`</span>
+<span class="sd">            The ID of the member</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialMember`</span>
+<span class="sd">            The partial member object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span>
+
+        <span class="k">return</span> <span class="n">PartialMember</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">member_id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="PartialGuild.fetch_member">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_member">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Member&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch a member from the guild</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        member_id: `int`</span>
+<span class="sd">            The ID of the member</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Member`</span>
+<span class="sd">            The member object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/members/</span><span class="si">{</span><span class="n">member_id</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -1292,6 +1330,14 @@
 <div class="viewcode-block" id="PartialGuild.fetch_public_threads">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_public_threads">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_public_threads</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;PublicThread&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches all the public threads in the guild</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `list[PublicThread]`</span>
+<span class="sd">            The public threads in the guild</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
             <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/threads/active&quot;</span>
@@ -1315,6 +1361,21 @@
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="n">after</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="s2">&quot;Member&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches all the members in the guild</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        limit: `Optional[int]`</span>
+<span class="sd">            The maximum amount of members to return</span>
+<span class="sd">        after: `Optional[Union[Snowflake, int]]`</span>
+<span class="sd">            The member to start after</span>
+
+<span class="sd">        Yields</span>
+<span class="sd">        ------</span>
+<span class="sd">        `Members`</span>
+<span class="sd">            The members in the guild</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
