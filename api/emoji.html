@@ -250,21 +250,87 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="discord_http.emoji.Emoji">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.emoji.</span></span><span class="sig-name descname"><span class="pre">Emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="guild.html#discord_http.guild.PartialGuild" title="discord_http.guild.PartialGuild"><span class="pre">PartialGuild</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="guild.html#discord_http.guild.Guild" title="discord_http.guild.Guild"><span class="pre">Guild</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#discord_http.emoji.PartialEmoji" title="discord_http.emoji.PartialEmoji"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialEmoji</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.emoji.Emoji.url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#discord_http.emoji.Emoji.url" title="Link to this definition">#</a></dt>
+<dd><p>Returns the URL of the emoji</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>str</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.emoji.EmojiParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.emoji.</span></span><span class="sig-name descname"><span class="pre">EmojiParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emoji</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#EmojiParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.EmojiParser" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is used to accept any input and convert
+to either a normal emoji or a Discord emoji automatically.</p>
+<p>It is used for things like reactions, forum, components, etc</p>
+<section id="examples">
+<h3>Examples:<a class="headerlink" href="#examples" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><cite>EmojiParser(”👍”)</cite></p></li>
+<li><p><cite>EmojiParser(“&lt;:name:1234567890&gt;”)</cite></p></li>
+<li><p><cite>EmojiParser(“1234567890”)</cite></p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.emoji.EmojiParser.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#EmojiParser.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.EmojiParser.to_dict" title="Link to this definition">#</a></dt>
+<dd><p><cite>dict</cite>: Returns a dict representation of the emoji</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.emoji.EmojiParser.to_forum_dict">
+<span class="sig-name descname"><span class="pre">to_forum_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#EmojiParser.to_forum_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.EmojiParser.to_forum_dict" title="Link to this definition">#</a></dt>
+<dd><p><cite>dict</cite>: Returns a dict representation of emoji to forum/media channel</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.emoji.EmojiParser.to_reaction">
+<span class="sig-name descname"><span class="pre">to_reaction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#EmojiParser.to_reaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.EmojiParser.to_reaction" title="Link to this definition">#</a></dt>
+<dd><p><cite>str</cite>: Returns a string representation of the emoji</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.emoji.EmojiParser.url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.emoji.EmojiParser.url" title="Link to this definition">#</a></dt>
+<dd><p>Returns the URL of the emoji if it’s a Discord emoji</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>str</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.emoji.</span></span><span class="sig-name descname"><span class="pre">PartialEmoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="object.html#discord_http.object.PartialBase" title="discord_http.object.PartialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialBase</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="discord_http.emoji.Emoji.delete">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji.delete" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.delete">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.delete" title="Link to this definition">#</a></dt>
 <dd><p>Deletes the emoji.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for deleting the emoji.</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Whenever guild_id is not defined</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="discord_http.emoji.Emoji.edit">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles:</span> <span class="pre">list[~discord_http.role.PartialRole</span> <span class="pre">|</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji.edit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji.edit" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.edit">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles:</span> <span class="pre">list[~discord_http.role.PartialRole</span> <span class="pre">|</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.edit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.edit" title="Link to this definition">#</a></dt>
 <dd><p>Edits the emoji.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -280,42 +346,40 @@
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>Emoji</cite></p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="discord_http.emoji.Emoji.url">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#discord_http.emoji.Emoji.url" title="Link to this definition">#</a></dt>
-<dd><p>Returns the URL of the emoji</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>str</cite></p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Whenever guild_id is not defined</p>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.fetch">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.emoji.Emoji" title="discord_http.emoji.Emoji"><span class="pre">Emoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.fetch" title="Link to this definition">#</a></dt>
+<dd><p><cite>Emoji</cite>: Fetches the emoji</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Whenever guild_id is not defined</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.emoji.</span></span><span class="sig-name descname"><span class="pre">PartialEmoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emoji</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.to_dict" title="Link to this definition">#</a></dt>
-<dd><p><cite>dict</cite>: Returns a dict representation of the emoji</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.to_reaction">
-<span class="sig-name descname"><span class="pre">to_reaction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.to_reaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.to_reaction" title="Link to this definition">#</a></dt>
-<dd><p><cite>str</cite>: Returns a string representation of the emoji</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.guild">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">guild</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="guild.html#discord_http.guild.PartialGuild" title="discord_http.guild.PartialGuild"><span class="pre">PartialGuild</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.emoji.PartialEmoji.guild" title="Link to this definition">#</a></dt>
+<dd><p>The guild of the member.
+Returns <cite>None</cite> if guild_id is not defined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialGuild</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.url">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.emoji.PartialEmoji.url" title="Link to this definition">#</a></dt>
-<dd><p>Returns the URL of the emoji if it’s a Discord emoji</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#discord_http.emoji.PartialEmoji.url" title="Link to this definition">#</a></dt>
+<dd><p>Returns the URL of the emoji.
+It will always be PNG as it’s a partial emoji.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>str</cite></p>
@@ -386,14 +450,21 @@
 <li><a class="reference internal" href="#">Emoji</a><ul>
 <li><a class="reference internal" href="#module-discord_http.emoji">discord_http.emoji module</a><ul>
 <li><a class="reference internal" href="#discord_http.emoji.Emoji"><code class="docutils literal notranslate"><span class="pre">Emoji</span></code></a><ul>
-<li><a class="reference internal" href="#discord_http.emoji.Emoji.delete"><code class="docutils literal notranslate"><span class="pre">Emoji.delete()</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.emoji.Emoji.edit"><code class="docutils literal notranslate"><span class="pre">Emoji.edit()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.emoji.Emoji.url"><code class="docutils literal notranslate"><span class="pre">Emoji.url</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#discord_http.emoji.EmojiParser"><code class="docutils literal notranslate"><span class="pre">EmojiParser</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.emoji.EmojiParser.to_dict"><code class="docutils literal notranslate"><span class="pre">EmojiParser.to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.EmojiParser.to_forum_dict"><code class="docutils literal notranslate"><span class="pre">EmojiParser.to_forum_dict()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.EmojiParser.to_reaction"><code class="docutils literal notranslate"><span class="pre">EmojiParser.to_reaction()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.EmojiParser.url"><code class="docutils literal notranslate"><span class="pre">EmojiParser.url</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#discord_http.emoji.PartialEmoji"><code class="docutils literal notranslate"><span class="pre">PartialEmoji</span></code></a><ul>
-<li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.to_dict"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.to_dict()</span></code></a></li>
-<li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.to_reaction"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.to_reaction()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.delete"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.delete()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.edit"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.edit()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.fetch"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.fetch()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.guild"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.guild</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.emoji.PartialEmoji.url"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.url</span></code></a></li>
 </ul>
 </li>

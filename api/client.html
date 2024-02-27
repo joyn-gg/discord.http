@@ -583,6 +583,26 @@ if some interaction Custom IDs are regex.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.get_partial_emoji">
+<span class="sig-name descname"><span class="pre">get_partial_emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emoji_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="emoji.html#discord_http.emoji.PartialEmoji" title="discord_http.emoji.PartialEmoji"><span class="pre">PartialEmoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_emoji" title="Link to this definition">#</a></dt>
+<dd><p>Creates a partial emoji object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emoji_id</strong> (<cite>int</cite>) – Emoji ID to create the partial emoji object with.</p></li>
+<li><p><strong>guild_id</strong> (<cite>Optional[int]</cite>) – Guild ID of where the emoji comes from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial emoji object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialEmoji</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.get_partial_entitlement">
 <span class="sig-name descname"><span class="pre">get_partial_entitlement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entitlement_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="entitlements.html#discord_http.entitlements.PartialEntitlements" title="discord_http.entitlements.PartialEntitlements"><span class="pre">PartialEntitlements</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.get_partial_entitlement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.get_partial_entitlement" title="Link to this definition">#</a></dt>
 <dd><p>Creates a partial entitlement object.</p>
@@ -1037,6 +1057,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_webhook"><code class="docutils literal notranslate"><span class="pre">Client.fetch_webhook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.find_interaction"><code class="docutils literal notranslate"><span class="pre">Client.find_interaction()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.get_partial_emoji"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_emoji()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_entitlement()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_guild"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_guild()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.get_partial_invite"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_invite()</span></code></a></li>

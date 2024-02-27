@@ -285,6 +285,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.create_stage_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_stage_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.create_text_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_text_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.create_voice_channel"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.create_voice_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/channel.html#discord_http.channel.CategoryChannel.type"><code class="docutils literal notranslate"><span class="pre">CategoryChannel.type</span></code></a></li>
@@ -403,6 +404,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.fetch_webhook"><code class="docutils literal notranslate"><span class="pre">Client.fetch_webhook()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.find_interaction"><code class="docutils literal notranslate"><span class="pre">Client.find_interaction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_emoji"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_emoji()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_entitlement()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_guild"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_guild()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.get_partial_invite"><code class="docutils literal notranslate"><span class="pre">Client.get_partial_invite()</span></code></a></li>
@@ -557,14 +559,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/emoji.html">Emoji</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/emoji.html#module-discord_http.emoji">discord_http.emoji module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.Emoji"><code class="docutils literal notranslate"><span class="pre">Emoji</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.Emoji.delete"><code class="docutils literal notranslate"><span class="pre">Emoji.delete()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.Emoji.edit"><code class="docutils literal notranslate"><span class="pre">Emoji.edit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.Emoji.url"><code class="docutils literal notranslate"><span class="pre">Emoji.url</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.EmojiParser"><code class="docutils literal notranslate"><span class="pre">EmojiParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.EmojiParser.to_dict"><code class="docutils literal notranslate"><span class="pre">EmojiParser.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.EmojiParser.to_forum_dict"><code class="docutils literal notranslate"><span class="pre">EmojiParser.to_forum_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.EmojiParser.to_reaction"><code class="docutils literal notranslate"><span class="pre">EmojiParser.to_reaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.EmojiParser.url"><code class="docutils literal notranslate"><span class="pre">EmojiParser.url</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji"><code class="docutils literal notranslate"><span class="pre">PartialEmoji</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.to_dict"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.to_reaction"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.to_reaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.delete"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.delete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.edit"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.edit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.fetch"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.guild"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.guild</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/emoji.html#discord_http.emoji.PartialEmoji.url"><code class="docutils literal notranslate"><span class="pre">PartialEmoji.url</span></code></a></li>
 </ul>
 </li>
@@ -955,13 +964,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_guild"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_guild()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_role()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_scheduled_event"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_scheduled_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_stage_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_stage_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_text_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_text_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.create_voice_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_voice_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.default_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.default_role</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.delete"><code class="docutils literal notranslate"><span class="pre">PartialGuild.delete()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.edit"><code class="docutils literal notranslate"><span class="pre">PartialGuild.edit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_channels"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_channels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_emoji()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_emojis"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_emojis()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_guild_prune_count"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_guild_prune_count()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_invites"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_invites()</span></code></a></li>
@@ -971,8 +984,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_regions"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_regions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_roles"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_roles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_scheduled_events"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_scheduled_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_stickers"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_stickers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_emoji()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_member"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_role()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.kick"><code class="docutils literal notranslate"><span class="pre">PartialGuild.kick()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.search_members"><code class="docutils literal notranslate"><span class="pre">PartialGuild.search_members()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.unban"><code class="docutils literal notranslate"><span class="pre">PartialGuild.unban()</span></code></a></li>
@@ -1040,6 +1058,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.Member.public_flags"><code class="docutils literal notranslate"><span class="pre">Member.public_flags</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.Member.resolved_permissions"><code class="docutils literal notranslate"><span class="pre">Member.resolved_permissions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.Member.system"><code class="docutils literal notranslate"><span class="pre">Member.system</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.Member.top_role"><code class="docutils literal notranslate"><span class="pre">Member.top_role</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember"><code class="docutils literal notranslate"><span class="pre">PartialMember</span></code></a><ul>
@@ -1212,7 +1231,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.PartialSticker.delete"><code class="docutils literal notranslate"><span class="pre">PartialSticker.delete()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.PartialSticker.edit"><code class="docutils literal notranslate"><span class="pre">PartialSticker.edit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.PartialSticker.fetch"><code class="docutils literal notranslate"><span class="pre">PartialSticker.fetch()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.PartialSticker.partial_guild"><code class="docutils literal notranslate"><span class="pre">PartialSticker.partial_guild</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.PartialSticker.guild"><code class="docutils literal notranslate"><span class="pre">PartialSticker.guild</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/sticker.html#discord_http.sticker.PartialSticker.url"><code class="docutils literal notranslate"><span class="pre">PartialSticker.url</span></code></a></li>
 </ul>
 </li>

@@ -254,6 +254,7 @@
 <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">PartialChannel</span><span class="p">,</span> <span class="n">BaseChannel</span>
 <span class="kn">from</span> <span class="nn">.commands</span> <span class="kn">import</span> <span class="n">Command</span><span class="p">,</span> <span class="n">Interaction</span><span class="p">,</span> <span class="n">Listener</span><span class="p">,</span> <span class="n">Cog</span><span class="p">,</span> <span class="n">SubGroup</span>
 <span class="kn">from</span> <span class="nn">.context</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">PartialEmoji</span>
 <span class="kn">from</span> <span class="nn">.entitlements</span> <span class="kn">import</span> <span class="n">SKU</span><span class="p">,</span> <span class="n">PartialEntitlements</span><span class="p">,</span> <span class="n">Entitlements</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ApplicationCommandType</span>
 <span class="kn">from</span> <span class="nn">.guild</span> <span class="kn">import</span> <span class="n">PartialGuild</span><span class="p">,</span> <span class="n">Guild</span><span class="p">,</span> <span class="n">PartialScheduledEvent</span><span class="p">,</span> <span class="n">ScheduledEvent</span>
@@ -1022,6 +1023,36 @@
         <span class="k">return</span> <span class="n">PartialInvite</span><span class="p">(</span>
             <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
             <span class="n">code</span><span class="o">=</span><span class="n">invite_code</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Client.get_partial_emoji">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.get_partial_emoji">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_emoji</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">emoji_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">guild_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialEmoji</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a partial emoji object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        emoji_id: `int`</span>
+<span class="sd">            Emoji ID to create the partial emoji object with.</span>
+<span class="sd">        guild_id: `Optional[int]`</span>
+<span class="sd">            Guild ID of where the emoji comes from.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialEmoji`</span>
+<span class="sd">            The partial emoji object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialEmoji</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">emoji_id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="n">guild_id</span>
         <span class="p">)</span></div>
 
 

@@ -247,7 +247,7 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">.embeds</span> <span class="kn">import</span> <span class="n">Embed</span>
-<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">PartialEmoji</span>
+<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">EmojiParser</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ChannelType</span><span class="p">,</span> <span class="n">ResponseType</span><span class="p">,</span> <span class="n">VideoQualityType</span><span class="p">,</span>
     <span class="n">SortOrderType</span><span class="p">,</span> <span class="n">ForumLayoutType</span>
@@ -712,7 +712,7 @@
         <span class="n">default_auto_archive_duration</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">flags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ChannelFlags</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">available_tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="s2">&quot;ForumTag&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
-        <span class="n">default_reaction_emoji</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;ForumTag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">default_reaction_emoji</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">default_thread_rate_limit_per_user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">default_sort_order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SortOrderType</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">default_forum_layout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ForumLayoutType</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
@@ -761,7 +761,7 @@
 <span class="sd">            The new flags of the channel (Forum, Media)</span>
 <span class="sd">        available_tags: `Optional[list[ForumTag]]`</span>
 <span class="sd">            The new available tags of the channel (Forum, Media)</span>
-<span class="sd">        default_reaction_emoji: `Optional[ForumTag]`</span>
+<span class="sd">        default_reaction_emoji: `Optional[str]`</span>
 <span class="sd">            The new default reaction emoji of the channel (Forum, Media)</span>
 <span class="sd">        default_thread_rate_limit_per_user: `Optional[int]`</span>
 <span class="sd">            The new default thread rate limit per user of the channel (Text, Forum, Media)</span>
@@ -859,10 +859,8 @@
             <span class="k">if</span> <span class="n">default_reaction_emoji</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;default_reaction_emoji&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;default_reaction_emoji&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;emoji_id&quot;</span><span class="p">:</span> <span class="n">default_reaction_emoji</span><span class="o">.</span><span class="n">emoji_id</span><span class="p">,</span>
-                    <span class="s2">&quot;emoji_name&quot;</span><span class="p">:</span> <span class="n">default_reaction_emoji</span><span class="o">.</span><span class="n">emoji_name</span>
-                <span class="p">}</span>
+                <span class="n">_emoji</span> <span class="o">=</span> <span class="n">EmojiParser</span><span class="p">(</span><span class="n">default_reaction_emoji</span><span class="p">)</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;default_reaction_emoji&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_emoji</span><span class="o">.</span><span class="n">to_forum_dict</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">default_thread_rate_limit_per_user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">MISSING</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;default_thread_rate_limit_per_user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
@@ -1799,6 +1797,48 @@
             <span class="n">parent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CategoryChannel.create_stage_channel">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.CategoryChannel.create_stage_channel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_stage_channel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StageChannel&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a stage channel</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: `str`</span>
+<span class="sd">            The name of the channel</span>
+<span class="sd">        bitrate: `Optional[int]`</span>
+<span class="sd">            The bitrate of the channel</span>
+<span class="sd">        user_limit: `Optional[int]`</span>
+<span class="sd">            The user limit of the channel</span>
+<span class="sd">        overwrites: `Optional[list[PermissionOverwrite]]`</span>
+<span class="sd">            The permission overwrites of the category</span>
+<span class="sd">        position: `Optional[int]`</span>
+<span class="sd">            The position of the channel</span>
+<span class="sd">        video_quality_mode: `Optional[Union[VideoQualityType, int]]`</span>
+<span class="sd">            The video quality mode of the channel</span>
+<span class="sd">        parent_id: `Optional[Union[Snowflake, int]]`</span>
+<span class="sd">            The Category ID where the channel will be placed</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the stage channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `StageChannel`</span>
+<span class="sd">            The created channel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild</span><span class="o">.</span><span class="n">create_stage_channel</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">parent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
 </div>
 
 
@@ -1906,8 +1946,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">emoji_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">emoji_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">moderated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1932,7 +1972,10 @@
 <span class="sd">            The tag object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">emoji_id</span> <span class="ow">and</span> <span class="n">emoji_name</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot have both emoji_id and emoji_name defined for a tag.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot have both emoji_id and &quot;</span>
+                <span class="s2">&quot;emoji_name defined for a tag.&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;New Tag&quot;</span><span class="p">,</span>
@@ -1967,7 +2010,7 @@
 <span class="k">class</span> <span class="nc">ForumChannel</span><span class="p">(</span><span class="n">PublicThread</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">default_reaction_emoji</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PartialEmoji</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_reaction_emoji</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EmojiParser</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ForumTag</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">ForumTag</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
@@ -1981,7 +2024,7 @@
 
     <span class="k">def</span> <span class="nf">_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_reaction_emoji&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">default_reaction_emoji</span> <span class="o">=</span> <span class="n">PartialEmoji</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default_reaction_emoji</span> <span class="o">=</span> <span class="n">EmojiParser</span><span class="p">(</span>
                 <span class="n">data</span><span class="p">[</span><span class="s2">&quot;default_reaction_emoji&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="ow">or</span>
                 <span class="n">data</span><span class="p">[</span><span class="s2">&quot;default_reaction_emoji&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
             <span class="p">)</span></div>

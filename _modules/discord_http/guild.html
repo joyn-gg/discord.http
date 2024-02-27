@@ -253,22 +253,22 @@
     <span class="n">ChannelType</span><span class="p">,</span> <span class="n">VerificationLevel</span><span class="p">,</span>
     <span class="n">DefaultNotificationLevel</span><span class="p">,</span> <span class="n">ContentFilterLevel</span><span class="p">,</span>
     <span class="n">ScheduledEventEntityType</span><span class="p">,</span> <span class="n">ScheduledEventPrivacyType</span><span class="p">,</span>
-    <span class="n">ScheduledEventStatusType</span>
+    <span class="n">ScheduledEventStatusType</span><span class="p">,</span> <span class="n">VideoQualityType</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">Emoji</span>
+<span class="kn">from</span> <span class="nn">.emoji</span> <span class="kn">import</span> <span class="n">Emoji</span><span class="p">,</span> <span class="n">PartialEmoji</span>
 <span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span><span class="p">,</span> <span class="n">SystemChannelFlags</span><span class="p">,</span> <span class="n">PermissionOverwrite</span>
 <span class="kn">from</span> <span class="nn">.multipart</span> <span class="kn">import</span> <span class="n">MultipartData</span>
 <span class="kn">from</span> <span class="nn">.object</span> <span class="kn">import</span> <span class="n">PartialBase</span><span class="p">,</span> <span class="n">Snowflake</span>
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">Role</span><span class="p">,</span> <span class="n">PartialRole</span>
-<span class="kn">from</span> <span class="nn">.sticker</span> <span class="kn">import</span> <span class="n">Sticker</span>
+<span class="kn">from</span> <span class="nn">.sticker</span> <span class="kn">import</span> <span class="n">Sticker</span><span class="p">,</span> <span class="n">PartialSticker</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="p">(</span>
         <span class="n">TextChannel</span><span class="p">,</span> <span class="n">VoiceChannel</span><span class="p">,</span>
         <span class="n">PartialChannel</span><span class="p">,</span> <span class="n">BaseChannel</span><span class="p">,</span>
         <span class="n">CategoryChannel</span><span class="p">,</span> <span class="n">PublicThread</span><span class="p">,</span>
-        <span class="n">VoiceRegion</span>
+        <span class="n">VoiceRegion</span><span class="p">,</span> <span class="n">StageChannel</span>
     <span class="p">)</span>
     <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
     <span class="kn">from</span> <span class="nn">.invite</span> <span class="kn">import</span> <span class="n">Invite</span>
@@ -532,6 +532,15 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;PartialGuild id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">default_role</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialRole</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Role`: Returns the default role, but as a partial role object &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialRole</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="PartialGuild.fetch">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch">[docs]</a>
@@ -991,6 +1000,7 @@
         <span class="n">rate_limit_per_user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">overwrites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">PermissionOverwrite</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">video_quality_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">VideoQualityType</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">parent_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">nsfw</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1012,6 +1022,8 @@
 <span class="sd">            The permission overwrites of the category</span>
 <span class="sd">        position: `Optional[int]`</span>
 <span class="sd">            The position of the channel</span>
+<span class="sd">        video_quality_mode: `Optional[Union[VideoQualityType, int]]`</span>
+<span class="sd">            The video quality mode of the channel</span>
 <span class="sd">        parent_id: `Optional[Snowflake]`</span>
 <span class="sd">            The Category ID where the channel will be placed</span>
 <span class="sd">        nsfw: `Optional[bool]`</span>
@@ -1040,6 +1052,8 @@
                 <span class="n">g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">overwrites</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">PermissionOverwrite</span><span class="p">)</span>
             <span class="p">]</span>
+        <span class="k">if</span> <span class="n">video_quality_mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;video_quality_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video_quality_mode</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">position</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">parent_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1056,6 +1070,82 @@
 
         <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">VoiceChannel</span>
         <span class="k">return</span> <span class="n">VoiceChannel</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.create_stage_channel">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.create_stage_channel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_stage_channel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">bitrate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">user_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">overwrites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">PermissionOverwrite</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">position</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">parent_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">video_quality_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">VideoQualityType</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">reason</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StageChannel&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a stage channel</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name: `str`</span>
+<span class="sd">            The name of the channel</span>
+<span class="sd">        bitrate: `Optional[int]`</span>
+<span class="sd">            The bitrate of the channel</span>
+<span class="sd">        user_limit: `Optional[int]`</span>
+<span class="sd">            The user limit of the channel</span>
+<span class="sd">        overwrites: `Optional[list[PermissionOverwrite]]`</span>
+<span class="sd">            The permission overwrites of the category</span>
+<span class="sd">        position: `Optional[int]`</span>
+<span class="sd">            The position of the channel</span>
+<span class="sd">        video_quality_mode: `Optional[Union[VideoQualityType, int]]`</span>
+<span class="sd">            The video quality mode of the channel</span>
+<span class="sd">        parent_id: `Optional[Union[Snowflake, int]]`</span>
+<span class="sd">            The Category ID where the channel will be placed</span>
+<span class="sd">        reason: `Optional[str]`</span>
+<span class="sd">            The reason for creating the stage channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `StageChannel`</span>
+<span class="sd">            The created channel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_stage_voice</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">bitrate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;bitrate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bitrate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;user_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">user_limit</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">overwrites</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;permission_overwrites&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">overwrites</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">PermissionOverwrite</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">if</span> <span class="n">position</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">video_quality_mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;video_quality_mode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">video_quality_mode</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parent_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;parent_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">parent_id</span><span class="p">))</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/channels&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="n">reason</span><span class="o">=</span><span class="n">reason</span>
+        <span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">StageChannel</span>
+        <span class="k">return</span> <span class="n">StageChannel</span><span class="p">(</span>
             <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span>
         <span class="p">)</span></div>
@@ -1270,6 +1360,148 @@
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;pruned&quot;</span><span class="p">])</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.get_partial_role">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.get_partial_role">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">role_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialRole</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a partial role object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        role_id: `int`</span>
+<span class="sd">            The ID of the role</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialRole`</span>
+<span class="sd">            The partial role object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialRole</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">role_id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.get_partial_channel">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.get_partial_channel">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PartialChannel&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a partial channel object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        channel_id: `int`</span>
+<span class="sd">            The ID of the channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialChannel`</span>
+<span class="sd">            The partial channel object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">PartialChannel</span>
+
+        <span class="k">return</span> <span class="n">PartialChannel</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">channel_id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.fetch_channel">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_channel">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseChannel&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch a channel from the guild</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        channel_id: `int`</span>
+<span class="sd">            The ID of the channel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `BaseChannel`</span>
+<span class="sd">            The channel object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partial_channel</span><span class="p">(</span><span class="n">channel_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">channel</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.get_partial_emoji">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.get_partial_emoji">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_emoji</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emoji_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialEmoji</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a partial emoji object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        emoji_id: `int`</span>
+<span class="sd">            The ID of the emoji</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialEmoji`</span>
+<span class="sd">            The partial emoji object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialEmoji</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">emoji_id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.fetch_emoji">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_emoji">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_emoji</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emoji_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Emoji</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Emoji`: Fetches an emoji from the guild &quot;&quot;&quot;</span>
+        <span class="n">emoji</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partial_emoji</span><span class="p">(</span><span class="n">emoji_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">emoji</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.get_partial_sticker">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.get_partial_sticker">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_sticker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sticker_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialSticker</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a partial sticker object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sticker_id: `int`</span>
+<span class="sd">            The ID of the sticker</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialSticker`</span>
+<span class="sd">            The partial sticker object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialSticker</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">sticker_id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.fetch_sticker">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_sticker">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_sticker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sticker_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sticker</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetch a sticker from the guild</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sticker_id: `int`</span>
+<span class="sd">            The ID of the sticker</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Sticker`</span>
+<span class="sd">            The sticker object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sticker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partial_sticker</span><span class="p">(</span><span class="n">sticker_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">sticker</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="PartialGuild.get_partial_member">

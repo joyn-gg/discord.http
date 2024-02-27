@@ -550,6 +550,32 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.create_stage_channel">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_stage_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="flag.html#discord_http.flag.PermissionOverwrite" title="discord_http.flag.PermissionOverwrite"><span class="pre">PermissionOverwrite</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_quality_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="enums.html#discord_http.enums.VideoQualityType" title="discord_http.enums.VideoQualityType"><span class="pre">VideoQualityType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="channel.html#discord_http.channel.StageChannel" title="discord_http.channel.StageChannel"><span class="pre">StageChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.create_stage_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.create_stage_channel" title="Link to this definition">#</a></dt>
+<dd><p>Create a stage channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>str</cite>) – The name of the channel</p></li>
+<li><p><strong>bitrate</strong> (<cite>Optional[int]</cite>) – The bitrate of the channel</p></li>
+<li><p><strong>user_limit</strong> (<cite>Optional[int]</cite>) – The user limit of the channel</p></li>
+<li><p><strong>overwrites</strong> (<cite>Optional[list[PermissionOverwrite]]</cite>) – The permission overwrites of the category</p></li>
+<li><p><strong>position</strong> (<cite>Optional[int]</cite>) – The position of the channel</p></li>
+<li><p><strong>video_quality_mode</strong> (<cite>Optional[Union[VideoQualityType, int]]</cite>) – The video quality mode of the channel</p></li>
+<li><p><strong>parent_id</strong> (<cite>Optional[Union[Snowflake, int]]</cite>) – The Category ID where the channel will be placed</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for creating the stage channel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created channel</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>StageChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.create_sticker">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_sticker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emoji</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="file.html#discord_http.file.File" title="discord_http.file.File"><span class="pre">File</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sticker.html#discord_http.sticker.Sticker" title="discord_http.sticker.Sticker"><span class="pre">Sticker</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.create_sticker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.create_sticker" title="Link to this definition">#</a></dt>
 <dd><p>Create a sticker</p>
@@ -599,7 +625,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.create_voice_channel">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_voice_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit_per_user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="flag.html#discord_http.flag.PermissionOverwrite" title="discord_http.flag.PermissionOverwrite"><span class="pre">PermissionOverwrite</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsfw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="channel.html#discord_http.channel.VoiceChannel" title="discord_http.channel.VoiceChannel"><span class="pre">VoiceChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.create_voice_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.create_voice_channel" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_voice_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit_per_user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="flag.html#discord_http.flag.PermissionOverwrite" title="discord_http.flag.PermissionOverwrite"><span class="pre">PermissionOverwrite</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_quality_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="enums.html#discord_http.enums.VideoQualityType" title="discord_http.enums.VideoQualityType"><span class="pre">VideoQualityType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsfw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="channel.html#discord_http.channel.VoiceChannel" title="discord_http.channel.VoiceChannel"><span class="pre">VoiceChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.create_voice_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.create_voice_channel" title="Link to this definition">#</a></dt>
 <dd><p>Create a voice channel</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -610,6 +636,7 @@
 <li><p><strong>rate_limit_per_user</strong> (<cite>Optional</cite>) – The rate limit per user of the channel</p></li>
 <li><p><strong>overwrites</strong> (<cite>Optional[list[PermissionOverwrite]]</cite>) – The permission overwrites of the category</p></li>
 <li><p><strong>position</strong> (<cite>Optional[int]</cite>) – The position of the channel</p></li>
+<li><p><strong>video_quality_mode</strong> (<cite>Optional[Union[VideoQualityType, int]]</cite>) – The video quality mode of the channel</p></li>
 <li><p><strong>parent_id</strong> (<cite>Optional[Snowflake]</cite>) – The Category ID where the channel will be placed</p></li>
 <li><p><strong>nsfw</strong> (<cite>Optional[bool]</cite>) – Whether the channel is NSFW or not</p></li>
 <li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for creating the voice channel</p></li>
@@ -620,6 +647,17 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>VoiceChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.default_role">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_role</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="role.html#discord_http.role.PartialRole" title="discord_http.role.PartialRole"><span class="pre">PartialRole</span></a></em><a class="headerlink" href="#discord_http.guild.PartialGuild.default_role" title="Link to this definition">#</a></dt>
+<dd><p>Returns the default role, but as a partial role object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Role</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -676,9 +714,32 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_channel">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="channel.html#discord_http.channel.BaseChannel" title="discord_http.channel.BaseChannel"><span class="pre">BaseChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_channel" title="Link to this definition">#</a></dt>
+<dd><p>Fetch a channel from the guild</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel_id</strong> (<cite>int</cite>) – The ID of the channel</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The channel object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>BaseChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_channels">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_channels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="channel.html#discord_http.channel.BaseChannel" title="discord_http.channel.BaseChannel"><span class="pre">BaseChannel</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_channels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_channels" title="Link to this definition">#</a></dt>
 <dd><p><cite>list[BaseChannel]</cite>: Fetches all the channels in the guild</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_emoji">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emoji_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="emoji.html#discord_http.emoji.Emoji" title="discord_http.emoji.Emoji"><span class="pre">Emoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_emoji" title="Link to this definition">#</a></dt>
+<dd><p><cite>Emoji</cite>: Fetches an emoji from the guild</p>
 </dd></dl>
 
 <dl class="py method">
@@ -780,9 +841,60 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_sticker">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_sticker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sticker_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sticker.html#discord_http.sticker.Sticker" title="discord_http.sticker.Sticker"><span class="pre">Sticker</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_sticker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_sticker" title="Link to this definition">#</a></dt>
+<dd><p>Fetch a sticker from the guild</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sticker_id</strong> (<cite>int</cite>) – The ID of the sticker</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sticker object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Sticker</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_stickers">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_stickers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="sticker.html#discord_http.sticker.Sticker" title="discord_http.sticker.Sticker"><span class="pre">Sticker</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_stickers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_stickers" title="Link to this definition">#</a></dt>
 <dd><p><cite>list[Sticker]</cite>: Fetches all the stickers in the guild</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.get_partial_channel">
+<span class="sig-name descname"><span class="pre">get_partial_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="channel.html#discord_http.channel.PartialChannel" title="discord_http.channel.PartialChannel"><span class="pre">PartialChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.get_partial_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.get_partial_channel" title="Link to this definition">#</a></dt>
+<dd><p>Get a partial channel object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel_id</strong> (<cite>int</cite>) – The ID of the channel</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial channel object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.get_partial_emoji">
+<span class="sig-name descname"><span class="pre">get_partial_emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emoji_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="emoji.html#discord_http.emoji.PartialEmoji" title="discord_http.emoji.PartialEmoji"><span class="pre">PartialEmoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.get_partial_emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.get_partial_emoji" title="Link to this definition">#</a></dt>
+<dd><p>Get a partial emoji object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>emoji_id</strong> (<cite>int</cite>) – The ID of the emoji</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial emoji object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialEmoji</cite></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -798,6 +910,40 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>PartialMember</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.get_partial_role">
+<span class="sig-name descname"><span class="pre">get_partial_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">role_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="role.html#discord_http.role.PartialRole" title="discord_http.role.PartialRole"><span class="pre">PartialRole</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.get_partial_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.get_partial_role" title="Link to this definition">#</a></dt>
+<dd><p>Get a partial role object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>role_id</strong> (<cite>int</cite>) – The ID of the role</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial role object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialRole</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.get_partial_sticker">
+<span class="sig-name descname"><span class="pre">get_partial_sticker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sticker_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sticker.html#discord_http.sticker.PartialSticker" title="discord_http.sticker.PartialSticker"><span class="pre">PartialSticker</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.get_partial_sticker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.get_partial_sticker" title="Link to this definition">#</a></dt>
+<dd><p>Get a partial sticker object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sticker_id</strong> (<cite>int</cite>) – The ID of the sticker</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The partial sticker object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>PartialSticker</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1003,13 +1149,17 @@
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_guild"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_guild()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_role()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_scheduled_event"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_scheduled_event()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_stage_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_stage_channel()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_text_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_text_channel()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.create_voice_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.create_voice_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.default_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.default_role</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.delete"><code class="docutils literal notranslate"><span class="pre">PartialGuild.delete()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.edit"><code class="docutils literal notranslate"><span class="pre">PartialGuild.edit()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_channel()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_channels"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_channels()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_emoji()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_emojis"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_emojis()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_guild_prune_count"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_guild_prune_count()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_invites"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_invites()</span></code></a></li>
@@ -1019,8 +1169,13 @@
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_regions"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_regions()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_roles"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_roles()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_scheduled_events"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_scheduled_events()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_stickers"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_stickers()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_emoji()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_member"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_member()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_role"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_role()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.kick"><code class="docutils literal notranslate"><span class="pre">PartialGuild.kick()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.search_members"><code class="docutils literal notranslate"><span class="pre">PartialGuild.search_members()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.unban"><code class="docutils literal notranslate"><span class="pre">PartialGuild.unban()</span></code></a></li>
