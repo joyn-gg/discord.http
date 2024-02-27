@@ -436,6 +436,11 @@ class Member(PartialMember):
         return next((r for r in self.roles if r.id == int(role)), None)
 
     @property
+    def top_role(self) -> Optional[PartialRole]:
+        """ `Optional[PartialRole]`: The top role of the member """
+        return next(iter(self.roles), None)
+
+    @property
     def resolved_permissions(self) -> Permissions:
         """
         `Permissions` Returns permissions from an interaction.

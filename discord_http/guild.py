@@ -9,22 +9,22 @@ from .enums import (
     ChannelType, VerificationLevel,
     DefaultNotificationLevel, ContentFilterLevel,
     ScheduledEventEntityType, ScheduledEventPrivacyType,
-    ScheduledEventStatusType
+    ScheduledEventStatusType, VideoQualityType
 )
-from .emoji import Emoji
+from .emoji import Emoji, PartialEmoji
 from .file import File
 from .flag import Permissions, SystemChannelFlags, PermissionOverwrite
 from .multipart import MultipartData
 from .object import PartialBase, Snowflake
 from .role import Role, PartialRole
-from .sticker import Sticker
+from .sticker import Sticker, PartialSticker
 
 if TYPE_CHECKING:
     from .channel import (
         TextChannel, VoiceChannel,
         PartialChannel, BaseChannel,
         CategoryChannel, PublicThread,
-        VoiceRegion
+        VoiceRegion, StageChannel
     )
     from .http import DiscordAPI
     from .invite import Invite
@@ -271,6 +271,15 @@ class PartialGuild(PartialBase):
 
     def __repr__(self) -> str:
         return f"<PartialGuild id={self.id}>"
+
+    @property
+    def default_role(self) -> PartialRole:
+        """ `Role`: Returns the default role, but as a partial role object """
+        return PartialRole(
+            state=self._state,
+            id=self.id,
+            guild_id=self.id
+        )
 
     async def fetch(self) -> "Guild":
         """ `Guild`: Fetches more information about the guild """
@@ -698,6 +707,7 @@ class PartialGuild(PartialBase):
         rate_limit_per_user: Optional[int] = None,
         overwrites: Optional[list[PermissionOverwrite]] = None,
         position: Optional[int] = None,
+        video_quality_mode: Optional[Union[VideoQualityType, int]] = None,
         parent_id: Union[Snowflake, int, None] = None,
         nsfw: Optional[bool] = None,
         reason: Optional[str] = None
@@ -719,6 +729,8 @@ class PartialGuild(PartialBase):
             The permission overwrites of the category
         position: `Optional[int]`
             The position of the channel
+        video_quality_mode: `Optional[Union[VideoQualityType, int]]`
+            The video quality mode of the channel
         parent_id: `Optional[Snowflake]`
             The Category ID where the channel will be placed
         nsfw: `Optional[bool]`
@@ -747,6 +759,8 @@ class PartialGuild(PartialBase):
                 g.to_dict() for g in overwrites
                 if isinstance(g, PermissionOverwrite)
             ]
+        if video_quality_mode is not None:
+            payload["video_quality_mode"] = int(video_quality_mode)
         if position is not None:
             payload["position"] = int(position)
         if parent_id is not None:
@@ -763,6 +777,79 @@ class PartialGuild(PartialBase):
 
         from .channel import VoiceChannel
         return VoiceChannel(
+            state=self._state,
+            data=r.response
+        )
+
+    async def create_stage_channel(
+        self,
+        *,
+        name: str,
+        bitrate: Optional[int] = None,
+        user_limit: Optional[int] = None,
+        overwrites: Optional[list[PermissionOverwrite]] = None,
+        position: Optional[int] = None,
+        parent_id: Optional[Union[Snowflake, int]] = None,
+        video_quality_mode: Optional[Union[VideoQualityType, int]] = None,
+        reason: Optional[str] = None
+    ) -> "StageChannel":
+        """
+        Create a stage channel
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the channel
+        bitrate: `Optional[int]`
+            The bitrate of the channel
+        user_limit: `Optional[int]`
+            The user limit of the channel
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        position: `Optional[int]`
+            The position of the channel
+        video_quality_mode: `Optional[Union[VideoQualityType, int]]`
+            The video quality mode of the channel
+        parent_id: `Optional[Union[Snowflake, int]]`
+            The Category ID where the channel will be placed
+        reason: `Optional[str]`
+            The reason for creating the stage channel
+
+        Returns
+        -------
+        `StageChannel`
+            The created channel
+        """
+        payload = {
+            "name": name,
+            "type": int(ChannelType.guild_stage_voice)
+        }
+
+        if bitrate is not None:
+            payload["bitrate"] = int(bitrate)
+        if user_limit is not None:
+            payload["user_limit"] = int(user_limit)
+        if overwrites:
+            payload["permission_overwrites"] = [
+                g.to_dict() for g in overwrites
+                if isinstance(g, PermissionOverwrite)
+            ]
+        if position is not None:
+            payload["position"] = int(position)
+        if video_quality_mode is not None:
+            payload["video_quality_mode"] = int(video_quality_mode)
+        if parent_id is not None:
+            payload["parent_id"] = str(int(parent_id))
+
+        r = await self._state.query(
+            "POST",
+            f"/guilds/{self.id}/channels",
+            json=payload,
+            reason=reason
+        )
+
+        from .channel import StageChannel
+        return StageChannel(
             state=self._state,
             data=r.response
         )
@@ -965,6 +1052,127 @@ class PartialGuild(PartialBase):
             return int(r.response["pruned"])
         except (KeyError, TypeError):
             return None
+
+    def get_partial_role(self, role_id: int) -> PartialRole:
+        """
+        Get a partial role object
+
+        Parameters
+        ----------
+        role_id: `int`
+            The ID of the role
+
+        Returns
+        -------
+        `PartialRole`
+            The partial role object
+        """
+        return PartialRole(
+            state=self._state,
+            id=role_id,
+            guild_id=self.id
+        )
+
+    def get_partial_channel(self, channel_id: int) -> "PartialChannel":
+        """
+        Get a partial channel object
+
+        Parameters
+        ----------
+        channel_id: `int`
+            The ID of the channel
+
+        Returns
+        -------
+        `PartialChannel`
+            The partial channel object
+        """
+        from .channel import PartialChannel
+
+        return PartialChannel(
+            state=self._state,
+            id=channel_id,
+            guild_id=self.id
+        )
+
+    async def fetch_channel(self, channel_id: int) -> "BaseChannel":
+        """
+        Fetch a channel from the guild
+
+        Parameters
+        ----------
+        channel_id: `int`
+            The ID of the channel
+
+        Returns
+        -------
+        `BaseChannel`
+            The channel object
+        """
+        channel = self.get_partial_channel(channel_id)
+        return await channel.fetch()
+
+    def get_partial_emoji(self, emoji_id: int) -> PartialEmoji:
+        """
+        Get a partial emoji object
+
+        Parameters
+        ----------
+        emoji_id: `int`
+            The ID of the emoji
+
+        Returns
+        -------
+        `PartialEmoji`
+            The partial emoji object
+        """
+        return PartialEmoji(
+            state=self._state,
+            id=emoji_id,
+            guild_id=self.id
+        )
+
+    async def fetch_emoji(self, emoji_id: int) -> Emoji:
+        """ `Emoji`: Fetches an emoji from the guild """
+        emoji = self.get_partial_emoji(emoji_id)
+        return await emoji.fetch()
+
+    def get_partial_sticker(self, sticker_id: int) -> PartialSticker:
+        """
+        Get a partial sticker object
+
+        Parameters
+        ----------
+        sticker_id: `int`
+            The ID of the sticker
+
+        Returns
+        -------
+        `PartialSticker`
+            The partial sticker object
+        """
+        return PartialSticker(
+            state=self._state,
+            id=sticker_id,
+            guild_id=self.id
+        )
+
+    async def fetch_sticker(self, sticker_id: int) -> Sticker:
+        """
+        Fetch a sticker from the guild
+
+        Parameters
+        ----------
+        sticker_id: `int`
+            The ID of the sticker
+
+        Returns
+        -------
+        `Sticker`
+            The sticker object
+        """
+        sticker = self.get_partial_sticker(sticker_id)
+        return await sticker.fetch()
 
     def get_partial_member(self, member_id: int) -> "PartialMember":
         """

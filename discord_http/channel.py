@@ -3,7 +3,7 @@ from typing import Union, TYPE_CHECKING, Optional, AsyncIterator, Callable, Self
 
 from . import utils
 from .embeds import Embed
-from .emoji import PartialEmoji
+from .emoji import EmojiParser
 from .enums import (
     ChannelType, ResponseType, VideoQualityType,
     SortOrderType, ForumLayoutType
@@ -434,7 +434,7 @@ class PartialChannel(PartialBase):
         default_auto_archive_duration: Optional[int] = MISSING,
         flags: Optional[ChannelFlags] = MISSING,
         available_tags: Optional[list["ForumTag"]] = MISSING,
-        default_reaction_emoji: Optional["ForumTag"] = MISSING,
+        default_reaction_emoji: Optional[str] = MISSING,
         default_thread_rate_limit_per_user: Optional[int] = MISSING,
         default_sort_order: Optional[Union[SortOrderType, int]] = MISSING,
         default_forum_layout: Optional[Union[ForumLayoutType, int]] = MISSING,
@@ -483,7 +483,7 @@ class PartialChannel(PartialBase):
             The new flags of the channel (Forum, Media)
         available_tags: `Optional[list[ForumTag]]`
             The new available tags of the channel (Forum, Media)
-        default_reaction_emoji: `Optional[ForumTag]`
+        default_reaction_emoji: `Optional[str]`
             The new default reaction emoji of the channel (Forum, Media)
         default_thread_rate_limit_per_user: `Optional[int]`
             The new default thread rate limit per user of the channel (Text, Forum, Media)
@@ -581,10 +581,8 @@ class PartialChannel(PartialBase):
             if default_reaction_emoji is None:
                 payload["default_reaction_emoji"] = None
             else:
-                payload["default_reaction_emoji"] = {
-                    "emoji_id": default_reaction_emoji.emoji_id,
-                    "emoji_name": default_reaction_emoji.emoji_name
-                }
+                _emoji = EmojiParser(default_reaction_emoji)
+                payload["default_reaction_emoji"] = _emoji.to_forum_dict()
 
         if default_thread_rate_limit_per_user is not MISSING:
             payload["default_thread_rate_limit_per_user"] = int(
@@ -1447,6 +1445,45 @@ class CategoryChannel(BaseChannel):
             **kwargs
         )
 
+    async def create_stage_channel(
+        self,
+        *,
+        name: str,
+        **kwargs
+    ) -> "StageChannel":
+        """
+        Create a stage channel
+
+        Parameters
+        ----------
+        name: `str`
+            The name of the channel
+        bitrate: `Optional[int]`
+            The bitrate of the channel
+        user_limit: `Optional[int]`
+            The user limit of the channel
+        overwrites: `Optional[list[PermissionOverwrite]]`
+            The permission overwrites of the category
+        position: `Optional[int]`
+            The position of the channel
+        video_quality_mode: `Optional[Union[VideoQualityType, int]]`
+            The video quality mode of the channel
+        parent_id: `Optional[Union[Snowflake, int]]`
+            The Category ID where the channel will be placed
+        reason: `Optional[str]`
+            The reason for creating the stage channel
+
+        Returns
+        -------
+        `StageChannel`
+            The created channel
+        """
+        return await self.guild.create_stage_channel(
+            name=name,
+            parent_id=self.id,
+            **kwargs
+        )
+
 
 class NewsChannel(BaseChannel):
     def __init__(self, state: "DiscordAPI", data: dict):
@@ -1541,8 +1578,8 @@ class ForumTag:
     @classmethod
     def create(
         cls,
-        *,
         name: Optional[str] = None,
+        *,
         emoji_id: Optional[int] = None,
         emoji_name: Optional[str] = None,
         moderated: bool = False
@@ -1567,7 +1604,10 @@ class ForumTag:
             The tag object
         """
         if emoji_id and emoji_name:
-            raise ValueError("Cannot have both emoji_id and emoji_name defined for a tag.")
+            raise ValueError(
+                "Cannot have both emoji_id and "
+                "emoji_name defined for a tag."
+            )
 
         return cls(data={
             "name": name or "New Tag",
@@ -1595,7 +1635,7 @@ class ForumTag:
 class ForumChannel(PublicThread):
     def __init__(self, state: "DiscordAPI", data: dict):
         super().__init__(state=state, data=data)
-        self.default_reaction_emoji: Optional[PartialEmoji] = None
+        self.default_reaction_emoji: Optional[EmojiParser] = None
 
         self.tags: list[ForumTag] = [
             ForumTag(data=g)
@@ -1609,7 +1649,7 @@ class ForumChannel(PublicThread):
 
     def _from_data(self, data: dict):
         if data.get("default_reaction_emoji", None):
-            self.default_reaction_emoji = PartialEmoji(
+            self.default_reaction_emoji = EmojiParser(
                 data["default_reaction_emoji"]["id"] or
                 data["default_reaction_emoji"]["name"]
             )
