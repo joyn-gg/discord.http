@@ -6,7 +6,7 @@ import time
 
 from typing import Union, Optional, TYPE_CHECKING, Callable
 
-from .emoji import PartialEmoji
+from .emoji import EmojiParser
 from .enums import (
     ButtonStyles, ComponentType, TextStyles,
     ChannelType
@@ -164,7 +164,7 @@ class Button(Item):
 
         if self.emoji:
             if isinstance(self.emoji, str):
-                payload["emoji"] = PartialEmoji(self.emoji).to_dict()
+                payload["emoji"] = EmojiParser(self.emoji).to_dict()
             elif isinstance(self.emoji, dict):
                 payload["emoji"] = self.emoji
         if self.label:
@@ -275,7 +275,7 @@ class Select(Item):
         if description:
             payload["description"] = description
         if emoji:
-            payload["emoji"] = PartialEmoji(emoji).to_dict()
+            payload["emoji"] = EmojiParser(emoji).to_dict()
 
         self._options.append(payload)
 

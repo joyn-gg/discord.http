@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Optional, Union
 
 from . import http, utils
 from .embeds import Embed
-from .emoji import PartialEmoji
+from .emoji import EmojiParser
 from .errors import HTTPException
 from .file import File
 from .mentions import AllowedMentions
@@ -581,7 +581,7 @@ class PartialMessage(PartialBase):
         emoji: `str`
             Emoji to add to the message
         """
-        _parsed = PartialEmoji(emoji).to_reaction()
+        _parsed = EmojiParser(emoji).to_reaction()
         await self._state.query(
             "PUT",
             f"/channels/{self.channel.id}/messages/{self.id}/reactions/{_parsed}/@me",
@@ -604,7 +604,7 @@ class PartialMessage(PartialBase):
         user_id: `Optional[int]`
             User ID to remove the reaction from
         """
-        _parsed = PartialEmoji(emoji).to_reaction()
+        _parsed = EmojiParser(emoji).to_reaction()
         _url = (
             f"/channels/{self.channel.id}/messages/{self.id}/reactions/{_parsed}"
             f"/{user_id}" if user_id is not None else "/@me"
@@ -755,10 +755,10 @@ class Message(PartialMessage):
             self.edited_timestamp = utils.parse_time(data["edited_timestamp"])
 
     @property
-    def emojis(self) -> list[PartialEmoji]:
-        """ `list[PartialEmoji]`: Returns the emojis in the message """
+    def emojis(self) -> list[EmojiParser]:
+        """ `list[EmojiParser]`: Returns the emojis in the message """
         return [
-            PartialEmoji(f"<{e[0]}:{e[1]}:{e[2]}>")
+            EmojiParser(f"<{e[0]}:{e[1]}:{e[2]}>")
             for e in utils.re_emoji.findall(self.content)
         ]
 

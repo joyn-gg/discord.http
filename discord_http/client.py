@@ -10,6 +10,7 @@ from .backend import DiscordHTTP
 from .channel import PartialChannel, BaseChannel
 from .commands import Command, Interaction, Listener, Cog, SubGroup
 from .context import Context
+from .emoji import PartialEmoji
 from .entitlements import SKU, PartialEntitlements, Entitlements
 from .enums import ApplicationCommandType
 from .guild import PartialGuild, Guild, PartialScheduledEvent, ScheduledEvent
@@ -717,6 +718,33 @@ class Client:
         return PartialInvite(
             state=self.state,
             code=invite_code
+        )
+
+    def get_partial_emoji(
+        self,
+        emoji_id: int,
+        *,
+        guild_id: Optional[int] = None
+    ) -> PartialEmoji:
+        """
+        Creates a partial emoji object.
+
+        Parameters
+        ----------
+        emoji_id: `int`
+            Emoji ID to create the partial emoji object with.
+        guild_id: `Optional[int]`
+            Guild ID of where the emoji comes from.
+
+        Returns
+        -------
+        `PartialEmoji`
+            The partial emoji object.
+        """
+        return PartialEmoji(
+            state=self.state,
+            id=emoji_id,
+            guild_id=guild_id
         )
 
     def get_partial_sticker(
