@@ -44,6 +44,7 @@ __all__ = (
     "StageChannel",
     "StoreChannel",
     "TextChannel",
+    "Thread",
     "VoiceChannel",
     "VoiceRegion",
 )
@@ -1691,6 +1692,18 @@ class PrivateThread(PublicThread):
     @property
     def type(self) -> ChannelType:
         """ `ChannelType`: Returns the channel's type """
+        return ChannelType.guild_private_thread
+
+
+class Thread(PublicThread):
+    def __init__(self, *, state: "DiscordAPI", data: dict):
+        super().__init__(state=state, data=data)
+
+    @property
+    def type(self) -> ChannelType:
+        """ `ChannelType`: Returns the channel's type """
+        if self._raw_type == 11:
+            return ChannelType.guild_public_thread
         return ChannelType.guild_private_thread
 
 

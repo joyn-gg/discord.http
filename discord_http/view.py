@@ -98,15 +98,14 @@ class ModalItem:
             "type": 4,
             "label": self.label,
             "custom_id": self.custom_id,
-            "style": self.style
+            "style": self.style,
+            "required": self.required,
         }
 
         if self.min_length is not None:
             payload["min_length"] = int(self.min_length)
         if self.max_length is not None:
             payload["max_length"] = int(self.max_length)
-        if self.required:
-            payload["required"] = bool(self.required)
         if self.placeholder is not None:
             payload["placeholder"] = str(self.placeholder)
         if self.default is not None:

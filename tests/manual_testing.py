@@ -318,7 +318,20 @@ async def test_sticker(ctx: Context):
         "goodbye": "Goodbye!"
     }
 )
-async def test_list(ctx: Context, choice: commands.Choice[str]):
+async def test_list_str(ctx: Context, choice: commands.Choice[str]):
+    return ctx.response.send_message(
+        f"You chose **{choice.value}** which has key value: **{choice.key}**"
+    )
+
+
+@client.command()
+@commands.choices(
+    choice={
+        23: "Nice",
+        55: "meme"
+    }
+)
+async def test_list_int(ctx: Context, choice: commands.Choice[int]):
     return ctx.response.send_message(
         f"You chose **{choice.value}** which has key value: **{choice.key}**"
     )

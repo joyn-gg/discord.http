@@ -15,7 +15,7 @@ from .channel import (
     CategoryChannel, NewsThread,
     PublicThread, PrivateThread, StageChannel,
     DirectoryChannel, ForumChannel, StoreChannel,
-    NewsChannel, BaseChannel
+    NewsChannel, BaseChannel, Thread
 )
 from .enums import ApplicationCommandType, CommandOptionType, ChannelType
 from .errors import UserMissingPermissions, BotMissingPermissions, CheckFailed
@@ -52,11 +52,12 @@ channel_types = {
     PrivateThread: [ChannelType.guild_private_thread],
     StageChannel: [ChannelType.guild_stage_voice],
     DirectoryChannel: [ChannelType.guild_directory],
-    ForumChannel: [
+    ForumChannel: [ChannelType.guild_forum],
+    Thread: [
         ChannelType.guild_news_thread,
         ChannelType.guild_public_thread,
         ChannelType.guild_private_thread
-    ],
+    ]
 }
 
 _log = logging.getLogger(__name__)
@@ -227,9 +228,10 @@ class Command:
                 elif origin in [Role]:
                     ptype = CommandOptionType.role
                 elif origin in [Choice]:
-                    # Temporarily set to string, will be changed later
                     self.__list_choices.append(parameter.name)
-                    ptype = CommandOptionType.string
+                    ptype = Choice.choice_type(
+                        parameter.annotation.__args__[0]
+                    )
                 elif isinstance(origin, Range):
                     ptype = origin.type
                     if origin.type == CommandOptionType.string:
@@ -783,19 +785,27 @@ class Choice(Generic[ChoiceT]):
         self.key: str = key
         self.value: ChoiceT = value
 
-    @property
-    def _choice_type(self) -> CommandOptionType:
-        if isinstance(self.value, str):
-            return CommandOptionType.string
-        elif isinstance(self.value, int):
-            return CommandOptionType.integer
-        elif isinstance(self.value, float):
-            return CommandOptionType.number
-        else:
+    @classmethod
+    def choice_type(
+        cls,
+        arg_type: Union[str, int, float, type]
+    ) -> CommandOptionType:
+        if not isinstance(arg_type, type):
+            arg_type = type(arg_type)
+
+        _type_table = {
+            str: CommandOptionType.string,
+            int: CommandOptionType.integer,
+            float: CommandOptionType.number
+        }
+
+        if arg_type not in _type_table:
             raise TypeError(
                 "Choice value must be a str, int, or float, "
-                f"not a {type(self.value)}"
+                f"not a {arg_type}"
             )
+
+        return _type_table[arg_type]
 
 
 class Range:

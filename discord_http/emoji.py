@@ -257,10 +257,9 @@ class Emoji(PartialEmoji):
         super().__init__(
             state=state,
             id=int(data["id"]),
-            guild_id=int(data["guild_id"])
+            guild_id=guild.id
         )
 
-        self.guild: Union["PartialGuild", "Guild"] = guild
         self.name: str = data["name"]
         self.animated: bool = data["animated"]
         self.available: bool = data["available"]

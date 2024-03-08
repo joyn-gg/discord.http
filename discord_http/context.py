@@ -596,6 +596,7 @@ class Context:
             data=r.response,
             guild=self.guild
         )
+
         self._original_response = msg
         return msg
 
