@@ -288,6 +288,7 @@
     <span class="s2">&quot;StageChannel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;StoreChannel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;TextChannel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Thread&quot;</span><span class="p">,</span>
     <span class="s2">&quot;VoiceChannel&quot;</span><span class="p">,</span>
     <span class="s2">&quot;VoiceRegion&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -2075,6 +2076,21 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChannelType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `ChannelType`: Returns the channel&#39;s type &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_private_thread</span></div>
+
+
+
+<div class="viewcode-block" id="Thread">
+<a class="viewcode-back" href="../../api/channel.html#discord_http.channel.Thread">[docs]</a>
+<span class="k">class</span> <span class="nc">Thread</span><span class="p">(</span><span class="n">PublicThread</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="s2">&quot;DiscordAPI&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChannelType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `ChannelType`: Returns the channel&#39;s type &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_type</span> <span class="o">==</span> <span class="mi">11</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_public_thread</span>
         <span class="k">return</span> <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_private_thread</span></div>
 
 

@@ -352,15 +352,14 @@
             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
             <span class="s2">&quot;custom_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_id</span><span class="p">,</span>
-            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
+            <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;min_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_length</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;max_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
-            <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeholder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;placeholder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">placeholder</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

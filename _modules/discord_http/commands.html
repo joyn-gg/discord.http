@@ -259,7 +259,7 @@
     <span class="n">CategoryChannel</span><span class="p">,</span> <span class="n">NewsThread</span><span class="p">,</span>
     <span class="n">PublicThread</span><span class="p">,</span> <span class="n">PrivateThread</span><span class="p">,</span> <span class="n">StageChannel</span><span class="p">,</span>
     <span class="n">DirectoryChannel</span><span class="p">,</span> <span class="n">ForumChannel</span><span class="p">,</span> <span class="n">StoreChannel</span><span class="p">,</span>
-    <span class="n">NewsChannel</span><span class="p">,</span> <span class="n">BaseChannel</span>
+    <span class="n">NewsChannel</span><span class="p">,</span> <span class="n">BaseChannel</span><span class="p">,</span> <span class="n">Thread</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ApplicationCommandType</span><span class="p">,</span> <span class="n">CommandOptionType</span><span class="p">,</span> <span class="n">ChannelType</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="n">UserMissingPermissions</span><span class="p">,</span> <span class="n">BotMissingPermissions</span><span class="p">,</span> <span class="n">CheckFailed</span>
@@ -296,11 +296,12 @@
     <span class="n">PrivateThread</span><span class="p">:</span> <span class="p">[</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_private_thread</span><span class="p">],</span>
     <span class="n">StageChannel</span><span class="p">:</span> <span class="p">[</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_stage_voice</span><span class="p">],</span>
     <span class="n">DirectoryChannel</span><span class="p">:</span> <span class="p">[</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_directory</span><span class="p">],</span>
-    <span class="n">ForumChannel</span><span class="p">:</span> <span class="p">[</span>
+    <span class="n">ForumChannel</span><span class="p">:</span> <span class="p">[</span><span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_forum</span><span class="p">],</span>
+    <span class="n">Thread</span><span class="p">:</span> <span class="p">[</span>
         <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_news_thread</span><span class="p">,</span>
         <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_public_thread</span><span class="p">,</span>
         <span class="n">ChannelType</span><span class="o">.</span><span class="n">guild_private_thread</span>
-    <span class="p">],</span>
+    <span class="p">]</span>
 <span class="p">}</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -482,9 +483,10 @@
                 <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">role</span>
                 <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Choice</span><span class="p">]:</span>
-                    <span class="c1"># Temporarily set to string, will be changed later</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__list_choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
+                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">Choice</span><span class="o">.</span><span class="n">choice_type</span><span class="p">(</span>
+                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="p">)</span>
                 <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">Range</span><span class="p">):</span>
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span>
                     <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
@@ -1083,19 +1085,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">ChoiceT</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">_choice_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandOptionType</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
-        <span class="k">else</span><span class="p">:</span>
+<div class="viewcode-block" id="Choice.choice_type">
+<a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Choice.choice_type">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">choice_type</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">arg_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandOptionType</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg_type</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+            <span class="n">arg_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg_type</span><span class="p">)</span>
+
+        <span class="n">_type_table</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nb">str</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span>
+            <span class="nb">float</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">arg_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_type_table</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Choice value must be a str, int, or float, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;not a </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span></div>
+                <span class="sa">f</span><span class="s2">&quot;not a </span><span class="si">{</span><span class="n">arg_type</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_type_table</span><span class="p">[</span><span class="n">arg_type</span><span class="p">]</span></div>
+</div>
 
 
 
