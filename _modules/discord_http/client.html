@@ -1494,6 +1494,21 @@
         <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialScheduledEvent</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a partial scheduled event object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: `int`</span>
+<span class="sd">            The ID of the scheduled event.</span>
+<span class="sd">        guild_id: `int`</span>
+<span class="sd">            The guild ID of the scheduled event.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialScheduledEvent`</span>
+<span class="sd">            The partial scheduled event object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PartialScheduledEvent</span><span class="p">(</span>
             <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
             <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
@@ -1508,6 +1523,21 @@
         <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guild_id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledEvent</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches a scheduled event object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: `int`</span>
+<span class="sd">            The ID of the scheduled event.</span>
+<span class="sd">        guild_id: `int`</span>
+<span class="sd">            The guild ID of the scheduled event.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `ScheduledEvent`</span>
+<span class="sd">            The scheduled event object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partial_scheduled_event</span><span class="p">(</span>
             <span class="nb">id</span><span class="p">,</span> <span class="n">guild_id</span>
         <span class="p">)</span>

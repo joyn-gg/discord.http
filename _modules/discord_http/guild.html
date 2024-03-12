@@ -595,9 +595,9 @@
         <span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="PartialGuild.fetch_scheduled_events">
-<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_scheduled_events">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_scheduled_events</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScheduledEvent</span><span class="p">]:</span>
+<div class="viewcode-block" id="PartialGuild.fetch_scheduled_events_list">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_scheduled_events_list">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_scheduled_events_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScheduledEvent</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `list[ScheduledEvent]`: Fetches all the scheduled events in the guild &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
@@ -1360,6 +1360,54 @@
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;pruned&quot;</span><span class="p">])</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.get_partial_scheduled_event">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.get_partial_scheduled_event">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_partial_scheduled_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PartialScheduledEvent</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a partial scheduled event object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: `int`</span>
+<span class="sd">            The ID of the scheduled event.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `PartialScheduledEvent`</span>
+<span class="sd">            The partial scheduled event object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PartialScheduledEvent</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.fetch_scheduled_event">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_scheduled_event">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_scheduled_event</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScheduledEvent</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches a scheduled event object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: `int`</span>
+<span class="sd">            The ID of the scheduled event.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `ScheduledEvent`</span>
+<span class="sd">            The scheduled event object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_partial_scheduled_event</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">event</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="PartialGuild.get_partial_role">

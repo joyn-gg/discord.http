@@ -246,6 +246,7 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;ApplicationCommandType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AuditLogType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ButtonStyles&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ChannelType&quot;</span><span class="p">,</span>
     <span class="s2">&quot;CommandOptionType&quot;</span><span class="p">,</span>
@@ -322,6 +323,68 @@
     <span class="n">disabled</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">members_without_roles</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">all_members</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="AuditLogType">
+<a class="viewcode-back" href="../../api/enums.html#discord_http.enums.AuditLogType">[docs]</a>
+<span class="k">class</span> <span class="nc">AuditLogType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">guild_update</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">channel_create</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">channel_update</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">channel_delete</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">channel_overwrite_create</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">channel_overwrite_update</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">channel_overwrite_delete</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">member_kick</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">member_prune</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">member_ban_add</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">member_ban_remove</span> <span class="o">=</span> <span class="mi">23</span>
+    <span class="n">member_update</span> <span class="o">=</span> <span class="mi">24</span>
+    <span class="n">member_role_update</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="n">member_move</span> <span class="o">=</span> <span class="mi">26</span>
+    <span class="n">member_disconnect</span> <span class="o">=</span> <span class="mi">27</span>
+    <span class="n">bot_add</span> <span class="o">=</span> <span class="mi">28</span>
+    <span class="n">role_create</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">role_update</span> <span class="o">=</span> <span class="mi">31</span>
+    <span class="n">role_delete</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">invite_create</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">invite_update</span> <span class="o">=</span> <span class="mi">41</span>
+    <span class="n">invite_delete</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">webhook_create</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">webhook_update</span> <span class="o">=</span> <span class="mi">51</span>
+    <span class="n">webhook_delete</span> <span class="o">=</span> <span class="mi">52</span>
+    <span class="n">emoji_create</span> <span class="o">=</span> <span class="mi">60</span>
+    <span class="n">emoji_update</span> <span class="o">=</span> <span class="mi">61</span>
+    <span class="n">emoji_delete</span> <span class="o">=</span> <span class="mi">62</span>
+    <span class="n">message_delete</span> <span class="o">=</span> <span class="mi">72</span>
+    <span class="n">message_bulk_delete</span> <span class="o">=</span> <span class="mi">73</span>
+    <span class="n">message_pin</span> <span class="o">=</span> <span class="mi">74</span>
+    <span class="n">message_unpin</span> <span class="o">=</span> <span class="mi">75</span>
+    <span class="n">integration_create</span> <span class="o">=</span> <span class="mi">80</span>
+    <span class="n">integration_update</span> <span class="o">=</span> <span class="mi">81</span>
+    <span class="n">integration_delete</span> <span class="o">=</span> <span class="mi">82</span>
+    <span class="n">stage_instance_create</span> <span class="o">=</span> <span class="mi">83</span>
+    <span class="n">stage_instance_update</span> <span class="o">=</span> <span class="mi">84</span>
+    <span class="n">stage_instance_delete</span> <span class="o">=</span> <span class="mi">85</span>
+    <span class="n">sticker_create</span> <span class="o">=</span> <span class="mi">90</span>
+    <span class="n">sticker_update</span> <span class="o">=</span> <span class="mi">91</span>
+    <span class="n">sticker_delete</span> <span class="o">=</span> <span class="mi">92</span>
+    <span class="n">guild_scheduled_event_create</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">guild_scheduled_event_update</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">guild_scheduled_event_delete</span> <span class="o">=</span> <span class="mi">102</span>
+    <span class="n">thread_create</span> <span class="o">=</span> <span class="mi">110</span>
+    <span class="n">thread_update</span> <span class="o">=</span> <span class="mi">111</span>
+    <span class="n">thread_delete</span> <span class="o">=</span> <span class="mi">112</span>
+    <span class="n">application_command_permission_update</span> <span class="o">=</span> <span class="mi">121</span>
+    <span class="n">auto_moderation_rule_create</span> <span class="o">=</span> <span class="mi">140</span>
+    <span class="n">auto_moderation_rule_update</span> <span class="o">=</span> <span class="mi">141</span>
+    <span class="n">auto_moderation_rule_delete</span> <span class="o">=</span> <span class="mi">142</span>
+    <span class="n">auto_moderation_block_message</span> <span class="o">=</span> <span class="mi">143</span>
+    <span class="n">auto_moderation_flag_to_channel</span> <span class="o">=</span> <span class="mi">144</span>
+    <span class="n">auto_moderation_user_communication_disabled</span> <span class="o">=</span> <span class="mi">145</span>
+    <span class="n">creator_monetization_request_created</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">creator_monetization_terms_accepted</span> <span class="o">=</span> <span class="mi">151</span></div>
 
 
 
