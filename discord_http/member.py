@@ -42,12 +42,6 @@ class PartialMember(PartialBase):
         self._user = PartialUser(state=state, id=self.id)
         self.guild_id: int = int(guild_id)
 
-    def __str__(self) -> str:
-        return str(self.id)
-
-    def __int__(self) -> int:
-        return self.id
-
     def __repr__(self) -> str:
         return f"<PartialMember id={self.id} guild_id={self.guild_id}>"
 

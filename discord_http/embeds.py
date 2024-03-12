@@ -49,6 +49,10 @@ class Embed:
     def __repr__(self) -> str:
         return f"<Embed title={self.title} colour={self.colour}>"
 
+    def copy(self) -> Self:
+        """ `Embed`: Returns a copy of the embed """
+        return self.__class__.from_dict(self.to_dict())
+
     def set_footer(
         self,
         *,

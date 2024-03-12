@@ -1138,6 +1138,21 @@ class Client:
         id: int,
         guild_id: int
     ) -> PartialScheduledEvent:
+        """
+        Creates a partial scheduled event object.
+
+        Parameters
+        ----------
+        id: `int`
+            The ID of the scheduled event.
+        guild_id: `int`
+            The guild ID of the scheduled event.
+
+        Returns
+        -------
+        `PartialScheduledEvent`
+            The partial scheduled event object.
+        """
         return PartialScheduledEvent(
             state=self.state,
             id=id,
@@ -1149,6 +1164,21 @@ class Client:
         id: int,
         guild_id: int
     ) -> ScheduledEvent:
+        """
+        Fetches a scheduled event object.
+
+        Parameters
+        ----------
+        id: `int`
+            The ID of the scheduled event.
+        guild_id: `int`
+            The guild ID of the scheduled event.
+
+        Returns
+        -------
+        `ScheduledEvent`
+            The scheduled event object.
+        """
         event = self.get_partial_scheduled_event(
             id, guild_id
         )

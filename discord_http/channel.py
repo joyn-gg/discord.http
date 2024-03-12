@@ -1514,6 +1514,7 @@ class PublicThread(BaseChannel):
         self._metadata: dict = data.get("thread_metadata", {})
 
         self.locked: bool = self._metadata.get("locked", False)
+        self.archived: bool = self._metadata.get("archived", False)
         self.auto_archive_duration: int = self._metadata.get("auto_archive_duration", 60)
 
         self.channel_id: int = int(data["id"])

@@ -173,7 +173,6 @@ def oauth_url(
     output = (
         "https://discord.com/oauth2/authorize"
         f"?client_id={int(client_id)}"
-        "&scope=bot+applications.commands"
     )
 
     if scope is not None:
@@ -301,7 +300,10 @@ def mime_type_image(image: bytes) -> str:
         case x if x.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
             return "image/png"
 
-        case x if x.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
+        case x if x.startswith((
+            b"\x47\x49\x46\x38\x37\x61",
+            b"\x47\x49\x46\x38\x39\x61"
+        )):
             return "image/gif"
 
         case x if x.startswith(b"RIFF") and x[8:12] == b"WEBP":

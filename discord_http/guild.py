@@ -325,7 +325,7 @@ class PartialGuild(PartialBase):
             for data in r.response
         ]
 
-    async def fetch_scheduled_events(self) -> list[ScheduledEvent]:
+    async def fetch_scheduled_events_list(self) -> list[ScheduledEvent]:
         """ `list[ScheduledEvent]`: Fetches all the scheduled events in the guild """
         r = await self._state.query(
             "GET",
@@ -1052,6 +1052,48 @@ class PartialGuild(PartialBase):
             return int(r.response["pruned"])
         except (KeyError, TypeError):
             return None
+
+    def get_partial_scheduled_event(
+        self,
+        id: int
+    ) -> PartialScheduledEvent:
+        """
+        Creates a partial scheduled event object.
+
+        Parameters
+        ----------
+        id: `int`
+            The ID of the scheduled event.
+
+        Returns
+        -------
+        `PartialScheduledEvent`
+            The partial scheduled event object.
+        """
+        return PartialScheduledEvent(
+            state=self._state,
+            id=id,
+            guild_id=self.id
+        )
+
+    async def fetch_scheduled_event(
+        self, id: int
+    ) -> ScheduledEvent:
+        """
+        Fetches a scheduled event object.
+
+        Parameters
+        ----------
+        id: `int`
+            The ID of the scheduled event.
+
+        Returns
+        -------
+        `ScheduledEvent`
+            The scheduled event object.
+        """
+        event = self.get_partial_scheduled_event(id)
+        return await event.fetch()
 
     def get_partial_role(self, role_id: int) -> PartialRole:
         """
