@@ -317,6 +317,10 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; `PartialGuild`: The guild object this event is in &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">PartialGuild</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://discord.com/events/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+
 <div class="viewcode-block" id="PartialScheduledEvent.fetch">
 <a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialScheduledEvent.fetch">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ScheduledEvent&quot;</span><span class="p">:</span>
@@ -2226,6 +2230,37 @@
         <span class="k">return</span> <span class="nb">next</span><span class="p">((</span>
             <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">roles</span>
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">role_name</span>
+        <span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Guild.get_member_top_role">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.Guild.get_member_top_role">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_member_top_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s2">&quot;Member&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the top role of a member, because Discord API does not order roles</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        member: `Member`</span>
+<span class="sd">            The member to get the top role of</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `Optional[Role]`</span>
+<span class="sd">            The top role of the member</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="s2">&quot;roles&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">_roles_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">roles</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">next</span><span class="p">((</span>
+            <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">_roles_sorted</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">member</span><span class="o">.</span><span class="n">roles</span>
         <span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
 
