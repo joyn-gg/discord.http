@@ -877,7 +877,8 @@ class PartialChannel(PartialBase):
 
             for i, file in enumerate(temp_msg.files):
                 multidata.attach(
-                    f"files[{i}]", file,  # type: ignore
+                    f"files[{i}]",
+                    file,  # type: ignore
                     filename=file.filename
                 )
 

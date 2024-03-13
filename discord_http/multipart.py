@@ -1,6 +1,6 @@
 import json
-import io
 
+from io import BufferedIOBase
 from typing import Union, Optional
 
 from .file import File
@@ -23,7 +23,7 @@ class MultipartData:
     def attach(
         self,
         name: str,
-        data: Union[File, io.BufferedIOBase, dict, str],
+        data: Union[File, BufferedIOBase, dict, str],
         *,
         filename: Optional[str] = None,
         content_type: Optional[str] = None
@@ -52,7 +52,7 @@ class MultipartData:
         if isinstance(data, File):
             string += f"\r\nContent-Type: {content_type or 'application/octet-stream'}\r\n\r\n"
             data = data.data
-        elif isinstance(data, io.BufferedIOBase):
+        elif isinstance(data, BufferedIOBase):
             string += f"\r\nContent-Type: {content_type or 'application/octet-stream'}\r\n\r\n"
         elif isinstance(data, dict):
             string += "\r\nContent-Type: application/json\r\n\r\n"
@@ -62,11 +62,18 @@ class MultipartData:
             data = str(data)
 
         self.bufs.append(string.encode("utf8"))
-        self.bufs.append(
-            data.read()
-            if isinstance(data, io.BufferedIOBase)
-            else data.encode("utf8")
-        )
+
+        if getattr(data, "read", None):
+            # Check if the data has a read method
+            # If it does, it's a file-like object
+            data = data.read()  # type: ignore
+
+        if isinstance(data, str):
+            # If the data is a string, encode it to bytes
+            # Sometimes data.read() returns a string due to things like StringIO
+            data = data.encode("utf-8")  # type: ignore
+
+        self.bufs.append(data)  # type: ignore
 
         return None
 

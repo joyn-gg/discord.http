@@ -139,7 +139,7 @@ class PartialWebhook(PartialBase):
             for i, file in enumerate(payload.files):
                 multidata.attach(
                     f"file{i}",
-                    file.data,
+                    file,  # type: ignore
                     filename=file.filename
                 )
 
