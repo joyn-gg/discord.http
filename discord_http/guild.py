@@ -71,6 +71,10 @@ class PartialScheduledEvent(PartialBase):
         """ `PartialGuild`: The guild object this event is in """
         return PartialGuild(state=self._state, id=self.guild_id)
 
+    @property
+    def url(self) -> str:
+        return f"https://discord.com/events/{self.guild_id}/{self.id}"
+
     async def fetch(self) -> "ScheduledEvent":
         """ `ScheduledEvent`: Fetches more information about the event """
         r = await self._state.query(
@@ -1843,4 +1847,32 @@ class Guild(PartialGuild):
         return next((
             r for r in self.roles
             if r.name == role_name
+        ), None)
+
+    def get_member_top_role(self, member: "Member") -> Optional[Role]:
+        """
+        Get the top role of a member, because Discord API does not order roles
+
+        Parameters
+        ----------
+        member: `Member`
+            The member to get the top role of
+
+        Returns
+        -------
+        `Optional[Role]`
+            The top role of the member
+        """
+        if not getattr(member, "roles", None):
+            return None
+
+        _roles_sorted = sorted(
+            self.roles,
+            key=lambda r: r.position,
+            reverse=True
+        )
+
+        return next((
+            r for r in _roles_sorted
+            if r.id in member.roles
         ), None)
