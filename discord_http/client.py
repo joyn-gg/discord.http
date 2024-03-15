@@ -86,7 +86,6 @@ class Client:
         self.application_id: Optional[int] = application_id
         self.public_key: Optional[str] = public_key
         self.token: str = token
-        self.user: Optional[User] = None
         self.guild_id: Optional[int] = guild_id
         self.sync: bool = sync
         self.logging_level: int = logging_level
@@ -113,6 +112,8 @@ class Client:
         self.interactions_regex: Dict[str, Interaction] = {}
 
         self._ready: Optional[asyncio.Event] = asyncio.Event()
+        self._user_object: Optional[User] = None
+
         self._context: Callable = Context
         self.backend: DiscordHTTP = DiscordHTTP(client=self)
 
@@ -199,7 +200,7 @@ class Client:
     async def _prepare_me(self) -> User:
         """ Gets the bot's user data, mostly used to validate token """
         try:
-            self.user = await self.state.me()
+            self._user_object = await self.state.me()
         except KeyError:
             raise RuntimeError("Invalid token")
 
@@ -238,6 +239,27 @@ class Client:
         else:
             data = await self.state.fetch_commands(guild_id=self.guild_id)
             self._update_ids(data)
+
+    @property
+    def user(self) -> User:
+        """
+        Returns
+        -------
+        `User`
+            The bot's user object
+
+        Raises
+        ------
+        `AttributeError`
+            If used before the bot is ready
+        """
+        if not self._user_object:
+            raise AttributeError(
+                "User object is not available yet "
+                "(bot is not ready)"
+            )
+
+        return self._user_object
 
     def is_ready(self) -> bool:
         """ `bool`: Indicates if the client is ready. """

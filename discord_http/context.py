@@ -37,6 +37,7 @@ if TYPE_CHECKING:
     from .client import Client
 
 _log = logging.getLogger(__name__)
+
 MISSING = utils.MISSING
 
 channel_types = {
@@ -468,7 +469,7 @@ class Context:
         self.app_permissions: Permissions = Permissions(int(data.get("app_permissions", 0)))
         self.custom_id: Optional[str] = data.get("data", {}).get("custom_id", None)
         self.select_values: SelectValues = SelectValues.none(self)
-        self.modal_values: Optional[dict[str, str]] = {}
+        self.modal_values: dict[str, str] = {}
 
         self.options: list[dict] = data.get("data", {}).get("options", [])
         self.followup_token: str = data.get("token", None)

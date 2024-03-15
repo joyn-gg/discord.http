@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union, Literal, overload
 
 from . import utils
 from .embeds import Embed
@@ -52,6 +52,7 @@ class PartialWebhook(PartialBase):
             data=r.response
         )
 
+    @overload
     async def send(
         self,
         content: Optional[str] = MISSING,
@@ -66,7 +67,46 @@ class PartialWebhook(PartialBase):
         view: Optional[View] = MISSING,
         type: Union[ResponseType, int] = 4,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
-        wait: Optional[bool] = True,
+        wait: Literal[False],
+        thread_id: Optional[int] = MISSING
+    ) -> None:
+        ...
+
+    @overload
+    async def send(
+        self,
+        content: Optional[str] = MISSING,
+        *,
+        username: Optional[str] = MISSING,
+        avatar_url: Optional[str] = MISSING,
+        embed: Optional[Embed] = MISSING,
+        embeds: Optional[list[Embed]] = MISSING,
+        file: Optional[File] = MISSING,
+        files: Optional[list[File]] = MISSING,
+        ephemeral: Optional[bool] = False,
+        view: Optional[View] = MISSING,
+        type: Union[ResponseType, int] = 4,
+        allowed_mentions: Optional[AllowedMentions] = MISSING,
+        wait: bool = True,
+        thread_id: Optional[int] = MISSING
+    ) -> "WebhookMessage":
+        ...
+
+    async def send(
+        self,
+        content: Optional[str] = MISSING,
+        *,
+        username: Optional[str] = MISSING,
+        avatar_url: Optional[str] = MISSING,
+        embed: Optional[Embed] = MISSING,
+        embeds: Optional[list[Embed]] = MISSING,
+        file: Optional[File] = MISSING,
+        files: Optional[list[File]] = MISSING,
+        ephemeral: Optional[bool] = False,
+        view: Optional[View] = MISSING,
+        type: Union[ResponseType, int] = 4,
+        allowed_mentions: Optional[AllowedMentions] = MISSING,
+        wait: bool = True,
         thread_id: Optional[int] = MISSING
     ) -> Optional["WebhookMessage"]:
         """

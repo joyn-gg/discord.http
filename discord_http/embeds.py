@@ -53,6 +53,31 @@ class Embed:
         """ `Embed`: Returns a copy of the embed """
         return self.__class__.from_dict(self.to_dict())
 
+    def set_colour(
+        self,
+        value: Optional[Union[Colour, int]]
+    ) -> Self:
+        """
+        Set the colour of the embed
+
+        Parameters
+        ----------
+        value: `Optional[Union[Colour, int]]`
+            The colour to set the embed to.
+            If `None`, the colour will be removed
+
+        Returns
+        -------
+        `Self`
+            Returns the embed you are editing
+        """
+        if value is None:
+            self._colour = None
+        else:
+            self._colour = Colour(int(value))
+
+        return self
+
     def set_footer(
         self,
         *,
