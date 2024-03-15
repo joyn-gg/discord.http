@@ -977,6 +977,18 @@ You can overwrite this function to do your own setup</p>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.client.Client.user">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="user.html#discord_http.user.User" title="discord_http.user.User"><span class="pre">User</span></a></em><a class="headerlink" href="#discord_http.client.Client.user" title="Link to this definition">#</a></dt>
+<dd><p>returns: The bot’s user object
+:rtype: <cite>User</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AttributeError</strong> – If used before the bot is ready</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.user_command">
 <span class="sig-name descname"><span class="pre">user_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.user_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.user_command" title="Link to this definition">#</a></dt>
@@ -1109,6 +1121,7 @@ You can overwrite this function to do your own setup</p>
 <li><a class="reference internal" href="#discord_http.client.Client.set_context"><code class="docutils literal notranslate"><span class="pre">Client.set_context()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.setup_hook"><code class="docutils literal notranslate"><span class="pre">Client.setup_hook()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.start"><code class="docutils literal notranslate"><span class="pre">Client.start()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.user"><code class="docutils literal notranslate"><span class="pre">Client.user</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.user_command"><code class="docutils literal notranslate"><span class="pre">Client.user_command()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.wait_until_ready"><code class="docutils literal notranslate"><span class="pre">Client.wait_until_ready()</span></code></a></li>
 </ul>
