@@ -1713,7 +1713,7 @@ class Guild(PartialGuild):
         self.name: str = data["name"]
         self.nsfw: bool = data.get("nsfw", False)
         self.nsfw_level: int = data.get("nsfw_level", 0)
-        self.owner_id: Optional[int] = utils.get_int(data, "owner_id")
+        self.owner_id: int = int(data["owner_id"])
         self.preferred_locale: Optional[str] = data.get("preferred_locale", None)
         self.premium_progress_bar_enabled: bool = data.get("premium_progress_bar_enabled", False)
         self.premium_subscription_count: int = data.get("premium_subscription_count", 0)

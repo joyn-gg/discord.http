@@ -372,6 +372,14 @@ class PartialMessage(PartialBase):
         from .channel import PartialChannel
         return PartialChannel(state=self._state, id=self.channel_id)
 
+    @property
+    def jump_url(self) -> JumpURL:
+        """ `JumpURL`: Returns the jump URL of the message, GuildID will always be @me """
+        return JumpURL(
+            state=self._state,
+            url=f"https://discord.com/channels/@me/{self.channel_id}/{self.id}"
+        )
+
     async def fetch(self) -> "Message":
         """ `Message`: Returns the message object """
         r = await self._state.query(

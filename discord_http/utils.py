@@ -3,6 +3,7 @@ import logging
 import numbers
 import random
 import re
+import sys
 import traceback
 import unicodedata
 
@@ -615,7 +616,7 @@ def setup_logger(
     lib, _, _ = __name__.partition(".")
     logger = logging.getLogger(lib)
 
-    handler = logging.StreamHandler()
+    handler = logging.StreamHandler(sys.stdout)
     formatter = CustomFormatter(datefmt="%Y-%m-%d %H:%M:%S")
 
     handler.setFormatter(formatter)
