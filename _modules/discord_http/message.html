@@ -654,6 +654,14 @@
         <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">PartialChannel</span>
         <span class="k">return</span> <span class="n">PartialChannel</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="p">)</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">jump_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JumpURL</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `JumpURL`: Returns the jump URL of the message, GuildID will always be @me &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">JumpURL</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;https://discord.com/channels/@me/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">channel_id</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
 <div class="viewcode-block" id="PartialMessage.fetch">
 <a class="viewcode-back" href="../../api/message.html#discord_http.message.PartialMessage.fetch">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Message&quot;</span><span class="p">:</span>
