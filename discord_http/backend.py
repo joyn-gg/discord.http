@@ -162,7 +162,8 @@ class DiscordHTTP(Quart):
         _log.debug("Received slash command, processing...")
 
         command_name = data["data"]["name"]
-        cmd = self.bot.commands.get(command_name)
+        cmd = self.bot.commands.get(command_name, None)
+
         if not cmd:
             _log.warn(
                 f"Unhandeled command: {command_name} "

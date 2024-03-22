@@ -61,6 +61,12 @@ channel_types = {
 }
 
 _log = logging.getLogger(__name__)
+_NoneType = type(None)
+_type_table: dict[type, CommandOptionType] = {
+    str: CommandOptionType.string,
+    int: CommandOptionType.integer,
+    float: CommandOptionType.number
+}
 
 __all__ = (
     "Choice",
@@ -163,6 +169,8 @@ class Command:
         name: str,
         description: Optional[str] = None,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+        guild_install: bool = True,
+        user_install: bool = False,
         type: ApplicationCommandType = ApplicationCommandType.chat_input,
     ):
         self.id: Optional[int] = None
@@ -173,6 +181,9 @@ class Command:
         self.description = description
         self.options = []
         self.default_member_permissions = None
+
+        self.guild_install = guild_install
+        self.user_install = user_install
 
         self.name_localizations: Dict[LocaleTypes, str] = {}
         self.description_localizations: Dict[LocaleTypes, str] = {}
@@ -207,12 +218,18 @@ class Command:
 
                 option = {}
 
+                # Check if it's an Optional[Any] type
                 if (
                     origin in [Union] and
-                    len(parameter.annotation.__args__) == 2
+                    len(parameter.annotation.__args__) == 2 and
+                    parameter.annotation.__args__[-1] is _NoneType
                 ):
-                    # Parsing Optional/Union types
                     origin = parameter.annotation.__args__[0]
+
+                    # Recreate GenericAlias if it's something like Choice[str]
+                    if getattr(origin, "__origin__", None):
+                        parameter.annotation.__args__ = origin.__args__
+                        origin = origin.__origin__
 
                 if origin in [Member, User]:
                     ptype = CommandOptionType.user
@@ -229,8 +246,9 @@ class Command:
                     ptype = CommandOptionType.role
                 elif origin in [Choice]:
                     self.__list_choices.append(parameter.name)
-                    ptype = Choice.choice_type(
-                        parameter.annotation.__args__[0]
+                    ptype = _type_table.get(
+                        parameter.annotation.__args__[0],
+                        CommandOptionType.string
                     )
                 elif isinstance(origin, Range):
                     ptype = origin.type
@@ -455,7 +473,7 @@ class Command:
 
     def to_dict(self) -> dict:
         """
-        Converts the command to a dict.
+        Converts the Discord command to a dict.
 
         Returns
         -------
@@ -467,6 +485,18 @@ class Command:
         _extra_choices = getattr(self.command, "__choices_params__", {})
         _default_permissions = getattr(self.command, "__default_permissions__", None)
 
+        _integration_types = []
+        if self.guild_install:
+            _integration_types.append(0)
+        if self.user_install:
+            _integration_types.append(1)
+
+        _integration_contexts = getattr(self.command, "__integration_contexts__", [0, 1, 2])
+        _dm_permission = getattr(self.command, "__dm_permission__", True)
+
+        if not _dm_permission:
+            _integration_contexts = [0]
+
         # Types
         _extra_locale: dict[LocaleTypes, list[LocaleContainer]]
 
@@ -475,12 +505,14 @@ class Command:
             "name": self.name,
             "description": self.description,
             "options": self.options,
-            "default_permission": True,
-            "dm_permission": getattr(self.command, "__dm_permission__", True),
             "nsfw": getattr(self.command, "__nsfw__", False),
             "name_localizations": {},
             "description_localizations": {},
+            "contexts": _integration_contexts
         }
+
+        if _integration_types:
+            data["integration_types"] = _integration_types
 
         for key, value in _extra_locale.items():
             for loc in value:
@@ -570,12 +602,16 @@ class SubCommand(Command):
         *,
         name: str,
         description: Optional[str] = None,
+        guild_install: bool = True,
+        user_install: bool = False,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None
     ):
         super().__init__(
             func,
             name=name,
             description=description,
+            guild_install=guild_install,
+            user_install=user_install,
             guild_ids=guild_ids
         )
 
@@ -607,6 +643,8 @@ class SubGroup(Command):
         name: Optional[str] = None,
         description: Optional[str] = None,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+        guild_install: bool = True,
+        user_install: bool = False,
     ):
         """
         Decorator to add a subcommand to a subcommand group
@@ -619,6 +657,10 @@ class SubGroup(Command):
             Description of the command (defaults to the function docstring)
         guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
+        user_install: `bool`
+            Whether the command can be installed by users or not
+        guild_install: `bool`
+            Whether the command can be installed by guilds or not
         """
         def decorator(func):
             subcommand = SubCommand(
@@ -626,6 +668,8 @@ class SubGroup(Command):
                 name=name or func.__name__,
                 description=description,
                 guild_ids=guild_ids,
+                guild_install=guild_install,
+                user_install=user_install,
             )
             self.subcommands[subcommand.name] = subcommand
             return subcommand
@@ -694,9 +738,10 @@ class Interaction:
 
         self.cog: Optional["Cog"] = None
 
-        self._pattern: Optional[re.Pattern] = None
-        if self.regex:
-            self._pattern = re.compile(custom_id)
+        self._pattern: Optional[re.Pattern] = (
+            re.compile(custom_id)
+            if self.regex else None
+        )
 
     def __repr__(self) -> str:
         return (
@@ -774,41 +819,43 @@ class Choice(Generic[ChoiceT]):
     """
     Makes it possible to access both the name and value of a choice.
 
+    Defaults to a string type
+
     Paramaters
-    -----------
-    key: :class:`str`
+    ----------
+    key: `str`
         The key of the choice from your dict.
-    value: Union[:class:`int`, :class:`str`, :class:`float`]
+    value: `Union[int, str, float]`
         The value of your choice (the one that is shown to public)
     """
     def __init__(self, key: str, value: ChoiceT):
         self.key: str = key
         self.value: ChoiceT = value
 
-    @classmethod
-    def choice_type(
-        cls,
-        arg_type: Union[str, int, float, type]
-    ) -> CommandOptionType:
-        if not isinstance(arg_type, type):
-            arg_type = type(arg_type)
-
-        _type_table = {
-            str: CommandOptionType.string,
-            int: CommandOptionType.integer,
-            float: CommandOptionType.number
-        }
-
-        if arg_type not in _type_table:
-            raise TypeError(
-                "Choice value must be a str, int, or float, "
-                f"not a {arg_type}"
-            )
-
-        return _type_table[arg_type]
-
 
 class Range:
+    """
+    Makes it possible to create a range rule for command arguments
+
+    When used in a command, it will only return the value if it's within the range.
+
+    Example usage:
+
+    .. code-block:: python
+
+        Range[str, 1, 10]        # (min and max length of the string)
+        Range[int, 1, 10]        # (min and max value of the integer)
+        Range[float, 1.0, 10.0]  # (min and max value of the float)
+
+    Parameters
+    ----------
+    opt_type: `CommandOptionType`
+        The type of the range
+    min: `Union[int, float, str]`
+        The minimum value of the range
+    max: `Union[int, float, str]`
+        The maximum value of the range
+    """
     def __init__(
         self,
         opt_type: CommandOptionType,
@@ -853,10 +900,9 @@ class Range:
                     f"or float, not a {obj_type}"
                 )
 
+        cast = float
         if obj_type in (str, int):
             cast = int
-        else:
-            cast = float
 
         return cls(
             opt,
@@ -870,6 +916,8 @@ def command(
     *,
     description: Optional[str] = None,
     guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+    guild_install: bool = True,
+    user_install: bool = False,
 ):
     """
     Decorator to register a command.
@@ -882,6 +930,10 @@ def command(
         Description of the command (defaults to the function docstring)
     guild_ids: `Optional[list[Union[Snowflake, int]]]`
         List of guild IDs to register the command in
+    user_install: `bool`
+        Whether the command can be installed by users or not
+    guild_install: `bool`
+        Whether the command can be installed by guilds or not
     """
     def decorator(func):
         return Command(
@@ -889,6 +941,8 @@ def command(
             name=name or func.__name__,
             description=description,
             guild_ids=guild_ids,
+            guild_install=guild_install,
+            user_install=user_install
         )
 
     return decorator
@@ -898,6 +952,8 @@ def user_command(
     name: Optional[str] = None,
     *,
     guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+    guild_install: bool = True,
+    user_install: bool = False,
 ):
     """
     Decorator to register a user command.
@@ -916,6 +972,10 @@ def user_command(
         Name of the command (defaults to the function name)
     guild_ids: `Optional[list[Union[Snowflake, int]]]`
         List of guild IDs to register the command in
+    user_install: `bool`
+        Whether the command can be installed by users or not
+    guild_install: `bool`
+        Whether the command can be installed by guilds or not
     """
     def decorator(func):
         return Command(
@@ -923,6 +983,8 @@ def user_command(
             name=name or func.__name__,
             type=ApplicationCommandType.user,
             guild_ids=guild_ids,
+            guild_install=guild_install,
+            user_install=user_install
         )
 
     return decorator
@@ -932,6 +994,8 @@ def message_command(
     name: Optional[str] = None,
     *,
     guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+    guild_install: bool = True,
+    user_install: bool = False,
 ):
     """
     Decorator to register a message command.
@@ -950,13 +1014,19 @@ def message_command(
         Name of the command (defaults to the function name)
     guild_ids: `Optional[list[Union[Snowflake, int]]]`
         List of guild IDs to register the command in
+    user_install: `bool`
+        Whether the command can be installed by users or not
+    guild_install: `bool`
+        Whether the command can be installed by guilds or not
     """
     def decorator(func):
         return Command(
             func,
             name=name or func.__name__,
             type=ApplicationCommandType.message,
-            guild_ids=guild_ids
+            guild_ids=guild_ids,
+            guild_install=guild_install,
+            user_install=user_install
         )
 
     return decorator
@@ -1090,6 +1160,39 @@ def describe(**kwargs):
     return decorator
 
 
+def allow_contexts(
+    *,
+    guild: bool = True,
+    bot_dm: bool = True,
+    private_dm: bool = True
+):
+    """
+    Decorator to set the places you are allowed to use the command.
+    Can only be used if the Command has user_install set to True.
+
+    Parameters
+    ----------
+    guild: `bool`
+        Weather the command can be used in guilds.
+    bot_dm: `bool`
+        Weather the command can be used in bot DMs.
+    private_dm: `bool`
+        Weather the command can be used in private DMs.
+    """
+    def decorator(func):
+        func.__integration_contexts__ = []
+
+        if guild:
+            func.__integration_contexts__.append(0)
+        if bot_dm:
+            func.__integration_contexts__.append(1)
+        if private_dm:
+            func.__integration_contexts__.append(2)
+
+        return func
+    return decorator
+
+
 def choices(**kwargs):
     """
     Decorator to set choices for a command.
@@ -1119,7 +1222,11 @@ def choices(**kwargs):
 
 
 def guild_only():
-    """ Decorator to set a command as guild only. """
+    """
+    Decorator to set a command as guild only.
+
+    This is a alias to `commands.allow_contexts(guild=True, bot_dm=False, private_dm=False)`
+    """
     def decorator(func):
         func.__dm_permission__ = False
         return func
@@ -1136,10 +1243,27 @@ def is_nsfw():
     return decorator
 
 
-def default_permissions(*args):
+def default_permissions(*args: Union[Permissions, str]):
     """ Decorator to set default permissions for a command. """
     def decorator(func):
-        func.__default_permissions__ = str(Permissions.from_names(*args).value)
+        if not args:
+            return func
+
+        if isinstance(args[0], Permissions):
+            func.__default_permissions__ = str(args[0].value)
+        else:
+            _store_perms: list[str] = []
+            for arg in args:
+                if not isinstance(arg, str):
+                    raise TypeError(
+                        "Default permissions must be a "
+                        f"string or Permissions, not a {type(arg)}"
+                    )
+
+            func.__default_permissions__ = str(
+                Permissions.from_names(*_store_perms).value
+            )
+
         return func
 
     return decorator

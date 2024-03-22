@@ -466,7 +466,9 @@ class Client:
         self,
         name: Optional[str] = None,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[Snowflake, int]]] = None
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+        guild_install: bool = True,
+        user_install: bool = False,
     ):
         """
         Used to register a command
@@ -479,6 +481,10 @@ class Client:
             Description of the command, if not provided, it will use the function docstring
         guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
+        user_install: `bool`
+            Whether the command can be installed by users or not
+        guild_install: `bool`
+            Whether the command can be installed by guilds or not
         """
         def decorator(func):
             command = Command(
@@ -486,6 +492,8 @@ class Client:
                 name=name or func.__name__,
                 description=description,
                 guild_ids=guild_ids,
+                guild_install=guild_install,
+                user_install=user_install
             )
             self.add_command(command)
             return command
@@ -497,6 +505,8 @@ class Client:
         name: Optional[str] = None,
         *,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+        guild_install: bool = True,
+        user_install: bool = False,
     ):
         """
         Used to register a user command
@@ -515,6 +525,10 @@ class Client:
             Name of the command, if not provided, it will use the function name
         guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
+        user_install: `bool`
+            Whether the command can be installed by users or not
+        guild_install: `bool`
+            Whether the command can be installed by guilds or not
         """
         def decorator(func):
             command = Command(
@@ -522,6 +536,8 @@ class Client:
                 name=name or func.__name__,
                 type=ApplicationCommandType.user,
                 guild_ids=guild_ids,
+                guild_install=guild_install,
+                user_install=user_install
             )
             self.add_command(command)
             return command
@@ -533,6 +549,8 @@ class Client:
         name: Optional[str] = None,
         *,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+        guild_install: bool = True,
+        user_install: bool = False,
     ):
         """
         Used to register a message command
@@ -551,6 +569,10 @@ class Client:
             Name of the command, if not provided, it will use the function name
         guild_ids: `Optional[list[Union[Snowflake, int]]]`
             List of guild IDs to register the command in
+        user_install: `bool`
+            Whether the command can be installed by users or not
+        guild_install: `bool`
+            Whether the command can be installed by guilds or not
         """
         def decorator(func):
             command = Command(
@@ -558,6 +580,8 @@ class Client:
                 name=name or func.__name__,
                 type=ApplicationCommandType.message,
                 guild_ids=guild_ids,
+                guild_install=guild_install,
+                user_install=user_install
             )
             self.add_command(command)
             return command

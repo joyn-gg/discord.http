@@ -152,6 +152,7 @@ def oauth_url(
     client_id: Union[Snowflake, int],
     /,
     scope: Optional[str] = None,
+    user_install: bool = False,
     **kwargs: str
 ):
     """
@@ -163,6 +164,8 @@ def oauth_url(
         Application ID to invite to the server
     scope: `Optional[str]`
         Changing the scope of the oauth url, default: `bot+applications.commands`
+    user_install: `bool`
+        Whether the bot is allowed to be installed on the user's account
     kwargs: `str`
         The query parameters to add to the url
 
@@ -176,10 +179,13 @@ def oauth_url(
         f"?client_id={int(client_id)}"
     )
 
-    if scope is not None:
-        output += f"&scope={scope}"
-    else:
-        output += "&scope=bot+applications.commands"
+    output += (
+        "&scope=bot+applications.commands"
+        if scope is None else f"&scope={scope}"
+    )
+
+    if user_install:
+        output += "&interaction_type=1"
 
     for key, value in kwargs.items():
         output += f"&{key}={value}"
