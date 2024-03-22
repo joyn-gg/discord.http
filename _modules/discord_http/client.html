@@ -744,7 +744,9 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register a command</span>
@@ -757,6 +759,10 @@
 <span class="sd">            Description of the command, if not provided, it will use the function docstring</span>
 <span class="sd">        guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">            List of guild IDs to register the command in</span>
+<span class="sd">        user_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by users or not</span>
+<span class="sd">        guild_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by guilds or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span>
@@ -764,6 +770,8 @@
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
                 <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+                <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+                <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">command</span>
@@ -778,6 +786,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register a user command</span>
@@ -796,6 +806,10 @@
 <span class="sd">            Name of the command, if not provided, it will use the function name</span>
 <span class="sd">        guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">            List of guild IDs to register the command in</span>
+<span class="sd">        user_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by users or not</span>
+<span class="sd">        guild_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by guilds or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span>
@@ -803,6 +817,8 @@
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
                 <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+                <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+                <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">command</span>
@@ -817,6 +833,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Used to register a message command</span>
@@ -835,6 +853,10 @@
 <span class="sd">            Name of the command, if not provided, it will use the function name</span>
 <span class="sd">        guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">            List of guild IDs to register the command in</span>
+<span class="sd">        user_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by users or not</span>
+<span class="sd">        guild_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by guilds or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">command</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span>
@@ -842,6 +864,8 @@
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
                 <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+                <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+                <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">command</span>

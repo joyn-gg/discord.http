@@ -305,6 +305,12 @@
 <span class="p">}</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">_type_table</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="n">CommandOptionType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nb">str</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
+    <span class="nb">int</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span>
+    <span class="nb">float</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
+<span class="p">}</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;Choice&quot;</span><span class="p">,</span>
@@ -418,6 +424,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">ApplicationCommandType</span> <span class="o">=</span> <span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -428,6 +436,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_member_permissions</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_install</span> <span class="o">=</span> <span class="n">guild_install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_install</span> <span class="o">=</span> <span class="n">user_install</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name_localizations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description_localizations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -462,12 +473,18 @@
 
                 <span class="n">option</span> <span class="o">=</span> <span class="p">{}</span>
 
+                <span class="c1"># Check if it&#39;s an Optional[Any] type</span>
                 <span class="k">if</span> <span class="p">(</span>
                     <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Union</span><span class="p">]</span> <span class="ow">and</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span>
+                    <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="n">_NoneType</span>
                 <span class="p">):</span>
-                    <span class="c1"># Parsing Optional/Union types</span>
                     <span class="n">origin</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="c1"># Recreate GenericAlias if it&#39;s something like Choice[str]</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="s2">&quot;__origin__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__args__</span>
+                        <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__origin__</span>
 
                 <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">user</span>
@@ -484,8 +501,9 @@
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">role</span>
                 <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Choice</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">__list_choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">Choice</span><span class="o">.</span><span class="n">choice_type</span><span class="p">(</span>
-                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">_type_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                        <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
                     <span class="p">)</span>
                 <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">Range</span><span class="p">):</span>
                     <span class="n">ptype</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span>
@@ -721,7 +739,7 @@
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Command.to_dict">[docs]</a>
     <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts the command to a dict.</span>
+<span class="sd">        Converts the Discord command to a dict.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -733,6 +751,18 @@
         <span class="n">_extra_choices</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__choices_params__&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">_default_permissions</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__default_permissions__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
+        <span class="n">_integration_types</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_install</span><span class="p">:</span>
+            <span class="n">_integration_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_install</span><span class="p">:</span>
+            <span class="n">_integration_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">_integration_contexts</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__integration_contexts__&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="n">_dm_permission</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__dm_permission__&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_dm_permission</span><span class="p">:</span>
+            <span class="n">_integration_contexts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="c1"># Types</span>
         <span class="n">_extra_locale</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">LocaleContainer</span><span class="p">]]</span>
 
@@ -741,12 +771,14 @@
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
             <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">,</span>
-            <span class="s2">&quot;default_permission&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;dm_permission&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__dm_permission__&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
             <span class="s2">&quot;nsfw&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__nsfw__&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
             <span class="s2">&quot;name_localizations&quot;</span><span class="p">:</span> <span class="p">{},</span>
             <span class="s2">&quot;description_localizations&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;contexts&quot;</span><span class="p">:</span> <span class="n">_integration_contexts</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">_integration_types</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;integration_types&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_integration_types</span>
 
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">_extra_locale</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
@@ -841,12 +873,16 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">func</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+            <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span><span class="p">,</span>
             <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span>
         <span class="p">)</span>
 
@@ -882,6 +918,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Decorator to add a subcommand to a subcommand group</span>
@@ -894,6 +932,10 @@
 <span class="sd">            Description of the command (defaults to the function docstring)</span>
 <span class="sd">        guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">            List of guild IDs to register the command in</span>
+<span class="sd">        user_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by users or not</span>
+<span class="sd">        guild_install: `bool`</span>
+<span class="sd">            Whether the command can be installed by guilds or not</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="n">subcommand</span> <span class="o">=</span> <span class="n">SubCommand</span><span class="p">(</span>
@@ -901,6 +943,8 @@
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
                 <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+                <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+                <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subcommands</span><span class="p">[</span><span class="n">subcommand</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">subcommand</span>
             <span class="k">return</span> <span class="n">subcommand</span>
@@ -979,9 +1023,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Cog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">custom_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">custom_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -1074,47 +1119,46 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Makes it possible to access both the name and value of a choice.</span>
 
+<span class="sd">    Defaults to a string type</span>
+
 <span class="sd">    Paramaters</span>
-<span class="sd">    -----------</span>
-<span class="sd">    key: :class:`str`</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key: `str`</span>
 <span class="sd">        The key of the choice from your dict.</span>
-<span class="sd">    value: Union[:class:`int`, :class:`str`, :class:`float`]</span>
+<span class="sd">    value: `Union[int, str, float]`</span>
 <span class="sd">        The value of your choice (the one that is shown to public)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ChoiceT</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">ChoiceT</span> <span class="o">=</span> <span class="n">value</span>
-
-<div class="viewcode-block" id="Choice.choice_type">
-<a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Choice.choice_type">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">choice_type</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">arg_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">type</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommandOptionType</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg_type</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
-            <span class="n">arg_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg_type</span><span class="p">)</span>
-
-        <span class="n">_type_table</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="nb">str</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span><span class="p">,</span>
-            <span class="nb">int</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span>
-            <span class="nb">float</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
-        <span class="p">}</span>
-
-        <span class="k">if</span> <span class="n">arg_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_type_table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;Choice value must be a str, int, or float, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;not a </span><span class="si">{</span><span class="n">arg_type</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">_type_table</span><span class="p">[</span><span class="n">arg_type</span><span class="p">]</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">ChoiceT</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
 
 <div class="viewcode-block" id="Range">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Range">[docs]</a>
 <span class="k">class</span> <span class="nc">Range</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Makes it possible to create a range rule for command arguments</span>
+
+<span class="sd">    When used in a command, it will only return the value if it&#39;s within the range.</span>
+
+<span class="sd">    Example usage:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        Range[str, 1, 10]        # (min and max length of the string)</span>
+<span class="sd">        Range[int, 1, 10]        # (min and max value of the integer)</span>
+<span class="sd">        Range[float, 1.0, 10.0]  # (min and max value of the float)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    opt_type: `CommandOptionType`</span>
+<span class="sd">        The type of the range</span>
+<span class="sd">    min: `Union[int, float, str]`</span>
+<span class="sd">        The minimum value of the range</span>
+<span class="sd">    max: `Union[int, float, str]`</span>
+<span class="sd">        The maximum value of the range</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">opt_type</span><span class="p">:</span> <span class="n">CommandOptionType</span><span class="p">,</span>
@@ -1159,10 +1203,9 @@
                     <span class="sa">f</span><span class="s2">&quot;or float, not a </span><span class="si">{</span><span class="n">obj_type</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
+        <span class="n">cast</span> <span class="o">=</span> <span class="nb">float</span>
         <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">cast</span> <span class="o">=</span> <span class="nb">int</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">cast</span> <span class="o">=</span> <span class="nb">float</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">opt</span><span class="p">,</span>
@@ -1179,6 +1222,8 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a command.</span>
@@ -1191,6 +1236,10 @@
 <span class="sd">        Description of the command (defaults to the function docstring)</span>
 <span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">        List of guild IDs to register the command in</span>
+<span class="sd">    user_install: `bool`</span>
+<span class="sd">        Whether the command can be installed by users or not</span>
+<span class="sd">    guild_install: `bool`</span>
+<span class="sd">        Whether the command can be installed by guilds or not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
@@ -1198,6 +1247,8 @@
             <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
             <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+            <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+            <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>
@@ -1210,6 +1261,8 @@
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a user command.</span>
@@ -1228,6 +1281,10 @@
 <span class="sd">        Name of the command (defaults to the function name)</span>
 <span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">        List of guild IDs to register the command in</span>
+<span class="sd">    user_install: `bool`</span>
+<span class="sd">        Whether the command can be installed by users or not</span>
+<span class="sd">    guild_install: `bool`</span>
+<span class="sd">        Whether the command can be installed by guilds or not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
@@ -1235,6 +1292,8 @@
             <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
             <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+            <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+            <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>
@@ -1247,6 +1306,8 @@
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a message command.</span>
@@ -1265,13 +1326,19 @@
 <span class="sd">        Name of the command (defaults to the function name)</span>
 <span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
 <span class="sd">        List of guild IDs to register the command in</span>
+<span class="sd">    user_install: `bool`</span>
+<span class="sd">        Whether the command can be installed by users or not</span>
+<span class="sd">    guild_install: `bool`</span>
+<span class="sd">        Whether the command can be installed by guilds or not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Command</span><span class="p">(</span>
             <span class="n">func</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">message</span><span class="p">,</span>
-            <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span>
+            <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+            <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+            <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>
@@ -1415,6 +1482,42 @@
 
 
 
+<div class="viewcode-block" id="allow_contexts">
+<a class="viewcode-back" href="../../api/commands.html#discord_http.commands.allow_contexts">[docs]</a>
+<span class="k">def</span> <span class="nf">allow_contexts</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">guild</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">bot_dm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">private_dm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator to set the places you are allowed to use the command.</span>
+<span class="sd">    Can only be used if the Command has user_install set to True.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    guild: `bool`</span>
+<span class="sd">        Weather the command can be used in guilds.</span>
+<span class="sd">    bot_dm: `bool`</span>
+<span class="sd">        Weather the command can be used in bot DMs.</span>
+<span class="sd">    private_dm: `bool`</span>
+<span class="sd">        Weather the command can be used in private DMs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">func</span><span class="o">.</span><span class="n">__integration_contexts__</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">guild</span><span class="p">:</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__integration_contexts__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bot_dm</span><span class="p">:</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__integration_contexts__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">private_dm</span><span class="p">:</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__integration_contexts__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">func</span>
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
 <div class="viewcode-block" id="choices">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.choices">[docs]</a>
 <span class="k">def</span> <span class="nf">choices</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1449,7 +1552,11 @@
 <div class="viewcode-block" id="guild_only">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.guild_only">[docs]</a>
 <span class="k">def</span> <span class="nf">guild_only</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Decorator to set a command as guild only. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator to set a command as guild only.</span>
+
+<span class="sd">    This is a alias to `commands.allow_contexts(guild=True, bot_dm=False, private_dm=False)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="n">func</span><span class="o">.</span><span class="n">__dm_permission__</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">func</span>
@@ -1472,10 +1579,27 @@
 
 <div class="viewcode-block" id="default_permissions">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.default_permissions">[docs]</a>
-<span class="k">def</span> <span class="nf">default_permissions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">default_permissions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Permissions</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Decorator to set default permissions for a command. &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Permissions</span><span class="p">):</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_store_perms</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s2">&quot;Default permissions must be a &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;string or Permissions, not a </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">_store_perms</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">func</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>

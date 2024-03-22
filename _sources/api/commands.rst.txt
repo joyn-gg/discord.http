@@ -24,6 +24,8 @@ Commands decorators
 
 .. autofunction:: discord_http.commands.describe
 
+.. autofunction:: discord_http.commands.allow_contexts
+
 .. autofunction:: discord_http.commands.choices
 
 .. autofunction:: discord_http.commands.guild_only

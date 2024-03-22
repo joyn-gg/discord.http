@@ -408,7 +408,8 @@
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received slash command, processing...&quot;</span><span class="p">)</span>
 
         <span class="n">command_name</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">)</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">command_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="n">_log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Unhandeled command: </span><span class="si">{</span><span class="n">command_name</span><span class="si">}</span><span class="s2"> &quot;</span>
