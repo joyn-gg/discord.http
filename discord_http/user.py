@@ -33,10 +33,16 @@ class PartialUser(PartialBase):
     ):
         super().__init__(id=int(id))
         self._state = state
+        self._id = id
 
     def __repr__(self) -> str:
         return f"<PartialUser id={self.id}>"
 
+    @property
+    def id(self) -> int:
+        """ `int`: Returns the user id"""
+        return self._id
+    
     @property
     def mention(self) -> str:
         """ `str`: Returns a string that allows you to mention the user """

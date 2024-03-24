@@ -46,6 +46,11 @@ class PartialMember(PartialBase):
         return f"<PartialMember id={self.id} guild_id={self.guild_id}>"
 
     @property
+    def id(self) -> int:
+        """ `int`: Returns the user id """
+        return self._user.id
+
+    @property
     def guild(self) -> PartialGuild:
         """ `PartialGuild`: The guild of the member """
         return PartialGuild(state=self._state, id=self.guild_id)
