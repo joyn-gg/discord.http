@@ -32,6 +32,7 @@ class PartialUser(PartialBase):
         id: int
     ):
         super().__init__(id=int(id))
+        
         self._state = state
         self._id = id
 
