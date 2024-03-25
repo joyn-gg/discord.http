@@ -134,6 +134,7 @@ class Cog:
             bot.add_interaction(interaction)
 
     async def cog_load(self) -> None:
+        """ Called before the cog is loaded """
         pass
 
 
@@ -180,16 +181,13 @@ class Command:
         self.name = name
         self.description = description
         self.options = []
-        self.default_member_permissions = None
 
         self.guild_install = guild_install
         self.user_install = user_install
 
-        self.name_localizations: Dict[LocaleTypes, str] = {}
-        self.description_localizations: Dict[LocaleTypes, str] = {}
-
         self.list_autocompletes: Dict[str, Callable] = {}
         self.guild_ids: list[Union[Snowflake, int]] = guild_ids or []
+
         self.__list_choices: list[str] = []
 
         if self.type == ApplicationCommandType.chat_input:
@@ -202,12 +200,15 @@ class Command:
         else:
             self.description = None
 
-        if self.type is ApplicationCommandType.chat_input.value and not self.options:
+        if (
+            self.type is ApplicationCommandType.chat_input.value and
+            not self.options
+        ):
             sig = inspect.signature(self.command)
             self.options = []
 
             slicer = 1
-            if sig.parameters.get("self"):
+            if sig.parameters.get("self", None):
                 slicer = 2
 
             for parameter in itertools.islice(sig.parameters.values(), slicer, None):
@@ -231,47 +232,58 @@ class Command:
                         parameter.annotation.__args__ = origin.__args__
                         origin = origin.__origin__
 
-                if origin in [Member, User]:
-                    ptype = CommandOptionType.user
-                elif origin in channel_types:
-                    ptype = CommandOptionType.channel
-                    option.update({
-                        "channel_types": [
-                            int(i) for i in channel_types[origin]
-                        ]
-                    })
-                elif origin in [Attachment]:
-                    ptype = CommandOptionType.attachment
-                elif origin in [Role]:
-                    ptype = CommandOptionType.role
-                elif origin in [Choice]:
-                    self.__list_choices.append(parameter.name)
-                    ptype = _type_table.get(
-                        parameter.annotation.__args__[0],
-                        CommandOptionType.string
-                    )
-                elif isinstance(origin, Range):
-                    ptype = origin.type
-                    if origin.type == CommandOptionType.string:
+                match origin:
+                    case x if x in [Member, User]:
+                        ptype = CommandOptionType.user
+
+                    case x if x in channel_types:
+                        ptype = CommandOptionType.channel
                         option.update({
-                            "min_length": origin.min,
-                            "max_length": origin.max
+                            "channel_types": [
+                                int(i) for i in channel_types[origin]
+                            ]
                         })
-                    else:
-                        option.update({
-                            "min_value": origin.min,
-                            "max_value": origin.max
-                        })
-                elif origin == int:
-                    ptype = CommandOptionType.integer
-                elif origin == bool:
-                    ptype = CommandOptionType.boolean
-                elif origin == float:
-                    ptype = CommandOptionType.number
-                elif origin == str:
-                    ptype = CommandOptionType.string
-                else:
-                    ptype = CommandOptionType.string
+
+                    case x if x in [Attachment]:
+                        ptype = CommandOptionType.attachment
+
+                    case x if x in [Role]:
+                        ptype = CommandOptionType.role
+
+                    case x if x in [Choice]:
+                        self.__list_choices.append(parameter.name)
+                        ptype = _type_table.get(
+                            parameter.annotation.__args__[0],
+                            CommandOptionType.string
+                        )
+
+                    case x if isinstance(x, Range):
+                        ptype = origin.type
+                        if origin.type == CommandOptionType.string:
+                            option.update({
+                                "min_length": origin.min,
+                                "max_length": origin.max
+                            })
+                        else:
+                            option.update({
+                                "min_value": origin.min,
+                                "max_value": origin.max
+                            })
+
+                    case x if x == int:
+                        ptype = CommandOptionType.integer
+
+                    case x if x == bool:
+                        ptype = CommandOptionType.boolean
+
+                    case x if x == float:
+                        ptype = CommandOptionType.number
+
+                    case x if x == str:
+                        ptype = CommandOptionType.string
+
+                    case _:
+                        ptype = CommandOptionType.string
 
                 option.update({
                     "name": parameter.name,
@@ -392,7 +404,12 @@ class Command:
 
         return True
 
-    async def run(self, context: "Context", *args, **kwargs) -> BaseResponse:
+    async def run(
+        self,
+        context: "Context",
+        *args,
+        **kwargs
+    ) -> BaseResponse:
         """
         Runs the command.
 
@@ -483,7 +500,9 @@ class Command:
         _extra_locale = getattr(self.command, "__locales__", {})
         _extra_params = getattr(self.command, "__describe_params__", {})
         _extra_choices = getattr(self.command, "__choices_params__", {})
-        _default_permissions = getattr(self.command, "__default_permissions__", None)
+        _default_permissions: Optional[Permissions] = getattr(
+            self.command, "__default_permissions__", None
+        )
 
         _integration_types = []
         if self.guild_install:
@@ -492,10 +511,6 @@ class Command:
             _integration_types.append(1)
 
         _integration_contexts = getattr(self.command, "__integration_contexts__", [0, 1, 2])
-        _dm_permission = getattr(self.command, "__dm_permission__", True)
-
-        if not _dm_permission:
-            _integration_contexts = [0]
 
         # Types
         _extra_locale: dict[LocaleTypes, list[LocaleContainer]]
@@ -533,7 +548,7 @@ class Command:
                 opt["description_localizations"][key] = loc.description
 
         if _default_permissions:
-            data["default_member_permissions"] = _default_permissions
+            data["default_member_permissions"] = str(_default_permissions.value)
 
         for key, value in _extra_params.items():
             opt = self._find_option(key)
@@ -588,6 +603,7 @@ class Command:
 
             if not find_option:
                 raise ValueError(f"Option {name} in command {self.name} not found.")
+
             find_option["autocomplete"] = True
             self.list_autocompletes[name] = func
             return func
@@ -625,7 +641,9 @@ class SubGroup(Command):
         *,
         name: str,
         description: Optional[str] = None,
-        guild_ids: Optional[list[Union[Snowflake, int]]] = None
+        guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+        guild_install: bool = True,
+        user_install: bool = False
     ):
         self.name = name
         self.description = description or "..."  # Only used to make Discord happy
@@ -633,6 +651,8 @@ class SubGroup(Command):
         self.type = int(ApplicationCommandType.chat_input)
         self.cog: Optional["Cog"] = None
         self.subcommands: Dict[str, Union[SubCommand, SubGroup]] = {}
+        self.guild_install = guild_install
+        self.user_install = user_install
 
     def __repr__(self) -> str:
         _subs = [g for g in self.subcommands.values()]
@@ -828,9 +848,9 @@ class Choice(Generic[ChoiceT]):
     value: `Union[int, str, float]`
         The value of your choice (the one that is shown to public)
     """
-    def __init__(self, key: str, value: ChoiceT):
-        self.key: str = key
-        self.value: ChoiceT = value
+    def __init__(self, key: ChoiceT, value: Union[str, int, float]):
+        self.key: ChoiceT = key
+        self.value: Union[str, int, float] = value
 
 
 class Range:
@@ -1118,8 +1138,12 @@ def locales(
 
 
 def group(
+    *,
     name: Optional[str] = None,
-    description: Optional[str] = None
+    description: Optional[str] = None,
+    guild_ids: Optional[list[Union[Snowflake, int]]] = None,
+    guild_install: bool = True,
+    user_install: bool = False,
 ):
     """
     Decorator to register a command group.
@@ -1130,11 +1154,20 @@ def group(
         Name of the command group (defaults to the function name)
     description: `Optional[str]`
         Description of the command group (defaults to the function docstring)
+    guild_ids: `Optional[list[Union[Snowflake, int]]]`
+        List of guild IDs to register the command group in
+    user_install: `bool`
+        Whether the command group can be installed by users or not
+    guild_install: `bool`
+        Whether the command group can be installed by guilds or not
     """
     def decorator(func):
         return SubGroup(
             name=name or func.__name__,
-            description=description
+            description=description,
+            guild_ids=guild_ids,
+            guild_install=guild_install,
+            user_install=user_install
         )
 
     return decorator
@@ -1193,7 +1226,12 @@ def allow_contexts(
     return decorator
 
 
-def choices(**kwargs):
+def choices(
+    **kwargs: dict[
+        Union[str, int, float],
+        Union[str, int, float]
+    ]
+):
     """
     Decorator to set choices for a command.
 
@@ -1203,7 +1241,11 @@ def choices(**kwargs):
 
         @commands.command()
         @commands.choices(
-            options={"opt1": "Choice 1", "opt2": "Choice 2"}
+            options={
+                "opt1": "Choice 1",
+                "opt2": "Choice 2",
+                ...
+            }
         )
         async def ping(ctx, options: Choice[str]):
             await ctx.send(f"You chose {choice.value}")
@@ -1228,7 +1270,7 @@ def guild_only():
     This is a alias to `commands.allow_contexts(guild=True, bot_dm=False, private_dm=False)`
     """
     def decorator(func):
-        func.__dm_permission__ = False
+        func.__integration_contexts__ = [0]
         return func
 
     return decorator
@@ -1250,18 +1292,16 @@ def default_permissions(*args: Union[Permissions, str]):
             return func
 
         if isinstance(args[0], Permissions):
-            func.__default_permissions__ = str(args[0].value)
+            func.__default_permissions__ = args[0]
         else:
-            _store_perms: list[str] = []
-            for arg in args:
-                if not isinstance(arg, str):
-                    raise TypeError(
-                        "Default permissions must be a "
-                        f"string or Permissions, not a {type(arg)}"
-                    )
+            if any(not isinstance(arg, str) for arg in args):
+                raise TypeError(
+                    "All permissions must be strings "
+                    "or only 1 Permissions object"
+                )
 
-            func.__default_permissions__ = str(
-                Permissions.from_names(*_store_perms).value
+            func.__default_permissions__ = Permissions.from_names(
+                *args  # type: ignore
             )
 
         return func
@@ -1269,7 +1309,7 @@ def default_permissions(*args: Union[Permissions, str]):
     return decorator
 
 
-def has_permissions(*args: str):
+def has_permissions(*args: Union[Permissions, str]):
     """
     Decorator to set permissions for a command.
 
@@ -1283,13 +1323,28 @@ def has_permissions(*args: str):
             ...
     """
     def decorator(func):
-        func.__has_permissions__ = Permissions.from_names(*args)
+        if not args:
+            return func
+
+        if isinstance(args[0], Permissions):
+            func.__has_permissions__ = args[0]
+        else:
+            if any(not isinstance(arg, str) for arg in args):
+                raise TypeError(
+                    "All permissions must be strings "
+                    "or only 1 Permissions object"
+                )
+
+            func.__has_permissions__ = Permissions.from_names(
+                *args  # type: ignore
+            )
+
         return func
 
     return decorator
 
 
-def bot_has_permissions(*args: str):
+def bot_has_permissions(*args: Union[Permissions, str]):
     """
     Decorator to set permissions for a command.
 
@@ -1303,7 +1358,22 @@ def bot_has_permissions(*args: str):
             ...
     """
     def decorator(func):
-        func.__bot_has_permissions__ = Permissions.from_names(*args)
+        if not args:
+            return func
+
+        if isinstance(args[0], Permissions):
+            func.__bot_has_permissions__ = args[0]
+        else:
+            if any(not isinstance(arg, str) for arg in args):
+                raise TypeError(
+                    "All permissions must be strings "
+                    "or only 1 Permissions object"
+                )
+
+            func.__bot_has_permissions__ = Permissions.from_names(
+                *args  # type: ignore
+            )
+
         return func
 
     return decorator
