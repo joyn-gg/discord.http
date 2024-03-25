@@ -1,6 +1,8 @@
 # discord.http
 Python library that handles interactions from Discord POST requests.
 
+### ✨ NOW SUPPORTS USER COMMANDS ✨
+
 ## Installing
 > You need **Python >=3.11** to use this library.
 
