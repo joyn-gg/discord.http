@@ -382,6 +382,7 @@
 <div class="viewcode-block" id="Cog.cog_load">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Cog.cog_load">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">cog_load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Called before the cog is loaded &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 </div>
 
@@ -435,16 +436,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">default_member_permissions</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">guild_install</span> <span class="o">=</span> <span class="n">guild_install</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_install</span> <span class="o">=</span> <span class="n">user_install</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">name_localizations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">description_localizations</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">list_autocompletes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">guild_ids</span> <span class="ow">or</span> <span class="p">[]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">__list_choices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="p">:</span>
@@ -457,12 +455,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
+        <span class="p">):</span>
             <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="n">slicer</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
                 <span class="n">slicer</span> <span class="o">=</span> <span class="mi">2</span>
 
             <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">slicer</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
@@ -486,47 +487,58 @@
                         <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__args__</span>
                         <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__origin__</span>
 
-                <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">user</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">channel</span>
-                    <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                        <span class="s2">&quot;channel_types&quot;</span><span class="p">:</span> <span class="p">[</span>
-                            <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">[</span><span class="n">origin</span><span class="p">]</span>
-                        <span class="p">]</span>
-                    <span class="p">})</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Attachment</span><span class="p">]:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">attachment</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">role</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Choice</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__list_choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">_type_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                        <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
-                    <span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">Range</span><span class="p">):</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span>
-                    <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
+                <span class="k">match</span> <span class="n">origin</span><span class="p">:</span>
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">user</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">channel</span>
                         <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                            <span class="s2">&quot;min_length&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
-                            <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">max</span>
+                            <span class="s2">&quot;channel_types&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">[</span><span class="n">origin</span><span class="p">]</span>
+                            <span class="p">]</span>
                         <span class="p">})</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                            <span class="s2">&quot;min_value&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
-                            <span class="s2">&quot;max_value&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">max</span>
-                        <span class="p">})</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">boolean</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
-                <span class="k">elif</span> <span class="n">origin</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Attachment</span><span class="p">]:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">attachment</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Role</span><span class="p">]:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">role</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Choice</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__list_choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">_type_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
+                        <span class="p">)</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Range</span><span class="p">):</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span>
+                        <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
+                            <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                                <span class="s2">&quot;min_length&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                                <span class="s2">&quot;max_length&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">max</span>
+                            <span class="p">})</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                                <span class="s2">&quot;min_value&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">min</span><span class="p">,</span>
+                                <span class="s2">&quot;max_value&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="o">.</span><span class="n">max</span>
+                            <span class="p">})</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">integer</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">boolean</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">number</span>
+
+                    <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
+
+                    <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                        <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">string</span>
 
                 <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
                     <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -652,7 +664,12 @@
 
 <div class="viewcode-block" id="Command.run">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Command.run">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseResponse</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseResponse</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the command.</span>
 
@@ -749,7 +766,9 @@
         <span class="n">_extra_locale</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__locales__&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">_extra_params</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__describe_params__&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">_extra_choices</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__choices_params__&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">_default_permissions</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__default_permissions__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">_default_permissions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Permissions</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__default_permissions__&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
 
         <span class="n">_integration_types</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guild_install</span><span class="p">:</span>
@@ -758,10 +777,6 @@
             <span class="n">_integration_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="n">_integration_contexts</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__integration_contexts__&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-        <span class="n">_dm_permission</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__dm_permission__&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">_dm_permission</span><span class="p">:</span>
-            <span class="n">_integration_contexts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Types</span>
         <span class="n">_extra_locale</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">LocaleTypes</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">LocaleContainer</span><span class="p">]]</span>
@@ -799,7 +814,7 @@
                 <span class="n">opt</span><span class="p">[</span><span class="s2">&quot;description_localizations&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">loc</span><span class="o">.</span><span class="n">description</span>
 
         <span class="k">if</span> <span class="n">_default_permissions</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;default_member_permissions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_default_permissions</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;default_member_permissions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">_default_permissions</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">_extra_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_option</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -857,6 +872,7 @@
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">find_option</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Option </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in command </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+
             <span class="n">find_option</span><span class="p">[</span><span class="s2">&quot;autocomplete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">list_autocompletes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
             <span class="k">return</span> <span class="n">func</span>
@@ -898,7 +914,9 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="s2">&quot;...&quot;</span>  <span class="c1"># Only used to make Discord happy</span>
@@ -906,6 +924,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ApplicationCommandType</span><span class="o">.</span><span class="n">chat_input</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cog</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Cog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subcommands</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SubCommand</span><span class="p">,</span> <span class="n">SubGroup</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">guild_install</span> <span class="o">=</span> <span class="n">guild_install</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_install</span> <span class="o">=</span> <span class="n">user_install</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">_subs</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subcommands</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
@@ -1128,9 +1148,9 @@
 <span class="sd">    value: `Union[int, str, float]`</span>
 <span class="sd">        The value of your choice (the one that is shown to public)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ChoiceT</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">ChoiceT</span> <span class="o">=</span> <span class="n">value</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">ChoiceT</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span> <span class="n">ChoiceT</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
 
@@ -1436,8 +1456,12 @@
 <div class="viewcode-block" id="group">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.group">[docs]</a>
 <span class="k">def</span> <span class="nf">group</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Snowflake</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">guild_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">user_install</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to register a command group.</span>
@@ -1448,11 +1472,20 @@
 <span class="sd">        Name of the command group (defaults to the function name)</span>
 <span class="sd">    description: `Optional[str]`</span>
 <span class="sd">        Description of the command group (defaults to the function docstring)</span>
+<span class="sd">    guild_ids: `Optional[list[Union[Snowflake, int]]]`</span>
+<span class="sd">        List of guild IDs to register the command group in</span>
+<span class="sd">    user_install: `bool`</span>
+<span class="sd">        Whether the command group can be installed by users or not</span>
+<span class="sd">    guild_install: `bool`</span>
+<span class="sd">        Whether the command group can be installed by guilds or not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">SubGroup</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="n">description</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">guild_ids</span><span class="o">=</span><span class="n">guild_ids</span><span class="p">,</span>
+            <span class="n">guild_install</span><span class="o">=</span><span class="n">guild_install</span><span class="p">,</span>
+            <span class="n">user_install</span><span class="o">=</span><span class="n">user_install</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>
@@ -1520,7 +1553,12 @@
 
 <div class="viewcode-block" id="choices">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.choices">[docs]</a>
-<span class="k">def</span> <span class="nf">choices</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">choices</span><span class="p">(</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span>
+        <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to set choices for a command.</span>
 
@@ -1530,7 +1568,11 @@
 
 <span class="sd">        @commands.command()</span>
 <span class="sd">        @commands.choices(</span>
-<span class="sd">            options={&quot;opt1&quot;: &quot;Choice 1&quot;, &quot;opt2&quot;: &quot;Choice 2&quot;}</span>
+<span class="sd">            options={</span>
+<span class="sd">                &quot;opt1&quot;: &quot;Choice 1&quot;,</span>
+<span class="sd">                &quot;opt2&quot;: &quot;Choice 2&quot;,</span>
+<span class="sd">                ...</span>
+<span class="sd">            }</span>
 <span class="sd">        )</span>
 <span class="sd">        async def ping(ctx, options: Choice[str]):</span>
 <span class="sd">            await ctx.send(f&quot;You chose {choice.value}&quot;)</span>
@@ -1558,7 +1600,7 @@
 <span class="sd">    This is a alias to `commands.allow_contexts(guild=True, bot_dm=False, private_dm=False)`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">func</span><span class="o">.</span><span class="n">__dm_permission__</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">func</span><span class="o">.</span><span class="n">__integration_contexts__</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">func</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>
@@ -1586,18 +1628,16 @@
             <span class="k">return</span> <span class="n">func</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Permissions</span><span class="p">):</span>
-            <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_store_perms</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="s2">&quot;Default permissions must be a &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;string or Permissions, not a </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;All permissions must be strings &quot;</span>
+                    <span class="s2">&quot;or only 1 Permissions object&quot;</span>
+                <span class="p">)</span>
 
-            <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-                <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">_store_perms</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__default_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">args</span>  <span class="c1"># type: ignore</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">func</span>
@@ -1608,7 +1648,7 @@
 
 <div class="viewcode-block" id="has_permissions">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.has_permissions">[docs]</a>
-<span class="k">def</span> <span class="nf">has_permissions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">has_permissions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Permissions</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to set permissions for a command.</span>
 
@@ -1622,7 +1662,22 @@
 <span class="sd">            ...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">func</span><span class="o">.</span><span class="n">__has_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Permissions</span><span class="p">):</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__has_permissions__</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;All permissions must be strings &quot;</span>
+                    <span class="s2">&quot;or only 1 Permissions object&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">func</span><span class="o">.</span><span class="n">__has_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">args</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">func</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>
@@ -1631,7 +1686,7 @@
 
 <div class="viewcode-block" id="bot_has_permissions">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.bot_has_permissions">[docs]</a>
-<span class="k">def</span> <span class="nf">bot_has_permissions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">bot_has_permissions</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Permissions</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to set permissions for a command.</span>
 
@@ -1645,7 +1700,22 @@
 <span class="sd">            ...</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">func</span><span class="o">.</span><span class="n">__bot_has_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Permissions</span><span class="p">):</span>
+            <span class="n">func</span><span class="o">.</span><span class="n">__bot_has_permissions__</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;All permissions must be strings &quot;</span>
+                    <span class="s2">&quot;or only 1 Permissions object&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">func</span><span class="o">.</span><span class="n">__bot_has_permissions__</span> <span class="o">=</span> <span class="n">Permissions</span><span class="o">.</span><span class="n">from_names</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">args</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="n">func</span>
 
     <span class="k">return</span> <span class="n">decorator</span></div>

@@ -396,17 +396,21 @@
             <span class="k">if</span> <span class="n">custom_id</span> <span class="k">else</span> <span class="n">_garbage_id</span><span class="p">()</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">ButtonStyles</span><span class="p">):</span>
-            <span class="k">pass</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="p">[</span><span class="n">style</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">match</span> <span class="n">style</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ButtonStyles</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+            <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+
+            <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="p">[</span><span class="n">style</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+                <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="o">.</span><span class="n">primary</span>
+
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="o">.</span><span class="n">primary</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">ButtonStyles</span><span class="o">.</span><span class="n">primary</span>
 
 <div class="viewcode-block" id="Button.to_dict">
 <a class="viewcode-back" href="../../api/view.html#discord_http.view.Button.to_dict">[docs]</a>
@@ -426,10 +430,13 @@
                 <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EmojiParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emoji</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">emoji</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emoji</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_id</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;custom_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_id</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
             <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
 

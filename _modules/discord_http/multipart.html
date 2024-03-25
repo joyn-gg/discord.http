@@ -289,6 +289,7 @@
 <span class="sd">            Filename to be sent on Discord</span>
 <span class="sd">        content_type: `Optional[str]`</span>
 <span class="sd">            The content type of the file data</span>
+<span class="sd">            (Defaults to &#39;application/octet-stream&#39; if not provided)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -297,17 +298,21 @@
         <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
             <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;; filename=</span><span class="se">\&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&quot;</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: </span><span class="si">{</span><span class="n">content_type</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;application/octet-stream&#39;</span><span class="si">}</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BufferedIOBase</span><span class="p">):</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: </span><span class="si">{</span><span class="n">content_type</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;application/octet-stream&#39;</span><span class="si">}</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: application/json</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">match</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">File</span><span class="p">):</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: </span><span class="si">{</span><span class="n">content_type</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;application/octet-stream&#39;</span><span class="si">}</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># type: ignore</span>
+
+            <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">BufferedIOBase</span><span class="p">):</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: </span><span class="si">{</span><span class="n">content_type</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;application/octet-stream&#39;</span><span class="si">}</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
+
+            <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">Content-Type: application/json</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bufs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span>
 
