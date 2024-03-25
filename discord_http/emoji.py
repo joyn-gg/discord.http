@@ -48,10 +48,12 @@ class EmojiParser:
             self.animated = bool(_animated)
             self.name: str = _name
             self.id = int(_id)
+
         elif emoji.isdigit():
             self.discord_emoji = True
             self.id = int(emoji)
             self.name: str = emoji
+
         else:
             self.name: str = emoji
 

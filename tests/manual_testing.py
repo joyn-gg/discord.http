@@ -333,7 +333,8 @@ async def test_list_str(ctx: Context, choice: commands.Choice[str]):
 )
 async def test_list_int(ctx: Context, choice: commands.Choice[int]):
     return ctx.response.send_message(
-        f"You chose **{choice.value}** which has key value: **{choice.key}**"
+        f"You chose **{choice.value}** ({type(choice.value)}) "
+        f"which has key value: **{choice.key}** ({type(choice.key)})"
     )
 
 
@@ -376,8 +377,10 @@ async def test_local_view(ctx: Context):
     async def view_callback(ctx: Context):
         if ctx.custom_id == "test_local_1":
             output = "Hello world"
+
         elif ctx.custom_id == "test_local_2":
             output = "Goodbye world"
+
         else:
             output = "Unknown"
 

@@ -21,6 +21,7 @@ class Embed:
         timestamp: Optional[datetime] = None,
     ):
         self.colour: Optional[Colour] = None
+
         if colour is not None:
             self.colour = Colour(int(colour))
         elif color is not None:

@@ -652,24 +652,38 @@ class Context:
 
             case ApplicationCommandType.user:
                 if self._resolved.get("members", {}):
-                    _first: Optional[dict] = next(iter(self._resolved["members"].values()), None)
+                    _first: Optional[dict] = next(
+                        iter(self._resolved["members"].values()),
+                        None
+                    )
 
                     if not _first:
                         raise ValueError("User command detected members, but was unable to parse it")
                     if not self.guild:
                         raise ValueError("While parsing members, guild was not available")
 
-                    _first["user"] = next(iter(self._resolved["users"].values()), None)
+                    _first["user"] = next(
+                        iter(self._resolved["users"].values()),
+                        None
+                    )
+
                     _target = Member(
                         state=self.bot.state,
                         guild=self.guild,
                         data=_first
                     )
+
                 elif self._resolved.get("users", {}):
-                    _first: Optional[dict] = next(iter(self._resolved["users"].values()), None)
+                    _first: Optional[dict] = next(
+                        iter(self._resolved["users"].values()),
+                        None
+                    )
+
                     if not _first:
                         raise ValueError("User command detected users, but was unable to parse it")
+
                     _target = User(state=self.bot.state, data=_first)
+
                 else:
                     raise ValueError("Neither members nor users were detected while parsing user command")
 
@@ -703,7 +717,7 @@ class Context:
                             member_data["user"] = resolved["users"][option["value"]]
 
                             if not self.guild:
-                                raise ValueError("Guild somehow was not available while parsing user")
+                                raise ValueError("Guild somehow was not available while parsing Member")
 
                             kwargs[option["name"]] = Member(
                                 state=self.bot.state,
@@ -731,7 +745,7 @@ class Context:
 
                     case CommandOptionType.role:
                         if not self.guild:
-                            raise ValueError("Guild somehow was not available while parsing role")
+                            raise ValueError("Guild somehow was not available while parsing Role")
 
                         kwargs[option["name"]] = Role(
                             state=self.bot.state,

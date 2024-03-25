@@ -41,6 +41,7 @@ class MultipartData:
             Filename to be sent on Discord
         content_type: `Optional[str]`
             The content type of the file data
+            (Defaults to 'application/octet-stream' if not provided)
         """
         if not data:
             return None
@@ -49,17 +50,21 @@ class MultipartData:
         if filename:
             string += f"; filename=\"{filename}\""
 
-        if isinstance(data, File):
-            string += f"\r\nContent-Type: {content_type or 'application/octet-stream'}\r\n\r\n"
-            data = data.data
-        elif isinstance(data, BufferedIOBase):
-            string += f"\r\nContent-Type: {content_type or 'application/octet-stream'}\r\n\r\n"
-        elif isinstance(data, dict):
-            string += "\r\nContent-Type: application/json\r\n\r\n"
-            data = json.dumps(data)
-        else:
-            string += "\r\n\r\n"
-            data = str(data)
+        match data:
+            case x if isinstance(x, File):
+                string += f"\r\nContent-Type: {content_type or 'application/octet-stream'}\r\n\r\n"
+                data = data.data  # type: ignore
+
+            case x if isinstance(x, BufferedIOBase):
+                string += f"\r\nContent-Type: {content_type or 'application/octet-stream'}\r\n\r\n"
+
+            case x if isinstance(x, dict):
+                string += "\r\nContent-Type: application/json\r\n\r\n"
+                data = json.dumps(data)
+
+            case _:
+                string += "\r\n\r\n"
+                data = str(data)
 
         self.bufs.append(string.encode("utf8"))
 

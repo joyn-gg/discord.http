@@ -138,17 +138,21 @@ class Button(Item):
             if custom_id else _garbage_id()
         )
 
-        if isinstance(style, ButtonStyles):
-            pass
-        elif isinstance(style, int):
-            self.style = ButtonStyles(style)
-        elif isinstance(style, str):
-            try:
-                self.style = ButtonStyles[style]
-            except KeyError:
+        match style:
+            case x if isinstance(x, ButtonStyles):
+                pass
+
+            case x if isinstance(x, int):
+                self.style = ButtonStyles(style)
+
+            case x if isinstance(x, str):
+                try:
+                    self.style = ButtonStyles[style]  # type: ignore
+                except KeyError:
+                    self.style = ButtonStyles.primary
+
+            case _:
                 self.style = ButtonStyles.primary
-        else:
-            self.style = ButtonStyles.primary
 
     def to_dict(self) -> dict:
         """ `dict`: Returns a dict representation of the button """
@@ -166,10 +170,13 @@ class Button(Item):
                 payload["emoji"] = EmojiParser(self.emoji).to_dict()
             elif isinstance(self.emoji, dict):
                 payload["emoji"] = self.emoji
+
         if self.label:
             payload["label"] = self.label
+
         if self.custom_id:
             payload["custom_id"] = self.custom_id
+
         if self.url:
             payload["url"] = self.url
 
