@@ -1,8 +1,6 @@
 # discord.http
 Python library that handles interactions from Discord POST requests.
 
-### ✨ NOW SUPPORTS USER COMMANDS ✨
-
 ## Installing
 > You need **Python >=3.11** to use this library.
 
@@ -14,7 +12,7 @@ If `pip` does not work, there are other ways to install as well, most commonly:
 
 ## Quick example
 ```py <!-- DOCS: quick_example -->
-from discord_http import Context, Client
+from discord_http import Context, Client, commands
 
 client = Client(
     token="Your bot token here",
@@ -27,6 +25,14 @@ client = Client(
 async def ping(ctx: Context):
     """ A simple ping command """
     return ctx.response.send_message("Pong!")
+
+
+@client.command(user_install=True)
+@commands.allow_contexts(guild=True, bot_dm=True, private_dm=True)
+async def ping2(ctx: Context):
+    """ A simple user-install ping command """
+    return ctx.response.send_message("Pong!")
+
 
 client.start()
 ```
