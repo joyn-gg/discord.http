@@ -419,7 +419,8 @@ async def test_embed(ctx: Context):
     embed = Embed(
         title=f"Hello {ctx.user}",
         description="This is a description",
-        colour=0xFF00FF
+        colour=0xFF00FF,
+        timestamp=utils.utcnow()
     )
 
     embed.add_field(

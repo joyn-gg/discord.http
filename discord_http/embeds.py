@@ -354,6 +354,6 @@ class Embed:
             if isinstance(self.timestamp, datetime):
                 if self.timestamp.tzinfo is None:
                     self.timestamp = self.timestamp.astimezone()
-                embed["timestamp"] = self.timestamp
+                embed["timestamp"] = self.timestamp.isoformat()
 
         return embed

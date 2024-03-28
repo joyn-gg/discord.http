@@ -661,6 +661,7 @@ class SubGroup(Command):
     def command(
         self,
         name: Optional[str] = None,
+        *,
         description: Optional[str] = None,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None,
         guild_install: bool = True,
@@ -696,7 +697,12 @@ class SubGroup(Command):
 
         return decorator
 
-    def group(self, name: Optional[str] = None):
+    def group(
+        self,
+        name: Optional[str] = None,
+        *,
+        description: Optional[str] = None
+    ):
         """
         Decorator to add a subcommand group to a subcommand group
 
@@ -706,7 +712,10 @@ class SubGroup(Command):
             Name of the subcommand group (defaults to the function name)
         """
         def decorator(func):
-            subgroup = SubGroup(name=name or func.__name__)
+            subgroup = SubGroup(
+                name=name or func.__name__,
+                description=description
+            )
             self.subcommands[subgroup.name] = subgroup
             return subgroup
 
@@ -1138,8 +1147,8 @@ def locales(
 
 
 def group(
-    *,
     name: Optional[str] = None,
+    *,
     description: Optional[str] = None,
     guild_ids: Optional[list[Union[Snowflake, int]]] = None,
     guild_install: bool = True,

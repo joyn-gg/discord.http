@@ -1371,7 +1371,6 @@ class CategoryChannel(BaseChannel):
 
     async def create_text_channel(
         self,
-        *,
         name: str,
         **kwargs
     ) -> TextChannel:
@@ -1408,7 +1407,6 @@ class CategoryChannel(BaseChannel):
 
     async def create_voice_channel(
         self,
-        *,
         name: str,
         **kwargs
     ) -> "VoiceChannel":
@@ -1449,7 +1447,6 @@ class CategoryChannel(BaseChannel):
 
     async def create_stage_channel(
         self,
-        *,
         name: str,
         **kwargs
     ) -> "StageChannel":

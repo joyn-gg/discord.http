@@ -362,8 +362,8 @@ class PartialGuild(PartialBase):
 
     async def create_guild(
         self,
-        *,
         name: str,
+        *,
         icon: Optional[Union[File, bytes]] = None,
         reason: Optional[str] = None
     ) -> "Guild":
@@ -405,8 +405,8 @@ class PartialGuild(PartialBase):
 
     async def create_role(
         self,
-        *,
         name: str,
+        *,
         permissions: Optional[Permissions] = None,
         color: Optional[Union[Colour, Color, int]] = None,
         colour: Optional[Union[Colour, Color, int]] = None,
@@ -482,8 +482,8 @@ class PartialGuild(PartialBase):
 
     async def create_scheduled_event(
         self,
-        *,
         name: str,
+        *,
         start_time: Union[datetime, timedelta, int],
         end_time: Optional[Union[datetime, timedelta, int]] = None,
         channel: Optional[Union["PartialChannel", int]] = None,
@@ -575,8 +575,8 @@ class PartialGuild(PartialBase):
 
     async def create_category(
         self,
-        *,
         name: str,
+        *,
         overwrites: Optional[list[PermissionOverwrite]] = None,
         position: Optional[int] = None,
         reason: Optional[str] = None
@@ -629,8 +629,8 @@ class PartialGuild(PartialBase):
 
     async def create_text_channel(
         self,
-        *,
         name: str,
+        *,
         topic: Optional[str] = None,
         position: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
@@ -704,8 +704,8 @@ class PartialGuild(PartialBase):
 
     async def create_voice_channel(
         self,
-        *,
         name: str,
+        *,
         bitrate: Optional[int] = None,
         user_limit: Optional[int] = None,
         rate_limit_per_user: Optional[int] = None,
@@ -787,8 +787,8 @@ class PartialGuild(PartialBase):
 
     async def create_stage_channel(
         self,
-        *,
         name: str,
+        *,
         bitrate: Optional[int] = None,
         user_limit: Optional[int] = None,
         overwrites: Optional[list[PermissionOverwrite]] = None,
@@ -860,8 +860,8 @@ class PartialGuild(PartialBase):
 
     async def create_emoji(
         self,
-        *,
         name: str,
+        *,
         image: Union[File, bytes],
         reason: Optional[str] = None
     ) -> Emoji:
@@ -900,8 +900,8 @@ class PartialGuild(PartialBase):
 
     async def create_sticker(
         self,
-        *,
         name: str,
+        *,
         description: str,
         emoji: str,
         file: File,

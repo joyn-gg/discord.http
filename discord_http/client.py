@@ -465,6 +465,7 @@ class Client:
     def command(
         self,
         name: Optional[str] = None,
+        *,
         description: Optional[str] = None,
         guild_ids: Optional[list[Union[Snowflake, int]]] = None,
         guild_install: bool = True,
@@ -591,6 +592,7 @@ class Client:
     def group(
         self,
         name: Optional[str] = None,
+        *,
         description: Optional[str] = None
     ):
         """
