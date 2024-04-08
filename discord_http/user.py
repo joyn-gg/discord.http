@@ -215,3 +215,8 @@ class User(PartialUser):
     def global_avatar(self) -> Optional[Asset]:
         """ `Asset`: Alias for `User.avatar` """
         return self.avatar
+
+    @property
+    def display_name(self) -> str:
+        """ `str`: Returns the user's display name """
+        return self.global_name or self.name

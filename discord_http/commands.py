@@ -5,7 +5,7 @@ import re
 
 from typing import get_args as get_type_args
 from typing import (
-    Callable, Dict, TYPE_CHECKING, Union,
+    Callable, Dict, TYPE_CHECKING, Union, Type,
     Generic, TypeVar, Optional, Coroutine, Literal
 )
 
@@ -18,7 +18,7 @@ from .channel import (
     NewsChannel, BaseChannel, Thread
 )
 from .enums import ApplicationCommandType, CommandOptionType, ChannelType
-from .errors import UserMissingPermissions, BotMissingPermissions, CheckFailed
+from .errors import UserMissingPermissions, BotMissingPermissions, CheckFailed, InvalidMember
 from .flag import Permissions
 from .member import Member
 from .message import Attachment
@@ -32,6 +32,7 @@ if TYPE_CHECKING:
     from .context import Context
 
 ChoiceT = TypeVar("ChoiceT", str, int, float, Union[str, int, float])
+
 LocaleTypes = Literal[
     "id", "da", "de", "en-GB", "en-US", "es-ES", "fr",
     "hr", "it", "lt", "hu", "nl", "no", "pl", "pt-BR",
@@ -189,6 +190,7 @@ class Command:
         self.guild_ids: list[Union[Snowflake, int]] = guild_ids or []
 
         self.__list_choices: list[str] = []
+        self.__user_objects: dict[str, Type[Union[Member, User]]] = {}
 
         if self.type == ApplicationCommandType.chat_input:
             if self.description is None:
@@ -235,6 +237,7 @@ class Command:
                 match origin:
                     case x if x in [Member, User]:
                         ptype = CommandOptionType.user
+                        self.__user_objects[parameter.name] = origin
 
                     case x if x in channel_types:
                         ptype = CommandOptionType.channel
@@ -339,6 +342,23 @@ class Command:
             kwargs[name] = Choice(
                 kwargs[name], values[kwargs[name]]
             )
+
+        for name, value in self.__user_objects.items():
+            if name not in kwargs:
+                continue
+
+            if (
+                isinstance(kwargs[name], Member) and
+                value is User
+            ):
+                # Force User if command is expecting a User, but got a Member
+                kwargs[name] = kwargs[name]._user
+
+            if not isinstance(kwargs[name], value):
+                raise InvalidMember(
+                    f"User given by the command `(parameter: {name})` "
+                    "is not a member of a guild."
+                )
 
         result = await self.run(context, *args, **kwargs)
 

@@ -14,7 +14,7 @@ from typing import (
 from . import __version__
 from .errors import (
     NotFound, DiscordServerError,
-    Forbidden, HTTPException
+    Forbidden, HTTPException, Ratelimited
 )
 
 if TYPE_CHECKING:
@@ -413,19 +413,22 @@ class DiscordAPI:
                             return r
 
                         case 429:
+                            if not isinstance(r.response, dict):
+                                # For cases where you're ratelimited by CloudFlare
+                                raise Ratelimited(r)
+
                             retry_after: float = r.response["retry_after"]
                             _log.warning(f"Ratelimit hit ({path}), waiting {retry_after}s...")
                             await asyncio.sleep(retry_after)
                             continue
 
                         case x if x in (500, 502, 503, 504):
+                            if tries > 4:  # Give up after 5 tries
+                                raise DiscordServerError(r)
+
                             # Try again, maybe it will work next time, surely...
                             await asyncio.sleep(1 + tries * 2)
                             continue
-
-                        # The lovely exception hell
-                        case x if x >= 500:
-                            raise DiscordServerError(r)
 
                         case 403:
                             raise Forbidden(r)

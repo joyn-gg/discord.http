@@ -427,7 +427,10 @@ class Member(PartialMember):
         `Optional[PartialRole]`
             The role if found, else None
         """
-        return next((r for r in self.roles if r.id == int(role)), None)
+        return next((
+            r for r in self.roles
+            if r.id == int(role)
+        ), None)
 
     @property
     def resolved_permissions(self) -> Permissions:

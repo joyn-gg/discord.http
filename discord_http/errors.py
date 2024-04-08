@@ -12,7 +12,9 @@ __all__ = (
     "DiscordServerError",
     "Forbidden",
     "HTTPException",
+    "InvalidMember",
     "NotFound",
+    "Ratelimited",
     "UserMissingPermissions",
 )
 
@@ -24,6 +26,11 @@ class DiscordException(Exception):
 
 class CheckFailed(DiscordException):
     """ Raised whenever a check fails """
+    pass
+
+
+class InvalidMember(CheckFailed):
+    """ Raised whenever a user was found, but not a member of a guild """
     pass
 
 
@@ -73,6 +80,11 @@ class NotFound(HTTPException):
 
 class Forbidden(HTTPException):
     """ Raised whenever a HTTP request returns 403 """
+    pass
+
+
+class Ratelimited(HTTPException):
+    """ Raised whenever a HTTP request returns 429, but without a Retry-After header """
     pass
 
 
