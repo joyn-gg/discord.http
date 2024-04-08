@@ -256,7 +256,9 @@
     <span class="s2">&quot;DiscordServerError&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Forbidden&quot;</span><span class="p">,</span>
     <span class="s2">&quot;HTTPException&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InvalidMember&quot;</span><span class="p">,</span>
     <span class="s2">&quot;NotFound&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ratelimited&quot;</span><span class="p">,</span>
     <span class="s2">&quot;UserMissingPermissions&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -273,6 +275,14 @@
 <a class="viewcode-back" href="../../api/errors.html#discord_http.errors.CheckFailed">[docs]</a>
 <span class="k">class</span> <span class="nc">CheckFailed</span><span class="p">(</span><span class="n">DiscordException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Raised whenever a check fails &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidMember">
+<a class="viewcode-back" href="../../api/errors.html#discord_http.errors.InvalidMember">[docs]</a>
+<span class="k">class</span> <span class="nc">InvalidMember</span><span class="p">(</span><span class="n">CheckFailed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Raised whenever a user was found, but not a member of a guild &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 
@@ -337,6 +347,14 @@
 <a class="viewcode-back" href="../../api/errors.html#discord_http.errors.Forbidden">[docs]</a>
 <span class="k">class</span> <span class="nc">Forbidden</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Raised whenever a HTTP request returns 403 &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="Ratelimited">
+<a class="viewcode-back" href="../../api/errors.html#discord_http.errors.Ratelimited">[docs]</a>
+<span class="k">class</span> <span class="nc">Ratelimited</span><span class="p">(</span><span class="n">HTTPException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Raised whenever a HTTP request returns 429, but without a Retry-After header &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 

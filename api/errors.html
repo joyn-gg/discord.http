@@ -290,10 +290,24 @@
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="discord_http.errors.InvalidMember">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">InvalidMember</span></span><a class="reference internal" href="../_modules/discord_http/errors.html#InvalidMember"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.InvalidMember" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.CheckFailed" title="discord_http.errors.CheckFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckFailed</span></code></a></p>
+<p>Raised whenever a user was found, but not a member of a guild</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="discord_http.errors.NotFound">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">NotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#NotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.NotFound" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#discord_http.errors.HTTPException" title="discord_http.errors.HTTPException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPException</span></code></a></p>
 <p>Raised whenever a HTTP request returns 404</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="discord_http.errors.Ratelimited">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">Ratelimited</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#Ratelimited"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.Ratelimited" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.HTTPException" title="discord_http.errors.HTTPException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPException</span></code></a></p>
+<p>Raised whenever a HTTP request returns 429, but without a Retry-After header</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -369,7 +383,9 @@
 <li><a class="reference internal" href="#discord_http.errors.DiscordServerError"><code class="docutils literal notranslate"><span class="pre">DiscordServerError</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.Forbidden"><code class="docutils literal notranslate"><span class="pre">Forbidden</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.HTTPException"><code class="docutils literal notranslate"><span class="pre">HTTPException</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.errors.InvalidMember"><code class="docutils literal notranslate"><span class="pre">InvalidMember</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.NotFound"><code class="docutils literal notranslate"><span class="pre">NotFound</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.errors.Ratelimited"><code class="docutils literal notranslate"><span class="pre">Ratelimited</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.UserMissingPermissions"><code class="docutils literal notranslate"><span class="pre">UserMissingPermissions</span></code></a></li>
 </ul>
 </li>

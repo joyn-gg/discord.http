@@ -258,7 +258,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">__version__</span>
 <span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">NotFound</span><span class="p">,</span> <span class="n">DiscordServerError</span><span class="p">,</span>
-    <span class="n">Forbidden</span><span class="p">,</span> <span class="n">HTTPException</span>
+    <span class="n">Forbidden</span><span class="p">,</span> <span class="n">HTTPException</span><span class="p">,</span> <span class="n">Ratelimited</span>
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -667,19 +667,22 @@
                             <span class="k">return</span> <span class="n">r</span>
 
                         <span class="k">case</span> <span class="mi">429</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                                <span class="c1"># For cases where you&#39;re ratelimited by CloudFlare</span>
+                                <span class="k">raise</span> <span class="n">Ratelimited</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
                             <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;retry_after&quot;</span><span class="p">]</span>
                             <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ratelimit hit (</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">), waiting </span><span class="si">{</span><span class="n">retry_after</span><span class="si">}</span><span class="s2">s...&quot;</span><span class="p">)</span>
                             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">retry_after</span><span class="p">)</span>
                             <span class="k">continue</span>
 
                         <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">502</span><span class="p">,</span> <span class="mi">503</span><span class="p">,</span> <span class="mi">504</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">tries</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># Give up after 5 tries</span>
+                                <span class="k">raise</span> <span class="n">DiscordServerError</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
                             <span class="c1"># Try again, maybe it will work next time, surely...</span>
                             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">tries</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
                             <span class="k">continue</span>
-
-                        <span class="c1"># The lovely exception hell</span>
-                        <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">500</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="n">DiscordServerError</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
                         <span class="k">case</span> <span class="mi">403</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="n">Forbidden</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
