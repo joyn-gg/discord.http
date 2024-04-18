@@ -120,6 +120,8 @@ class Client:
         self._view_storage: dict[int, InteractionStorage] = {}
         self._default_allowed_mentions = allowed_mentions
 
+        self._cogs: dict[str, list[Cog]] = {}
+
         utils.setup_logger(level=self.logging_level)
 
     async def _run_event(
@@ -209,36 +211,49 @@ class Client:
         return self.user
 
     async def _prepare_commands(self) -> None:
+        """ Only used to sync commands on boot """
         if self.sync:
-            data = await self.state.update_commands(
+            await self.sync_commands()
+        else:
+            data = await self.state.fetch_commands(
+                guild_id=self.guild_id
+            )
+            self._update_ids(data)
+
+    async def sync_commands(self) -> None:
+        """
+        Make the bot fetch all current commands,
+        to then sync them all to Discord API.
+        """
+        data = await self.state.update_commands(
+            data=[
+                v.to_dict()
+                for v in self.commands.values()
+                if not v.guild_ids
+            ],
+            guild_id=self.guild_id
+        )
+
+        guild_ids = []
+        for cmd in self.commands.values():
+            if cmd.guild_ids:
+                guild_ids.extend([
+                    int(gid) for gid in cmd.guild_ids
+                ])
+
+        guild_ids = list(set(guild_ids))
+
+        for g in guild_ids:
+            await self.state.update_commands(
                 data=[
                     v.to_dict()
                     for v in self.commands.values()
-                    if not v.guild_ids
+                    if g in v.guild_ids
                 ],
-                guild_id=self.guild_id
+                guild_id=g
             )
 
-            guild_ids = []
-            for cmd in self.commands.values():
-                if cmd.guild_ids:
-                    guild_ids.extend([int(gid) for gid in cmd.guild_ids])
-            guild_ids = list(set(guild_ids))
-
-            for g in guild_ids:
-                await self.state.update_commands(
-                    data=[
-                        v.to_dict()
-                        for v in self.commands.values()
-                        if g in v.guild_ids
-                    ],
-                    guild_id=g
-                )
-
-            self._update_ids(data)
-        else:
-            data = await self.state.fetch_commands(guild_id=self.guild_id)
-            self._update_ids(data)
+        self._update_ids(data)
 
     @property
     def user(self) -> User:
@@ -445,11 +460,36 @@ class Client:
         package: `str`
             The package to load the extension from.
         """
+        if package in self._cogs:
+            raise RuntimeError(f"Cog {package} is already loaded")
+
         lib = importlib.import_module(package)
         setup = getattr(lib, "setup", None)
+
         if not setup:
             return None
+
         await setup(self)
+
+    async def unload_extension(
+        self,
+        package: str
+    ) -> None:
+        """
+        Unloads an extension.
+
+        Parameters
+        ----------
+        package: `str`
+            The package to unload the extension from.
+        """
+        if package not in self._cogs:
+            raise RuntimeError(f"Cog {package} is not loaded")
+
+        for cog in self._cogs[package]:
+            await self.remove_cog(cog)
+
+        del self._cogs[package]
 
     async def add_cog(self, cog: "Cog") -> None:
         """
@@ -461,6 +501,17 @@ class Client:
             The cog to add to the bot.
         """
         await cog._inject(self)
+
+    async def remove_cog(self, cog: "Cog") -> None:
+        """
+        Removes a cog from the bot.
+
+        Parameters
+        ----------
+        cog: `Cog`
+            The cog to remove from the bot.
+        """
+        await cog._eject(self)
 
     def command(
         self,
@@ -1344,6 +1395,20 @@ class Client:
         self.listeners.append(func)
         return func
 
+    def remove_listener(
+        self,
+        func: "Listener"
+    ) -> None:
+        """
+        Removes a listener from the bot.
+
+        Parameters
+        ----------
+        func: `Listener`
+            The listener to remove from the bot.
+        """
+        self.listeners.remove(func)
+
     def add_command(
         self,
         func: "Command"
@@ -1358,6 +1423,20 @@ class Client:
         """
         self.commands[func.name] = func
         return func
+
+    def remove_command(
+        self,
+        func: "Command"
+    ) -> None:
+        """
+        Removes a command from the bot.
+
+        Parameters
+        ----------
+        command: `Command`
+            The command to remove from the bot.
+        """
+        self.commands.pop(func.name, None)
 
     def add_interaction(
         self,
@@ -1377,3 +1456,20 @@ class Client:
             self.interactions[func.custom_id] = func
 
         return func
+
+    def remove_interaction(
+        self,
+        func: "Interaction"
+    ) -> None:
+        """
+        Removes an interaction from the bot.
+
+        Parameters
+        ----------
+        interaction: `Interaction`
+            The interaction to remove from the bot.
+        """
+        if func.regex:
+            self.interactions_regex.pop(func.custom_id, None)
+        else:
+            self.interactions.pop(func.custom_id, None)

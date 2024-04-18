@@ -127,6 +127,12 @@ async def test_reply(ctx: Context):
 
 
 @client.command()
+async def test_remove_command(ctx: Context):
+    client.remove_command(test_reply)
+    return ctx.response.send_message("Removed command")
+
+
+@client.command()
 async def test_publish(ctx: Context):
     async def call_after():
         msg = await ctx.channel.send("Hi there")

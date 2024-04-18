@@ -118,6 +118,12 @@ class Cog:
     async def _inject(self, bot: "Client"):
         await self.cog_load()
 
+        module_name = self.__class__.__module__
+
+        if module_name not in bot._cogs:
+            bot._cogs[module_name] = []
+        bot._cogs[module_name].append(self)
+
         for cmd in self._cog_commands.values():
             cmd.cog = self
             bot.add_command(cmd)
@@ -134,8 +140,28 @@ class Cog:
             interaction.cog = self
             bot.add_interaction(interaction)
 
+    async def _eject(self, bot: "Client"):
+        await self.cog_unload()
+
+        module_name = self.__class__.__module__
+        if module_name in bot._cogs:
+            bot._cogs[module_name].remove(self)
+
+        for cmd in self._cog_commands.values():
+            bot.remove_command(cmd)
+
+        for listener in self._cog_listeners.values():
+            bot.remove_listener(listener)
+
+        for interaction in self._cog_interactions.values():
+            bot.remove_interaction(interaction)
+
     async def cog_load(self) -> None:
         """ Called before the cog is loaded """
+        pass
+
+    async def cog_unload(self) -> None:
+        """ Called before the cog is unloaded """
         pass
 
 
