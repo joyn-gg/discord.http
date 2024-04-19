@@ -72,9 +72,9 @@ class PartialChannel(PartialBase):
         """ `Optional[PartialGuild]`: The guild the channel belongs to (if available) """
         from .guild import PartialGuild
 
-        if self.guild_id:
-            return PartialGuild(state=self._state, id=self.guild_id)
-        return None
+        if not self.guild_id:
+            return None
+        return PartialGuild(state=self._state, id=self.guild_id)
 
     @property
     def type(self) -> ChannelType:

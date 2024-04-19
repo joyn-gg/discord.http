@@ -12,13 +12,13 @@ class AllowedMentions:
         self,
         *,
         everyone: bool = True,
-        users: Optional[Union[bool, list[Snowflake]]] = True,
-        roles: Optional[Union[bool, list[Snowflake]]] = True,
+        users: Optional[Union[bool, list[Union[Snowflake, int]]]] = True,
+        roles: Optional[Union[bool, list[Union[Snowflake, int]]]] = True,
         replied_user: bool = True,
     ):
         self.everyone: bool = everyone
-        self.users: Optional[Union[bool, list[Snowflake]]] = users
-        self.roles: Optional[Union[bool, list[Snowflake]]] = roles
+        self.users: Optional[Union[bool, list[Union[Snowflake, int]]]] = users
+        self.roles: Optional[Union[bool, list[Union[Snowflake, int]]]] = roles
         self.reply_user: bool = replied_user
 
     @classmethod
@@ -43,12 +43,12 @@ class AllowedMentions:
             parse.append("everyone")
 
         if isinstance(self.users, list):
-            data["users"] = [x.id for x in self.users]
+            data["users"] = [int(x) for x in self.users]
         elif self.users is True:
             parse.append("users")
 
         if isinstance(self.roles, list):
-            data["roles"] = [x.id for x in self.roles]
+            data["roles"] = [int(x) for x in self.roles]
         elif self.roles is True:
             parse.append("roles")
 

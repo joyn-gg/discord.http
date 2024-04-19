@@ -214,6 +214,7 @@ class Client:
         """ Only used to sync commands on boot """
         if self.sync:
             await self.sync_commands()
+
         else:
             data = await self.state.fetch_commands(
                 guild_id=self.guild_id
@@ -387,13 +388,13 @@ class Client:
 
     async def wait_until_ready(self) -> None:
         """ Waits until the client is ready using `asyncio.Event.wait()`. """
-        if self._ready is not None:
-            await self._ready.wait()
-        else:
+        if self._ready is None:
             raise RuntimeError(
                 "Client has not been initialized yet, "
                 "please use Client.start() to initialize the client."
             )
+
+        await self._ready.wait()
 
     def dispatch(
         self,
@@ -467,7 +468,7 @@ class Client:
         setup = getattr(lib, "setup", None)
 
         if not setup:
-            return None
+            raise RuntimeError(f"Cog {package} does not have a setup function")
 
         await setup(self)
 
@@ -730,7 +731,7 @@ class Client:
             - If the listener name is not a string
             - If the listener is not a coroutine function
         """
-        if name is not None and not isinstance(name, str):
+        if not isinstance(name, str):
             raise TypeError(f"Listener name must be a string, not {type(name)}")
 
         def decorator(func):

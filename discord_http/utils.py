@@ -53,7 +53,7 @@ def traceback_maker(
     return error if advance else f"{type(err).__name__}: {err}"
 
 
-def snowflake_time(id: Union[int, Snowflake]) -> datetime:
+def snowflake_time(id: Union[Snowflake, int]) -> datetime:
     """
     Get the datetime from a discord snowflake
 

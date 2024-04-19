@@ -14,7 +14,7 @@ from quart.utils import MustReloadError, restart
 from typing import Optional, Any, Union, TYPE_CHECKING
 
 from . import utils
-from .commands import Command, Interaction, Listener, SubGroup
+from .commands import Command, SubGroup
 from .enums import InteractionType
 from .errors import CheckFailed
 from .response import BaseResponse, Ping, MessageResponse
@@ -70,10 +70,6 @@ class DiscordHTTP(Quart):
         self.bot: "Client" = client
         self.loop = self.bot.loop
         self.debug_events = self.bot.debug_events
-
-        self._cog_commands: dict[str, Command] = {}
-        self._cog_interactions: dict[str, Interaction] = {}
-        self._cog_listeners: list[Listener] = []
 
         super().__init__(__name__)
 
