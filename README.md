@@ -1,7 +1,9 @@
 # discord.http
 Python library that handles interactions from Discord POST requests.
 
-### ✨ NOW SUPPORTS USER COMMANDS ✨
+## Supported installs
+- [Guild application (normal bot)](/examples/ping_cmd_example.py)
+- [User application (bots on user accounts)](/examples/user_command_example.py)
 
 ## Installing
 > You need **Python >=3.11** to use this library.
