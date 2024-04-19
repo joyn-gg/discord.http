@@ -14,7 +14,7 @@
     </script>
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.01.29 -->
         <title>discord_http.commands - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
@@ -364,6 +364,12 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_inject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bot</span><span class="p">:</span> <span class="s2">&quot;Client&quot;</span><span class="p">):</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cog_load</span><span class="p">()</span>
 
+        <span class="n">module_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span>
+
+        <span class="k">if</span> <span class="n">module_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bot</span><span class="o">.</span><span class="n">_cogs</span><span class="p">:</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">_cogs</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">_cogs</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cog_commands</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">cog</span> <span class="o">=</span> <span class="bp">self</span>
             <span class="n">bot</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -380,10 +386,33 @@
             <span class="n">interaction</span><span class="o">.</span><span class="n">cog</span> <span class="o">=</span> <span class="bp">self</span>
             <span class="n">bot</span><span class="o">.</span><span class="n">add_interaction</span><span class="p">(</span><span class="n">interaction</span><span class="p">)</span>
 
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_eject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bot</span><span class="p">:</span> <span class="s2">&quot;Client&quot;</span><span class="p">):</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cog_unload</span><span class="p">()</span>
+
+        <span class="n">module_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="n">bot</span><span class="o">.</span><span class="n">_cogs</span><span class="p">:</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">_cogs</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cog_commands</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">remove_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cog_listeners</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">remove_listener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">interaction</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cog_interactions</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">bot</span><span class="o">.</span><span class="n">remove_interaction</span><span class="p">(</span><span class="n">interaction</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Cog.cog_load">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Cog.cog_load">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">cog_load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Called before the cog is loaded &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Cog.cog_unload">
+<a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Cog.cog_unload">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">cog_unload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Called before the cog is unloaded &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 </div>
 
@@ -1875,7 +1904,7 @@
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=d45e8c67"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
     </body>

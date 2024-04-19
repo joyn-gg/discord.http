@@ -15,7 +15,7 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Contributing" href="contribute.html" /><link rel="prev" title="Event references" href="events.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.01.29 -->
         <title>HTTP backend - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
@@ -244,7 +244,7 @@
         </div>
         <article role="main">
           <section id="http-backend">
-<h1>HTTP backend<a class="headerlink" href="#http-backend" title="Link to this heading">#</a></h1>
+<h1>HTTP backend<a class="headerlink" href="#http-backend" title="Link to this heading">¶</a></h1>
 <p>The HTTP backend is a simple HTTP server that listens for incoming requests and
 manages all the communication received by Discord HTTP POST requests.
 However since this is essentially based on Quart, you are free to intervean and
@@ -268,7 +268,7 @@ The <code class="docutils literal notranslate"><span class="pre">POST</span></co
 <code class="docutils literal notranslate"><span class="pre">GET</span></code> is used for you to verify that the bot is online and working, which shows a simple
 debug information about your bot and nothing more.</p>
 <section id="get-path">
-<h2>GET Path<a class="headerlink" href="#get-path" title="Link to this heading">#</a></h2>
+<h2>GET Path<a class="headerlink" href="#get-path" title="Link to this heading">¶</a></h2>
 <p>By default, the library provides you with a debug GET path that you can use to verify that the bot is online.
 It shows something like this when accessing it through your browser or any other tools:</p>
 <img alt="../_images/get_path.png" src="../_images/get_path.png" />
@@ -284,7 +284,7 @@ by having your main website ping this source and then be able to see if the bot 
 <p>Instead of then showing the default JSON value in there, it will then instead return <code class="docutils literal notranslate"><span class="pre">HTTP</span> <span class="pre">405:</span> <span class="pre">Method</span> <span class="pre">not</span> <span class="pre">allowed</span></code>.</p>
 </section>
 <section id="adding-paths">
-<h2>Adding paths<a class="headerlink" href="#adding-paths" title="Link to this heading">#</a></h2>
+<h2>Adding paths<a class="headerlink" href="#adding-paths" title="Link to this heading">¶</a></h2>
 <p>A very simplified example of how you can add your own paths to the server.
 Keep in mind that there are many more methods, but this is just a simple example.
 Code example will be taking the code above as an expantion of the code.</p>
@@ -373,7 +373,7 @@ Of course you can do much more than this, but this is more of an idea of what yo
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
     </body>

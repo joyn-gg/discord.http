@@ -14,7 +14,7 @@
     </script>
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.01.29 -->
         <title>discord_http.client - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
@@ -366,6 +366,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_view_storage</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">InteractionStorage</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_default_allowed_mentions</span> <span class="o">=</span> <span class="n">allowed_mentions</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cogs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Cog</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="n">utils</span><span class="o">.</span><span class="n">setup_logger</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logging_level</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_event</span><span class="p">(</span>
@@ -455,36 +457,53 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_prepare_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Only used to sync commands on boot &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">update_commands</span><span class="p">(</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_commands</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">fetch_commands</span><span class="p">(</span>
+                <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ids</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Client.sync_commands">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.sync_commands">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">sync_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make the bot fetch all current commands,</span>
+<span class="sd">        to then sync them all to Discord API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">update_commands</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">guild_ids</span>
+            <span class="p">],</span>
+            <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span>
+        <span class="p">)</span>
+
+        <span class="n">guild_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">cmd</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span>
+                <span class="n">guild_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span> <span class="k">for</span> <span class="n">gid</span> <span class="ow">in</span> <span class="n">cmd</span><span class="o">.</span><span class="n">guild_ids</span>
+                <span class="p">])</span>
+
+        <span class="n">guild_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">guild_ids</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">guild_ids</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">update_commands</span><span class="p">(</span>
                 <span class="n">data</span><span class="o">=</span><span class="p">[</span>
                     <span class="n">v</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
                     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">guild_ids</span>
+                    <span class="k">if</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">guild_ids</span>
                 <span class="p">],</span>
-                <span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span>
+                <span class="n">guild_id</span><span class="o">=</span><span class="n">g</span>
             <span class="p">)</span>
 
-            <span class="n">guild_ids</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">cmd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">cmd</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">:</span>
-                    <span class="n">guild_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span> <span class="k">for</span> <span class="n">gid</span> <span class="ow">in</span> <span class="n">cmd</span><span class="o">.</span><span class="n">guild_ids</span><span class="p">])</span>
-            <span class="n">guild_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">guild_ids</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_ids</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">guild_ids</span><span class="p">:</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">update_commands</span><span class="p">(</span>
-                    <span class="n">data</span><span class="o">=</span><span class="p">[</span>
-                        <span class="n">v</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-                        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">guild_ids</span>
-                    <span class="p">],</span>
-                    <span class="n">guild_id</span><span class="o">=</span><span class="n">g</span>
-                <span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ids</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">fetch_commands</span><span class="p">(</span><span class="n">guild_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">guild_id</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ids</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
@@ -635,13 +654,13 @@
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.wait_until_ready">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">wait_until_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Waits until the client is ready using `asyncio.Event.wait()`. &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="s2">&quot;Client has not been initialized yet, &quot;</span>
                 <span class="s2">&quot;please use Client.start() to initialize the client.&quot;</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ready</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Client.dispatch">
@@ -717,11 +736,39 @@
 <span class="sd">        package: `str`</span>
 <span class="sd">            The package to load the extension from.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">package</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cogs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cog </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2"> is already loaded&quot;</span><span class="p">)</span>
+
         <span class="n">lib</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
         <span class="n">setup</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">lib</span><span class="p">,</span> <span class="s2">&quot;setup&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">setup</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cog </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2"> does not have a setup function&quot;</span><span class="p">)</span>
+
         <span class="k">await</span> <span class="n">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Client.unload_extension">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.unload_extension">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">unload_extension</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">package</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unloads an extension.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        package: `str`</span>
+<span class="sd">            The package to unload the extension from.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">package</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cogs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cog </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2"> is not loaded&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cog</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cogs</span><span class="p">[</span><span class="n">package</span><span class="p">]:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_cog</span><span class="p">(</span><span class="n">cog</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cogs</span><span class="p">[</span><span class="n">package</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Client.add_cog">
@@ -736,6 +783,20 @@
 <span class="sd">            The cog to add to the bot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">cog</span><span class="o">.</span><span class="n">_inject</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Client.remove_cog">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.remove_cog">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_cog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cog</span><span class="p">:</span> <span class="s2">&quot;Cog&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a cog from the bot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cog: `Cog`</span>
+<span class="sd">            The cog to remove from the bot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">cog</span><span class="o">.</span><span class="n">_eject</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Client.command">
@@ -975,7 +1036,7 @@
 <span class="sd">            - If the listener name is not a string</span>
 <span class="sd">            - If the listener is not a coroutine function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Listener name must be a string, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
@@ -1719,6 +1780,23 @@
         <span class="k">return</span> <span class="n">func</span></div>
 
 
+<div class="viewcode-block" id="Client.remove_listener">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.remove_listener">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_listener</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">:</span> <span class="s2">&quot;Listener&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a listener from the bot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func: `Listener`</span>
+<span class="sd">            The listener to remove from the bot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="Client.add_command">
 <a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.add_command">[docs]</a>
     <span class="k">def</span> <span class="nf">add_command</span><span class="p">(</span>
@@ -1735,6 +1813,23 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">return</span> <span class="n">func</span></div>
+
+
+<div class="viewcode-block" id="Client.remove_command">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.remove_command">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_command</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">:</span> <span class="s2">&quot;Command&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a command from the bot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        command: `Command`</span>
+<span class="sd">            The command to remove from the bot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Client.add_interaction">
@@ -1757,6 +1852,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">interactions</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="n">custom_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
 
         <span class="k">return</span> <span class="n">func</span></div>
+
+
+<div class="viewcode-block" id="Client.remove_interaction">
+<a class="viewcode-back" href="../../api/client.html#discord_http.client.Client.remove_interaction">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_interaction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">func</span><span class="p">:</span> <span class="s2">&quot;Interaction&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes an interaction from the bot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        interaction: `Interaction`</span>
+<span class="sd">            The interaction to remove from the bot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="n">regex</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interactions_regex</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">custom_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interactions</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">custom_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -1792,7 +1907,7 @@
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=d45e8c67"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
     </body>

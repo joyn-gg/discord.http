@@ -15,7 +15,7 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Asset" href="../api/asset.html" /><link rel="prev" title="Getting started" href="getting_started.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.01.29 -->
         <title>API components - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
@@ -244,7 +244,7 @@
         </div>
         <article role="main">
           <section id="api-components">
-<h1>API components<a class="headerlink" href="#api-components" title="Link to this heading">#</a></h1>
+<h1>API components<a class="headerlink" href="#api-components" title="Link to this heading">¶</a></h1>
 <p>Here are all the things you can find on discord.http, packed in one page</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -426,10 +426,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.listener"><code class="docutils literal notranslate"><span class="pre">Client.listener()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.load_extension"><code class="docutils literal notranslate"><span class="pre">Client.load_extension()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.message_command"><code class="docutils literal notranslate"><span class="pre">Client.message_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.remove_cog"><code class="docutils literal notranslate"><span class="pre">Client.remove_cog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.remove_command"><code class="docutils literal notranslate"><span class="pre">Client.remove_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.remove_interaction"><code class="docutils literal notranslate"><span class="pre">Client.remove_interaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.remove_listener"><code class="docutils literal notranslate"><span class="pre">Client.remove_listener()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.set_backend"><code class="docutils literal notranslate"><span class="pre">Client.set_backend()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.set_context"><code class="docutils literal notranslate"><span class="pre">Client.set_context()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.setup_hook"><code class="docutils literal notranslate"><span class="pre">Client.setup_hook()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.start"><code class="docutils literal notranslate"><span class="pre">Client.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.sync_commands"><code class="docutils literal notranslate"><span class="pre">Client.sync_commands()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.unload_extension"><code class="docutils literal notranslate"><span class="pre">Client.unload_extension()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.user"><code class="docutils literal notranslate"><span class="pre">Client.user</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.user_command"><code class="docutils literal notranslate"><span class="pre">Client.user_command()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/client.html#discord_http.client.Client.wait_until_ready"><code class="docutils literal notranslate"><span class="pre">Client.wait_until_ready()</span></code></a></li>
@@ -463,6 +469,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.Choice"><code class="docutils literal notranslate"><span class="pre">Choice</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.Cog"><code class="docutils literal notranslate"><span class="pre">Cog</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/commands.html#discord_http.commands.Cog.cog_load"><code class="docutils literal notranslate"><span class="pre">Cog.cog_load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/commands.html#discord_http.commands.Cog.cog_unload"><code class="docutils literal notranslate"><span class="pre">Cog.cog_unload()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a><ul>
@@ -1485,7 +1492,7 @@
     </aside>
   </div>
 </div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
     </body>
