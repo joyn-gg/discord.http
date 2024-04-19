@@ -1,11 +1,11 @@
-from typing import TYPE_CHECKING, Union, Optional
+from typing import TYPE_CHECKING, Optional
 
 from . import utils
 from .enums import StickerType, StickerFormatType
 from .object import PartialBase
 
 if TYPE_CHECKING:
-    from .guild import PartialGuild, Guild
+    from .guild import PartialGuild
     from .http import DiscordAPI
 
 MISSING = utils.MISSING
@@ -177,7 +177,7 @@ class Sticker(PartialSticker):
         *,
         state: "DiscordAPI",
         data: dict,
-        guild: Optional[Union["PartialGuild", "Guild"]],
+        guild: Optional["PartialGuild"],
     ):
         super().__init__(
             state=state,
@@ -194,7 +194,6 @@ class Sticker(PartialSticker):
         self.sort_value: Optional[int] = utils.get_int(data, "sort_value")
         self.tags: str = data["tags"]
         self.type: StickerType = StickerType(data["type"])
-        self.guild: Optional[Union["PartialGuild", "Guild"]] = guild
 
         # Re-define types
         self.name: str
