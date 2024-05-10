@@ -11,7 +11,7 @@ from .channel import PartialChannel, BaseChannel
 from .commands import Command, Interaction, Listener, Cog, SubGroup
 from .context import Context
 from .emoji import PartialEmoji
-from .entitlements import SKU, PartialEntitlements, Entitlements
+from .entitlements import PartialSKU, SKU, PartialEntitlements, Entitlements
 from .enums import ApplicationCommandType
 from .guild import PartialGuild, Guild, PartialScheduledEvent, ScheduledEvent
 from .http import DiscordAPI
@@ -1114,6 +1114,23 @@ class Client:
         """
         member = self.get_partial_member(user_id, guild_id)
         return await member.fetch()
+
+    def get_partial_sku(
+        self,
+        sku_id: int
+    ) -> PartialSKU:
+        """
+        Creates a partial SKU object.
+
+        Returns
+        -------
+        `PartialSKU`
+            The partial SKU object.
+        """
+        return PartialSKU(
+            state=self.state,
+            id=sku_id
+        )
 
     async def fetch_skus(self) -> list[SKU]:
         """ `list[SKU]`: Fetches all SKUs available to the bot. """

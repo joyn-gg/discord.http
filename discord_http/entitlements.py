@@ -109,6 +109,7 @@ class PartialEntitlements(PartialBase):
         return f"<PartialEntitlements id={self.id}>"
 
     async def fetch(self) -> "Entitlements":
+        """ `Entitlements`: Fetches the entitlement. """
         r = await self._state.query(
             "GET",
             f"/applications/{self._state.application_id}/entitlements/{self.id}"
@@ -117,6 +118,14 @@ class PartialEntitlements(PartialBase):
         return Entitlements(
             state=self._state,
             data=r.response
+        )
+
+    async def consume(self) -> None:
+        """ Mark the entitlement as consumed. """
+        await self._state.query(
+            "POST",
+            f"/applications/{self._state.application_id}/entitlements/{self.id}/consume",
+            res_method="text"
         )
 
     async def delete_test_entitlement(self) -> None:
@@ -139,7 +148,6 @@ class Entitlements(PartialEntitlements):
 
         self.deleted: bool = data["deleted"]
         self.type: EntitlementType = EntitlementType(data["type"])
-        self.consumed: bool = data["consumed"]
 
         self.user: Optional[PartialUser] = None
         self.guild: Optional[PartialGuild] = None
@@ -156,6 +164,7 @@ class Entitlements(PartialEntitlements):
         self.ends_at: Optional[datetime] = None
 
         self._from_data(data)
+        self._data_consumed: bool = data.get("consumed", False)
 
     def __repr__(self) -> str:
         return f"<Entitlements id={self.id} sku={self.sku} type={self.type}>"
@@ -172,3 +181,7 @@ class Entitlements(PartialEntitlements):
 
         if data.get("ends_at", None):
             self.ends_at = utils.parse_time(data["ends_at"])
+
+    def is_consumed(self) -> bool:
+        """ `bool`: Returns whether the entitlement is consumed or not. """
+        return bool(self._data_consumed)
