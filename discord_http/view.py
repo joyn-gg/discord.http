@@ -479,7 +479,6 @@ class InteractionStorage:
         self._timeout_bool = True
         self._update_event(True)
 
-    @property
     def is_timeout(self) -> bool:
         """ `bool`: Whether the view has timed out """
         return self._timeout_bool
@@ -583,7 +582,7 @@ class InteractionStorage:
         except KeyError:
             pass
 
-        if self.is_timeout:
+        if self.is_timeout():
             return None
         return self._store_interaction
 

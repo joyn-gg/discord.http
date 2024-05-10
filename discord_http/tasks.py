@@ -80,7 +80,7 @@ class Loop:
             time=time
         )
 
-        self._is_being_cancelled: bool = False
+        self._will_cancel: bool = False
         self._should_stop: bool = False
         self._has_faild: bool = False
         self._last_loop_failed: bool = False
@@ -188,7 +188,7 @@ class Loop:
                         break
 
         except asyncio.CancelledError:
-            self._is_being_cancelled = True
+            self._will_cancel = True
             raise
         except Exception as e:
             self._has_faild = True
@@ -197,7 +197,7 @@ class Loop:
             await self._after_loop()
             if self._handle:
                 self._handle.cancel()
-            self._is_being_cancelled = False
+            self._will_cancel = False
             self._loop_count = 0
             self._should_stop = False
 
@@ -220,7 +220,7 @@ class Loop:
 
     def _can_be_cancelled(self) -> bool:
         return bool(
-            not self._is_being_cancelled and
+            not self._will_cancel and
             self._task and
             not self._task.done()
         )
@@ -283,10 +283,9 @@ class Loop:
     def _is_explicit_time(self) -> bool:
         return self._time is not None
 
-    @property
     def is_being_cancelled(self) -> bool:
         """ Returns whether the loop is being cancelled or not """
-        return self._is_being_cancelled
+        return self._will_cancel
 
     def fetch_task(self) -> Optional[asyncio.Task]:
         """ Returns the task that is running the loop """

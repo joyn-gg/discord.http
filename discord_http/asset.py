@@ -90,7 +90,6 @@ class Asset:
         """
         return self._key
 
-    @property
     def is_animated(self) -> bool:
         """
         Whether the asset is animated or not

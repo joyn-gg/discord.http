@@ -107,7 +107,6 @@ class PartialBase(Snowflake):
     def __repr__(self) -> str:
         return f"<PartialBase id={self.id}>"
 
-    @property
     def is_partial(self) -> bool:
         """
         `bool`: Returns True if the object is partial
