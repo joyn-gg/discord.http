@@ -311,6 +311,13 @@
 <section id="module-discord_http.errors">
 <span id="discord-http-errors-module"></span><h2>discord_http.errors module<a class="headerlink" href="#module-discord_http.errors" title="Link to this heading">¶</a></h2>
 <dl class="py exception">
+<dt class="sig sig-object py" id="discord_http.errors.AutomodBlock">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">AutomodBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.HTTPResponse" title="discord_http.http.HTTPResponse"><span class="pre">HTTPResponse</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#AutomodBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.AutomodBlock" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#discord_http.errors.HTTPException" title="discord_http.errors.HTTPException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPException</span></code></a></p>
+<p>Raised whenever a HTTP request was blocked by Discord</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="discord_http.errors.BotMissingPermissions">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.errors.</span></span><span class="sig-name descname"><span class="pre">BotMissingPermissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">perms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="flag.html#discord_http.flag.Permissions" title="discord_http.flag.Permissions"><span class="pre">Permissions</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/errors.html#BotMissingPermissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.errors.BotMissingPermissions" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#discord_http.errors.CheckFailed" title="discord_http.errors.CheckFailed"><code class="xref py py-class docutils literal notranslate"><span class="pre">CheckFailed</span></code></a></p>
@@ -440,6 +447,7 @@
             <ul>
 <li><a class="reference internal" href="#">Errors</a><ul>
 <li><a class="reference internal" href="#module-discord_http.errors">discord_http.errors module</a><ul>
+<li><a class="reference internal" href="#discord_http.errors.AutomodBlock"><code class="docutils literal notranslate"><span class="pre">AutomodBlock</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.BotMissingPermissions"><code class="docutils literal notranslate"><span class="pre">BotMissingPermissions</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.CheckFailed"><code class="docutils literal notranslate"><span class="pre">CheckFailed</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.errors.DiscordException"><code class="docutils literal notranslate"><span class="pre">DiscordException</span></code></a></li>
