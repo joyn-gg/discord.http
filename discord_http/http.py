@@ -14,7 +14,8 @@ from typing import (
 from . import __version__
 from .errors import (
     NotFound, DiscordServerError,
-    Forbidden, HTTPException, Ratelimited
+    Forbidden, HTTPException, Ratelimited,
+    AutomodBlock
 )
 
 if TYPE_CHECKING:
@@ -395,6 +396,11 @@ class DiscordAPI:
 
         ratelimit = self.get_ratelimit(f"{method} {path}")
 
+        _http_400_error_table: dict[int, type[HTTPException]] = {
+            200000: AutomodBlock,
+            200001: AutomodBlock,
+        }
+
         async with ratelimit:
             for tries in range(5):
                 try:
@@ -429,6 +435,12 @@ class DiscordAPI:
                             # Try again, maybe it will work next time, surely...
                             await asyncio.sleep(1 + tries * 2)
                             continue
+
+                        case 400:
+                            raise _http_400_error_table.get(
+                                r.response.get("code", 0),
+                                HTTPException
+                            )(r)
 
                         case 403:
                             raise Forbidden(r)

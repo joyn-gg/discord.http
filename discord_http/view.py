@@ -776,6 +776,8 @@ class View(InteractionStorage):
 
                 if c.get("type", None):
                     del c["type"]
+                if c.get("id", None):
+                    del c["id"]
 
                 items.append(cls(row=i, **c))
 

@@ -731,7 +731,7 @@ class Client:
             - If the listener name is not a string
             - If the listener is not a coroutine function
         """
-        if not isinstance(name, str):
+        if not isinstance(name, (str, type(None))):
             raise TypeError(f"Listener name must be a string, not {type(name)}")
 
         def decorator(func):

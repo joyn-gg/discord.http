@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 from io import BytesIO
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional, Union, AsyncIterator
 
 from . import http, utils
 from .embeds import Embed
@@ -8,7 +8,7 @@ from .emoji import EmojiParser
 from .errors import HTTPException
 from .file import File
 from .mentions import AllowedMentions
-from .object import PartialBase
+from .object import PartialBase, Snowflake
 from .response import MessageResponse
 from .role import PartialRole
 from .sticker import PartialSticker
@@ -137,6 +137,110 @@ class JumpURL:
         if self.channel_id and self.message_id:
             return f"https://discord.com/channels/{self.guild_id or '@me'}/{self.channel_id}/{self.message_id}"
         return f"https://discord.com/channels/{self.guild_id or '@me'}/{self.channel_id}"
+
+
+class PollAnswer:
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        message: "Message",
+        data: dict
+    ):
+        self._state = state
+        self._message: "Message" = message
+        _poll_media = data.get("poll_media", {})
+
+        self.id: Optional[int] = data.get("id", None)
+
+        self.text: Optional[str] = _poll_media.get("text", None)
+        self.emoji: Optional[Union[EmojiParser, str]] = None
+
+        if _poll_media.get("emoji", None):
+            self.emoji = _poll_media["emoji"]["name"]
+            if _poll_media["emoji"]["id"] is not None:
+                self.emoji = EmojiParser(_poll_media["emoji"])
+
+    async def fetch_users(
+        self,
+        after: Optional[Union[Snowflake, int]] = None,
+        limit: Optional[int] = 100,
+    ) -> AsyncIterator["User"]:
+        """
+        Fetch the users who voted for this answer
+
+        Yields
+        -------
+        `User`
+            User object of people who voted
+        """
+        async def _get_history(limit: int, **kwargs):
+            params = {"limit": min(limit, 100)}
+            for key, value in kwargs.items():
+                if value is None:
+                    continue
+                params[key] = int(value)
+
+            return await self._state.query(
+                "GET",
+                f"/channels/{self._message.channel_id}/polls/"
+                f"{self._message.id}/answers/{self.id}",
+                params=params
+            )
+
+        while True:
+            http_limit = 100 if limit is None else min(limit, 100)
+            if http_limit <= 0:
+                break
+
+            r = await _get_history(http_limit, after=after)
+
+            i = 0
+            for i, u in enumerate(r.response):
+                yield User(state=self._state, data=u)
+
+            if i < 100:
+                break
+
+
+class Poll:
+    def __init__(
+        self,
+        *,
+        state: "DiscordAPI",
+        message: "Message",
+        data: dict
+    ):
+        self._state = state
+        self._message: "Message" = message
+
+        self.is_finalized: bool = data["is_finalized"]
+        self.question: str = data["question"]
+        self.answers: list[PollAnswer] = [
+            PollAnswer(state=self._state, message=self._message, data=a)
+            for a in data["answers"]
+        ]
+
+    async def expire(self) -> "Message":
+        """
+        Immediately end the poll, then returns new Message object.
+        This can only be done if you created it
+
+        Returns
+        -------
+        `Message`
+            The message object of the poll
+        """
+        r = await self._state.query(
+            "POST",
+            f"/channels/{self._message.channel_id}/polls/{self._message.id}/expire"
+        )
+
+        return Message(
+            state=self._state,
+            data=r.response,
+            guild=self._message.guild
+        )
 
 
 class MessageReference:
@@ -400,6 +504,26 @@ class PartialMessage(PartialBase):
             f"/channels/{self.channel.id}/messages/{self.id}",
             reason=reason,
             res_method="text"
+        )
+
+    async def expire_poll(self) -> "Message":
+        """
+        Immediately end the poll, then returns new Message object.
+        This can only be done if you created it
+
+        Returns
+        -------
+        `Message`
+            The message object of the poll
+        """
+        r = await self._state.query(
+            "POST",
+            f"/channels/{self.channel_id}/polls/{self.id}/expire"
+        )
+
+        return Message(
+            state=self._state,
+            data=r.response
         )
 
     async def edit(

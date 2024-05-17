@@ -16,6 +16,7 @@ __all__ = (
     "NotFound",
     "Ratelimited",
     "UserMissingPermissions",
+    "AutomodBlock",
 )
 
 
@@ -80,6 +81,11 @@ class NotFound(HTTPException):
 
 class Forbidden(HTTPException):
     """ Raised whenever a HTTP request returns 403 """
+    pass
+
+
+class AutomodBlock(HTTPException):
+    """ Raised whenever a HTTP request was blocked by Discord """
     pass
 
 
