@@ -325,7 +325,7 @@
 <span class="kn">from</span> <span class="nn">.guild</span> <span class="kn">import</span> <span class="n">PartialGuild</span>
 <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
 <span class="kn">from</span> <span class="nn">.mentions</span> <span class="kn">import</span> <span class="n">AllowedMentions</span>
-<span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Attachment</span>
+<span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Attachment</span><span class="p">,</span> <span class="n">Poll</span>
 <span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">MessageResponse</span><span class="p">,</span> <span class="n">DeferResponse</span><span class="p">,</span>
     <span class="n">AutocompleteResponse</span><span class="p">,</span> <span class="n">ModalResponse</span>
@@ -564,6 +564,7 @@
         <span class="n">tts</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="nb">type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ResponseType</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
         <span class="n">allowed_mentions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AllowedMentions</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
+        <span class="n">poll</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Poll</span><span class="p">]</span> <span class="o">=</span> <span class="n">MISSING</span><span class="p">,</span>
         <span class="n">call_after</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MessageResponse</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -633,6 +634,7 @@
             <span class="n">tts</span><span class="o">=</span><span class="n">tts</span><span class="p">,</span>
             <span class="n">attachments</span><span class="o">=</span><span class="n">files</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span>
+            <span class="n">poll</span><span class="o">=</span><span class="n">poll</span><span class="p">,</span>
             <span class="n">allowed_mentions</span><span class="o">=</span><span class="p">(</span>
                 <span class="n">allowed_mentions</span> <span class="ow">or</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">bot</span><span class="o">.</span><span class="n">_default_allowed_mentions</span>

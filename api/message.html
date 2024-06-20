@@ -670,6 +670,25 @@ This can only be done if you created it</p>
 <dd><p><cite>Message</cite>: Returns the message object</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.message.PartialMessage.fetch_poll_voters">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_poll_voters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">answer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PollAnswer</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="user.html#discord_http.user.User" title="discord_http.user.User"><span class="pre">User</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/message.html#PartialMessage.fetch_poll_voters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.message.PartialMessage.fetch_poll_voters" title="Link to this definition">¶</a></dt>
+<dd><p>Fetch the users who voted for this answer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>answer</strong> (<cite>Union[PollAnswer, int]</cite>) – The answer to fetch the voters from</p></li>
+<li><p><strong>after</strong> (<cite>Optional[Union[Snowflake, int]]</cite>) – The user ID to start fetching from</p></li>
+<li><p><strong>limit</strong> (<cite>Optional[int]</cite>) – The amount of users to fetch, defaults to 100.
+<cite>None</cite> will fetch all users.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>User</cite> – User object of people who voted</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.message.PartialMessage.jump_url">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jump_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#discord_http.message.JumpURL" title="discord_http.message.JumpURL"><span class="pre">JumpURL</span></a></em><a class="headerlink" href="#discord_http.message.PartialMessage.jump_url" title="Link to this definition">¶</a></dt>
@@ -749,6 +768,54 @@ This can only be done if you created it</p>
 </dd>
 </dl>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.message.Poll">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.message.</span></span><span class="sig-name descname"><span class="pre">Poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_multiselect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">timedelta</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/message.html#Poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.message.Poll" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.message.Poll.add_answer">
+<span class="sig-name descname"><span class="pre">add_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emoji</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="emoji.html#discord_http.emoji.EmojiParser" title="discord_http.emoji.EmojiParser"><span class="pre">EmojiParser</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PollAnswer</span></span></span><a class="reference internal" href="../_modules/discord_http/message.html#Poll.add_answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.message.Poll.add_answer" title="Link to this definition">¶</a></dt>
+<dd><p>Add an answer to the poll</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<cite>Optional[str]</cite>) – The text of the answer</p></li>
+<li><p><strong>emoji</strong> (<cite>Optional[Union[EmojiParser, str]]</cite>) – The emoji of the answer</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.message.Poll.from_dict">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="../_modules/discord_http/message.html#Poll.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.message.Poll.from_dict" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.message.Poll.remove_answer">
+<span class="sig-name descname"><span class="pre">remove_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">answer_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PollAnswer</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/message.html#Poll.remove_answer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.message.Poll.remove_answer" title="Link to this definition">¶</a></dt>
+<dd><p>Remove an answer from the poll</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>answer</strong> (<cite>Union[PollAnswer, int]</cite>) – The ID to the answer to remove</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – <ul class="simple">
+<li><p>If the answer ID does not exist
+    - If the answer is not a PollAnswer or integer</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.message.Poll.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/discord_http/message.html#Poll.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.message.Poll.to_dict" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -895,12 +962,20 @@ This can only be done if you created it</p>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.edit"><code class="docutils literal notranslate"><span class="pre">PartialMessage.edit()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.expire_poll"><code class="docutils literal notranslate"><span class="pre">PartialMessage.expire_poll()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.fetch"><code class="docutils literal notranslate"><span class="pre">PartialMessage.fetch()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.message.PartialMessage.fetch_poll_voters"><code class="docutils literal notranslate"><span class="pre">PartialMessage.fetch_poll_voters()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.jump_url"><code class="docutils literal notranslate"><span class="pre">PartialMessage.jump_url</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.pin"><code class="docutils literal notranslate"><span class="pre">PartialMessage.pin()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.publish"><code class="docutils literal notranslate"><span class="pre">PartialMessage.publish()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.remove_reaction"><code class="docutils literal notranslate"><span class="pre">PartialMessage.remove_reaction()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.reply"><code class="docutils literal notranslate"><span class="pre">PartialMessage.reply()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.message.PartialMessage.unpin"><code class="docutils literal notranslate"><span class="pre">PartialMessage.unpin()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#discord_http.message.Poll"><code class="docutils literal notranslate"><span class="pre">Poll</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.message.Poll.add_answer"><code class="docutils literal notranslate"><span class="pre">Poll.add_answer()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.message.Poll.from_dict"><code class="docutils literal notranslate"><span class="pre">Poll.from_dict()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.message.Poll.remove_answer"><code class="docutils literal notranslate"><span class="pre">Poll.remove_answer()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.message.Poll.to_dict"><code class="docutils literal notranslate"><span class="pre">Poll.to_dict()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.message.WebhookMessage"><code class="docutils literal notranslate"><span class="pre">WebhookMessage</span></code></a><ul>
