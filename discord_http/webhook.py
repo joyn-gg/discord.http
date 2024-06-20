@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from .channel import PartialChannel
     from .guild import PartialGuild
     from .http import DiscordAPI
-    from .message import WebhookMessage
+    from .message import WebhookMessage, Poll
 
 __all__ = (
     "PartialWebhook",
@@ -68,7 +68,8 @@ class PartialWebhook(PartialBase):
         type: Union[ResponseType, int] = 4,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
         wait: Literal[False],
-        thread_id: Optional[int] = MISSING
+        thread_id: Optional[int] = MISSING,
+        poll: Optional["Poll"] = MISSING,
     ) -> None:
         ...
 
@@ -88,7 +89,8 @@ class PartialWebhook(PartialBase):
         type: Union[ResponseType, int] = 4,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
         wait: bool = True,
-        thread_id: Optional[int] = MISSING
+        thread_id: Optional[int] = MISSING,
+        poll: Optional["Poll"] = MISSING,
     ) -> "WebhookMessage":
         ...
 
@@ -107,7 +109,8 @@ class PartialWebhook(PartialBase):
         type: Union[ResponseType, int] = 4,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
         wait: bool = True,
-        thread_id: Optional[int] = MISSING
+        thread_id: Optional[int] = MISSING,
+        poll: Optional["Poll"] = MISSING,
     ) -> Optional["WebhookMessage"]:
         """
         Send a message with the webhook
@@ -140,6 +143,8 @@ class PartialWebhook(PartialBase):
             Whether to wait for the message to be sent
         thread_id: `Optional[int]`
             Thread ID to send the message to
+        poll: `Optional[Poll]`
+            Poll to send with the message
 
         Returns
         -------
@@ -170,6 +175,7 @@ class PartialWebhook(PartialBase):
             ephemeral=ephemeral,
             view=view,
             type=type,
+            poll=poll,
             allowed_mentions=allowed_mentions
         )
 

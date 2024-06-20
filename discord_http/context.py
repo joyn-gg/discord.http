@@ -23,7 +23,7 @@ from .flag import Permissions
 from .guild import PartialGuild
 from .member import Member
 from .mentions import AllowedMentions
-from .message import Message, Attachment
+from .message import Message, Attachment, Poll
 from .response import (
     MessageResponse, DeferResponse,
     AutocompleteResponse, ModalResponse
@@ -249,6 +249,7 @@ class InteractionResponse:
         tts: Optional[bool] = False,
         type: Union[ResponseType, int] = 4,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
+        poll: Optional[Poll] = MISSING,
         call_after: Optional[Callable] = None
     ) -> MessageResponse:
         """
@@ -318,6 +319,7 @@ class InteractionResponse:
             tts=tts,
             attachments=files,
             type=type,
+            poll=poll,
             allowed_mentions=(
                 allowed_mentions or
                 self._parent.bot._default_allowed_mentions

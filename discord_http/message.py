@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime
 from io import BytesIO
-from typing import TYPE_CHECKING, Optional, Union, AsyncIterator
+from typing import TYPE_CHECKING, Optional, Union, AsyncIterator, Self, Callable
 
 from . import http, utils
 from .embeds import Embed
@@ -29,6 +29,7 @@ __all__ = (
     "MessageReference",
     "PartialMessage",
     "WebhookMessage",
+    "Poll",
 )
 
 
@@ -143,104 +144,194 @@ class PollAnswer:
     def __init__(
         self,
         *,
-        state: "DiscordAPI",
-        message: "Message",
-        data: dict
+        id: int,
+        text: Optional[str] = None,
+        emoji: Optional[Union[EmojiParser, str]] = None
     ):
-        self._state = state
-        self._message: "Message" = message
-        _poll_media = data.get("poll_media", {})
+        self.id: int = id
+        self.text: Optional[str] = text
 
-        self.id: Optional[int] = data.get("id", None)
-
-        self.text: Optional[str] = _poll_media.get("text", None)
         self.emoji: Optional[Union[EmojiParser, str]] = None
+        if isinstance(emoji, str):
+            self.emoji = EmojiParser(emoji)
 
-        if _poll_media.get("emoji", None):
-            self.emoji = _poll_media["emoji"]["name"]
-            if _poll_media["emoji"]["id"] is not None:
-                self.emoji = EmojiParser(_poll_media["emoji"])
+        if self.text is None and self.emoji is None:
+            raise ValueError("Either text or emoji must be provided")
 
-    async def fetch_users(
-        self,
-        after: Optional[Union[Snowflake, int]] = None,
-        limit: Optional[int] = 100,
-    ) -> AsyncIterator["User"]:
-        """
-        Fetch the users who voted for this answer
+        # Data only available when fetching message data
+        self.count: int = 0
+        self.me_voted: bool = False
 
-        Yields
-        -------
-        `User`
-            User object of people who voted
-        """
-        async def _get_history(limit: int, **kwargs):
-            params = {"limit": min(limit, 100)}
-            for key, value in kwargs.items():
-                if value is None:
-                    continue
-                params[key] = int(value)
+    def __repr__(self) -> str:
+        return f"<PollAnswer id={self.id} count={self.count}>"
 
-            return await self._state.query(
-                "GET",
-                f"/channels/{self._message.channel_id}/polls/"
-                f"{self._message.id}/answers/{self.id}",
-                params=params
-            )
+    def __int__(self) -> int:
+        return self.id
 
-        while True:
-            http_limit = 100 if limit is None else min(limit, 100)
-            if http_limit <= 0:
-                break
+    def __str__(self) -> str:
+        return self.text or str(self.emoji)
 
-            r = await _get_history(http_limit, after=after)
+    def to_dict(self) -> dict:
+        data = {
+            "answer_id": self.id,
+            "poll_media": {}
+        }
 
-            i = 0
-            for i, u in enumerate(r.response):
-                yield User(state=self._state, data=u)
+        if self.text:
+            data["poll_media"]["text"] = self.text
+        if isinstance(self.emoji, EmojiParser):
+            data["poll_media"]["emoji"] = self.emoji.to_dict()
 
-            if i < 100:
-                break
+        return data
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Self:
+        emoji = data["poll_media"].get("emoji", None)
+        if emoji:
+            emoji = EmojiParser.from_dict(emoji)
+
+        return cls(
+            id=data["answer_id"],
+            text=data["poll_media"].get("text", None),
+            emoji=emoji
+        )
 
 
 class Poll:
     def __init__(
         self,
         *,
-        state: "DiscordAPI",
-        message: "Message",
-        data: dict
+        text: str,
+        allow_multiselect: bool = False,
+        duration: Optional[Union[timedelta, int]] = None
     ):
-        self._state = state
-        self._message: "Message" = message
+        self.text: Optional[str] = text
 
-        self.is_finalized: bool = data["is_finalized"]
-        self.question: str = data["question"]
-        self.answers: list[PollAnswer] = [
-            PollAnswer(state=self._state, message=self._message, data=a)
-            for a in data["answers"]
-        ]
+        self.allow_multiselect: bool = allow_multiselect
+        self.answers: list[PollAnswer] = []
 
-    async def expire(self) -> "Message":
+        self.duration: Optional[int] = None
+
+        if duration is not None:
+            if isinstance(duration, timedelta):
+                duration = int(duration.total_seconds())
+            self.duration = duration
+
+            if self.duration > timedelta(days=7).total_seconds():
+                raise ValueError("Duration cannot be more than 7 days")
+
+            # Convert to hours int
+            self.duration = int(self.duration / 3600)
+
+        self.layout_type: int = 1  # This is the only layout type available
+
+        # Data only available when fetching message data
+        self.expiry: Optional[datetime] = None
+        self.is_finalized: bool = False
+
+    def __repr__(self) -> str:
+        return f"<Poll text='{self.text}' answers={self.answers}>"
+
+    def __str__(self) -> str:
+        return self.text or ""
+
+    def __len__(self) -> int:
+        return len(self.answers)
+
+    def add_answer(
+        self,
+        *,
+        text: Optional[str] = None,
+        emoji: Optional[Union[EmojiParser, str]] = None
+    ) -> PollAnswer:
         """
-        Immediately end the poll, then returns new Message object.
-        This can only be done if you created it
+        Add an answer to the poll
 
-        Returns
-        -------
-        `Message`
-            The message object of the poll
+        Parameters
+        ----------
+        text: `Optional[str]`
+            The text of the answer
+        emoji: `Optional[Union[EmojiParser, str]]`
+            The emoji of the answer
         """
-        r = await self._state.query(
-            "POST",
-            f"/channels/{self._message.channel_id}/polls/{self._message.id}/expire"
+        if not text and not emoji:
+            raise ValueError("Either text or emoji must be provided")
+
+        answer = PollAnswer(
+            id=len(self.answers) + 1,
+            text=text,
+            emoji=emoji
         )
 
-        return Message(
-            state=self._state,
-            data=r.response,
-            guild=self._message.guild
+        self.answers.append(answer)
+
+        return answer
+
+    def remove_answer(
+        self,
+        answer_id: Union[PollAnswer, int]
+    ) -> None:
+        """
+        Remove an answer from the poll
+
+        Parameters
+        ----------
+        answer: `Union[PollAnswer, int]`
+            The ID to the answer to remove
+
+        Raises
+        ------
+        `ValueError`
+            - If the answer ID does not exist
+            - If the answer is not a PollAnswer or integer
+        """
+        try:
+            self.answers.pop(int(answer_id) - 1)
+        except IndexError:
+            raise ValueError("Answer ID does not exist")
+        except ValueError:
+            raise ValueError("Answer must be an PollAnswer or integer")
+
+        # Make sure IDs are in order
+        for i, a in enumerate(self.answers, start=1):
+            a.id = i
+
+    def to_dict(self) -> dict:
+        return {
+            "question": {"text": self.text},
+            "answers": [a.to_dict() for a in self.answers],
+            "duration": self.duration,
+            "allow_multiselect": self.allow_multiselect,
+            "layout_type": self.layout_type
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Self:
+        poll = cls(
+            text=data["question"]["text"],
+            allow_multiselect=data["allow_multiselect"],
         )
+
+        poll.answers = [PollAnswer.from_dict(a) for a in data["answers"]]
+
+        if data.get("expiry", None):
+            poll.expiry = utils.parse_time(data["expiry"])
+
+        poll.is_finalized = data["results"].get("is_finalized", False)
+
+        for g in data["results"]["answer_counts"]:
+            find_answer = next(
+                (a for a in poll.answers if a.id == g["id"]),
+                None
+            )
+
+            if not find_answer:
+                continue
+
+            find_answer.count = g["count"]
+            find_answer.me_voted = g["me_voted"]
+
+        return poll
 
 
 class MessageReference:
@@ -525,6 +616,92 @@ class PartialMessage(PartialBase):
             state=self._state,
             data=r.response
         )
+
+    async def fetch_poll_voters(
+        self,
+        answer: Union[PollAnswer, int],
+        after: Optional[Union[Snowflake, int]] = None,
+        limit: Optional[int] = 100,
+    ) -> AsyncIterator["User"]:
+        """
+        Fetch the users who voted for this answer
+
+        Parameters
+        ----------
+        answer: `Union[PollAnswer, int]`
+            The answer to fetch the voters from
+        after: `Optional[Union[Snowflake, int]]`
+            The user ID to start fetching from
+        limit: `Optional[int]`
+            The amount of users to fetch, defaults to 100.
+            `None` will fetch all users.
+
+        Yields
+        -------
+        `User`
+            User object of people who voted
+        """
+        answer_id = answer
+        if isinstance(answer, PollAnswer):
+            answer_id = answer.id
+
+        def _resolve_id(entry) -> int:
+            match entry:
+                case x if isinstance(x, Snowflake):
+                    return int(x)
+
+                case x if isinstance(x, int):
+                    return x
+
+                case x if isinstance(x, str):
+                    if not x.isdigit():
+                        raise TypeError("Got a string that was not a Snowflake ID for after")
+                    return int(x)
+
+                case _:
+                    raise TypeError("Got an unknown type for after")
+
+        async def _get_history(limit: int, **kwargs):
+            params = {"limit": min(limit, 100)}
+            for key, value in kwargs.items():
+                if value is None:
+                    continue
+                params[key] = int(value)
+
+            return await self._state.query(
+                "GET",
+                f"/channels/{self.channel_id}/polls/"
+                f"{self.id}/answers/{answer_id}",
+                params=params
+            )
+
+        async def _after_http(http_limit: int, after_id: int, limit: int):
+            r = await _get_history(http_limit, after=after_id)
+            if r.response:
+                if limit is not None:
+                    limit -= len(r.response["users"])
+                after_id = r.response["users"][-1]["id"]
+            return r.response, after_id, limit
+
+        if after:
+            strategy, state = _after_http, _resolve_id(after)
+        else:
+            strategy, state = _after_http, None
+
+        while True:
+            http_limit = 100 if limit is None else min(limit, 100)
+            if http_limit <= 0:
+                break
+
+            strategy: Callable
+            users, state, limit = await strategy(http_limit, state, limit)
+
+            i = 0
+            for i, u in enumerate(users["users"], start=1):
+                yield User(state=self._state, data=u)
+
+            if i < 100:
+                break
 
     async def edit(
         self,
@@ -834,6 +1011,7 @@ class Message(PartialMessage):
         self.pinned: bool = data.get("pinned", False)
         self.mention_everyone: bool = data.get("mention_everyone", False)
         self.tts: bool = data.get("tts", False)
+        self.poll: Optional[Poll] = None
 
         self.embeds: list[Embed] = [
             Embed.from_dict(embed)
@@ -882,6 +1060,9 @@ class Message(PartialMessage):
                 data=data["referenced_message"],
                 guild=self.guild
             )
+
+        if data.get("poll", None):
+            self.poll = Poll.from_dict(data["poll"])
 
         if data.get("edited_timestamp", None):
             self.edited_timestamp = utils.parse_time(data["edited_timestamp"])

@@ -1,6 +1,6 @@
 import re
 
-from typing import TYPE_CHECKING, Union, Optional
+from typing import TYPE_CHECKING, Union, Optional, Self
 
 from . import utils
 from .asset import Asset
@@ -69,6 +69,13 @@ class EmojiParser:
         if self.discord_emoji:
             return self.id
         return None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Self:
+        return cls(
+            f"<{'a' if data.get('animated', None) else ''}:"
+            f"{data['name']}:{data['id']}>"
+        )
 
     @property
     def url(self) -> Optional[str]:

@@ -268,8 +268,12 @@ class Permissions(BaseFlag):
     moderate_members = 1 << 40
     view_creator_monetization_analytics = 1 << 41
     use_soundboard = 1 << 42
+    # create_guild_expressions = 1 << 43
+    # create_events = 1 << 44
     use_external_sounds = 1 << 45
     send_voice_messages = 1 << 46
+    send_polls = 1 << 49
+    use_external_apps = 1 << 50
 
 
 class PermissionOverwrite:

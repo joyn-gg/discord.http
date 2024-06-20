@@ -29,6 +29,7 @@ __all__ = (
     "MentionableSelect",
     "Modal",
     "ModalItem",
+    "Premium",
     "RoleSelect",
     "Select",
     "UserSelect",
@@ -123,6 +124,7 @@ class Button(Item):
         disabled: bool = False,
         row: Optional[int] = None,
         custom_id: Optional[str] = None,
+        sku_id: Optional[Union["Snowflake", int]] = None,
         emoji: Optional[Union[str, dict]] = None,
         url: Optional[str] = None
     ):
@@ -132,6 +134,7 @@ class Button(Item):
         self.disabled: bool = disabled
         self.url: Optional[str] = url
         self.emoji: Optional[Union[str, dict]] = emoji
+        self.sku_id: Optional[Union["Snowflake", int]] = sku_id
         self.style: Union[ButtonStyles, str, int] = style
         self.custom_id: str = (
             str(custom_id)
@@ -162,6 +165,15 @@ class Button(Item):
             "disabled": self.disabled,
         }
 
+        if self.sku_id:
+            if self.style != ButtonStyles.premium:
+                raise ValueError("Cannot have sku_id without premium style")
+
+            # Ignore everything else if sku_id is present
+            # https://discord.com/developers/docs/interactions/message-components#button-object-button-structure
+            payload["sku_id"] = str(int(self.sku_id))
+            return payload
+
         if self.custom_id and self.url:
             raise ValueError("Cannot have both custom_id and url")
 
@@ -183,6 +195,33 @@ class Button(Item):
         return payload
 
 
+class Premium(Button):
+    def __init__(
+        self,
+        *,
+        sku_id: Union["Snowflake", int],
+        row: Optional[int] = None,
+    ):
+        """
+        Button alias for the premium SKU style
+
+        Parameters
+        ----------
+        sku_id: `Union[Snowflake, int]`
+            SKU ID of the premium button
+        row: `Optional[int]`
+            Row of the button
+        """
+        super().__init__(
+            sku_id=sku_id,
+            style=ButtonStyles.premium,
+            row=row
+        )
+
+    def __repr__(self) -> str:
+        return f"<Premium sku_id={self.sku_id}>"
+
+
 class Link(Button):
     def __init__(
         self,
@@ -192,6 +231,20 @@ class Link(Button):
         row: Optional[int] = None,
         emoji: Optional[str] = None
     ):
+        """
+        Button alias for the link style
+
+        Parameters
+        ----------
+        url: `str`
+            URL to open when the button is clicked
+        label: `Optional[str]`
+            Label of the button
+        row: `Optional[int]`
+            Row of the button
+        emoji: `Optional[str]`
+            Emoji shown on the left side of the button
+        """
         super().__init__(
             url=url,
             label=label,

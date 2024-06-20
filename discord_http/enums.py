@@ -260,16 +260,20 @@ class ComponentType(Enum):
 
 
 class ButtonStyles(Enum):
+    # Original names
     primary = 1
     secondary = 2
     success = 3
     danger = 4
     link = 5
+    premium = 6
 
+    # Aliases
     blurple = 1
     grey = 2
     gray = 2
     green = 3
+    destructive = 4
     red = 4
     url = 5
 

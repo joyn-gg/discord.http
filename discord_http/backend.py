@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import logging
 import signal
 
@@ -302,11 +303,13 @@ class DiscordHTTP(Quart):
         Please do not touch this function, unless you know what you're doing
         """
         await self._validate_request()
-
         data = await request.json
 
         if self.debug_events:
-            self.bot.dispatch("raw_interaction", data)
+            self.bot.dispatch(
+                "raw_interaction",
+                copy.deepcopy(data)
+            )
 
         context = self.bot._context(self.bot, data)
         data_type = data.get("type", -1)

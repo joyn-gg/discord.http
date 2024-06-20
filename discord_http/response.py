@@ -12,7 +12,7 @@ from .view import View, Modal
 
 if TYPE_CHECKING:
     from .http import DiscordAPI
-    from .message import MessageReference
+    from .message import MessageReference, Poll
     from .user import PartialUser, User
 
 MISSING = utils.MISSING
@@ -169,6 +169,7 @@ class MessageResponse(BaseResponse):
         tts: Optional[bool] = False,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
         message_reference: Optional["MessageReference"] = MISSING,
+        poll: Optional["Poll"] = MISSING,
         type: Union[ResponseType, int] = 4,
         ephemeral: Optional[bool] = False,
     ):
@@ -182,6 +183,7 @@ class MessageResponse(BaseResponse):
         self.type = type
         self.allowed_mentions = allowed_mentions
         self.message_reference = message_reference
+        self.poll = poll
 
         if file is not MISSING and files is not MISSING:
             raise TypeError("Cannot pass both file and files")
@@ -249,6 +251,9 @@ class MessageResponse(BaseResponse):
                 embed.to_dict() for embed in self.embeds  # type: ignore
                 if isinstance(embed, Embed)
             ]
+
+        if self.poll is not MISSING:
+            output["poll"] = self.poll.to_dict()
 
         if self.view is not MISSING:
             output["components"] = self.view.to_dict()

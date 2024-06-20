@@ -9,7 +9,7 @@ import json
 import logging
 import secrets
 
-from datetime import time
+from datetime import time, timedelta
 from typing import Union, Optional
 
 from discord_http import (
@@ -20,7 +20,8 @@ from discord_http import (
     errors, Permissions, Colour,
     utils, VoiceChannel, Select,
     TextStyles, User, UserSelect, tasks,
-    TextChannel, Attachment, PermissionOverwrite
+    TextChannel, Attachment, PermissionOverwrite,
+    Poll
 )
 
 with open("./config.json") as f:
@@ -130,6 +131,37 @@ async def test_reply(ctx: Context):
 async def test_remove_command(ctx: Context):
     client.remove_command(test_reply)
     return ctx.response.send_message("Removed command")
+
+
+@client.command()
+async def test_poll(ctx: Context):
+    """ Create poll for testing """
+    poll = Poll(
+        text="Is this a test?",
+        duration=timedelta(days=1)
+    )
+
+    poll.add_answer(text="Yes", emoji="👍")
+    poll.add_answer(text="No")
+
+    async def call_after():
+        await asyncio.sleep(5)
+        # Time for me to vote
+        msg = await ctx.original_response()
+
+        for a in msg.poll.answers:
+            if a.count == 0:
+                continue
+            async for u in msg.fetch_poll_voters(a):
+                print(repr(u))
+
+        await msg.expire_poll()
+
+    return ctx.response.send_message(
+        "Nice poll test incoming!",
+        poll=poll,
+        call_after=call_after
+    )
 
 
 @client.command()

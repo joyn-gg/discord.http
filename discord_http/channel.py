@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from .guild import PartialGuild
     from .http import DiscordAPI
     from .invite import Invite
-    from .message import PartialMessage, Message
+    from .message import PartialMessage, Message, Poll
     from .user import PartialUser, User
 
 MISSING = utils.MISSING
@@ -283,6 +283,7 @@ class PartialChannel(PartialBase):
         view: Optional[View] = MISSING,
         tts: Optional[bool] = False,
         type: Union[ResponseType, int] = 4,
+        poll: Optional["Poll"] = MISSING,
         allowed_mentions: Optional[AllowedMentions] = MISSING,
     ) -> "Message":
         """
@@ -308,6 +309,8 @@ class PartialChannel(PartialBase):
             The type of response to the message
         allowed_mentions: `Optional[AllowedMentions]`
             The allowed mentions for the message
+        poll: `Optional[Poll]`
+            The poll to be sent
 
         Returns
         -------
@@ -323,6 +326,7 @@ class PartialChannel(PartialBase):
             view=view,
             tts=tts,
             type=type,
+            poll=poll,
             allowed_mentions=allowed_mentions,
         )
 
@@ -1003,8 +1007,9 @@ class PartialChannel(PartialBase):
             Get messages after this message
         around: `Optional[Union[datetime, Message, Snowflake, int]]`
             Get messages around this message
-        limit: `int`
-            The maximum amount of messages to fetch
+        limit: `Optional[int]`
+            The maximum amount of messages to fetch.
+            `None` will fetch all users.
 
         Yields
         ------
@@ -1013,9 +1018,6 @@ class PartialChannel(PartialBase):
         """
         def _resolve_id(entry) -> int:
             match entry:
-                case x if isinstance(x, Message):
-                    return x.id
-
                 case x if isinstance(x, Snowflake):
                     return int(x)
 
