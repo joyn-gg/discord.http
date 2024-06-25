@@ -169,6 +169,9 @@ class Entitlements(PartialEntitlements):
     def __repr__(self) -> str:
         return f"<Entitlements id={self.id} sku={self.sku} type={self.type}>"
 
+    def __str__(self) -> str:
+        return f"{self.sku}"
+
     def _from_data(self, data: dict):
         if data.get("user_id", None):
             self.user = PartialUser(state=self._state, id=int(data["user_id"]))

@@ -3,7 +3,8 @@ import importlib
 import inspect
 import logging
 
-from typing import Dict, Optional, Any, Callable, Union
+from datetime import datetime
+from typing import Dict, Optional, Any, Callable, Union, AsyncIterator
 
 from . import utils
 from .backend import DiscordHTTP
@@ -1193,10 +1194,10 @@ class Client:
         sku_ids: Optional[list[int]] = None,
         before: Optional[int] = None,
         after: Optional[int] = None,
-        limit: int = 100,
+        limit: Optional[int] = 100,
         guild_id: Optional[int] = None,
         exclude_ended: bool = False
-    ) -> list[Entitlements]:
+    ) -> AsyncIterator[Entitlements]:
         """
         Fetches a list of entitlement objects with optional filters.
 
@@ -1212,6 +1213,7 @@ class Client:
             Only show entitlements after this entitlement ID.
         limit: `int`
             Limit the amount of entitlements to fetch.
+            Use `None` to fetch all entitlements.
         guild_id: `Optional[int]`
             Show entitlements for a specific guild ID.
         exclude_ended: `bool`
@@ -1219,7 +1221,7 @@ class Client:
 
         Returns
         -------
-        `list[Entitlements]`
+        `AsyncIterator[Entitlements]`
             The entitlement objects.
         """
         params: dict[str, Any] = {
@@ -1230,25 +1232,82 @@ class Client:
             params["user_id"] = int(user_id)
         if sku_ids is not None:
             params["sku_ids"] = ",".join([str(int(g)) for g in sku_ids])
-        if before is not None:
-            params["before"] = int(before)
-        if after is not None:
-            params["after"] = int(after)
-        if limit is not None:
-            params["limit"] = min(int(limit), 100)
         if guild_id is not None:
             params["guild_id"] = int(guild_id)
 
-        r = await self.state.query(
-            "GET",
-            f"/applications/{self.application_id}/entitlements",
-            params=params
-        )
+        def _resolve_id(entry) -> int:
+            match entry:
+                case x if isinstance(x, Snowflake):
+                    return int(x)
 
-        return [
-            Entitlements(state=self.state, data=g)
-            for g in r.response
-        ]
+                case x if isinstance(x, int):
+                    return x
+
+                case x if isinstance(x, str):
+                    if not x.isdigit():
+                        raise TypeError("Got a string that was not a Snowflake ID for before/after")
+                    return int(x)
+
+                case x if isinstance(x, datetime):
+                    return utils.time_snowflake(x)
+
+                case _:
+                    raise TypeError("Got an unknown type for before/after")
+
+        async def _get_history(limit: int, **kwargs):
+            params["limit"] = min(limit, 100)
+            for key, value in kwargs.items():
+                if value is None:
+                    continue
+                params[key] = _resolve_id(value)
+
+            return await self.state.query(
+                "GET",
+                f"/applications/{self.application_id}/entitlements",
+                params=params
+            )
+
+        async def _after_http(http_limit: int, after_id: int, limit: int):
+            r = await _get_history(limit=http_limit, after=after_id)
+
+            if r.response:
+                if limit is not None:
+                    limit -= len(r.response)
+                after_id = int(r.response[0]["id"])
+
+            return r.response, after_id, limit
+
+        async def _before_http(http_limit: int, before_id: int, limit: int):
+            r = await _get_history(limit=http_limit, before=before_id)
+
+            if r.response:
+                if limit is not None:
+                    limit -= len(r.response)
+                before_id = int(r.response[-1]["id"])
+
+            return r.response, before_id, limit
+
+        if after:
+            strategy, state = _after_http, _resolve_id(after)
+        elif before:
+            strategy, state = _before_http, _resolve_id(before)
+        else:
+            strategy, state = _before_http, None
+
+        while True:
+            http_limit = 100 if limit is None else min(limit, 100)
+            if http_limit <= 0:
+                break
+
+            strategy: Callable
+            messages, state, limit = await strategy(http_limit, state, limit)
+
+            i = 0
+            for i, ent in enumerate(messages, start=1):
+                yield Entitlements(state=self.state, data=ent)
+
+            if i < 100:
+                break
 
     def get_partial_scheduled_event(
         self,
