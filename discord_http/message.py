@@ -675,7 +675,7 @@ class PartialMessage(PartialBase):
                 params=params
             )
 
-        async def _after_http(http_limit: int, after_id: int, limit: int):
+        async def _after_http(http_limit: int, after_id: Optional[int], limit: Optional[int]):
             r = await _get_history(http_limit, after=after_id)
             if r.response:
                 if limit is not None:
@@ -689,7 +689,7 @@ class PartialMessage(PartialBase):
             strategy, state = _after_http, None
 
         while True:
-            http_limit = 100 if limit is None else min(limit, 100)
+            http_limit: int = 100 if limit is None else min(limit, 100)
             if http_limit <= 0:
                 break
 

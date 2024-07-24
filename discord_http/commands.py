@@ -6,7 +6,7 @@ import re
 from typing import get_args as get_type_args
 from typing import (
     Callable, Dict, TYPE_CHECKING, Union, Type,
-    Generic, TypeVar, Optional, Coroutine, Literal
+    Generic, TypeVar, Optional, Coroutine, Literal, Any
 )
 
 from . import utils
@@ -17,8 +17,12 @@ from .channel import (
     DirectoryChannel, ForumChannel, StoreChannel,
     NewsChannel, BaseChannel, Thread
 )
+from .cooldowns import BucketType, Cooldown, CooldownCache
 from .enums import ApplicationCommandType, CommandOptionType, ChannelType
-from .errors import UserMissingPermissions, BotMissingPermissions, CheckFailed, InvalidMember
+from .errors import (
+    UserMissingPermissions, BotMissingPermissions, CheckFailed,
+    InvalidMember, CommandOnCooldown
+)
 from .flag import Permissions
 from .member import Member
 from .message import Attachment
@@ -245,20 +249,34 @@ class Command:
                     parameter.annotation
                 )
 
-                option = {}
+                option: dict[str, Any] = {}
+                _channel_options: list[ChannelType] = []
 
-                # Check if it's an Optional[Any] type
-                if (
-                    origin in [Union] and
-                    len(parameter.annotation.__args__) == 2 and
-                    parameter.annotation.__args__[-1] is _NoneType
-                ):
-                    origin = parameter.annotation.__args__[0]
+                # Either there is a Union[Any, ...] or Optional[Any] type
+                if origin in [Union]:
 
-                    # Recreate GenericAlias if it's something like Choice[str]
-                    if getattr(origin, "__origin__", None):
-                        parameter.annotation.__args__ = origin.__args__
-                        origin = origin.__origin__
+                    # Check if it's an Optional[Any] type
+                    if (
+                        len(parameter.annotation.__args__) == 2 and
+                        parameter.annotation.__args__[-1] is _NoneType
+                    ):
+                        origin = parameter.annotation.__args__[0]
+
+                        # Recreate GenericAlias if it's something like Choice[str]
+                        if getattr(origin, "__origin__", None):
+                            parameter.annotation.__args__ = origin.__args__
+                            origin = origin.__origin__
+
+                    # If you're using Union[TextChannel, VoiceChannel, ...]
+                    # And also check if all the types are valid channel types
+                    elif all([
+                        g in channel_types
+                        for g in parameter.annotation.__args__
+                    ]):
+                        # And make sure origin triggers channel types
+                        origin = parameter.annotation.__args__[0]
+                        for i in parameter.annotation.__args__:
+                            _channel_options.extend(channel_types[i])
 
                 match origin:
                     case x if x in [Member, User]:
@@ -267,11 +285,18 @@ class Command:
 
                     case x if x in channel_types:
                         ptype = CommandOptionType.channel
-                        option.update({
-                            "channel_types": [
-                                int(i) for i in channel_types[origin]
-                            ]
-                        })
+
+                        if _channel_options:
+                            # Union[] was used for channels
+                            option.update({
+                                "channel_types": [int(i) for i in _channel_options]
+                            })
+
+                        else:
+                            # Just a regular channel type
+                            option.update({
+                                "channel_types": [int(i) for i in channel_types[origin]]
+                            })
 
                     case x if x in [Attachment]:
                         ptype = CommandOptionType.attachment
@@ -335,6 +360,11 @@ class Command:
         if self.id:
             return f"</{self.name}:{self.id}>"
         return f"`/{self.name}`"
+
+    @property
+    def cooldown(self) -> Optional[CooldownCache]:
+        """ `Optional[CooldownCache]`: Returns the cooldown rule of the command if available """
+        return getattr(self.command, "__cooldown__", None)
 
     def mention_sub(self, suffix: str) -> str:
         """
@@ -450,6 +480,18 @@ class Command:
 
         return True
 
+    def _cooldown_checker(self, ctx: "Context") -> None:
+        if self.cooldown is None:
+            return None
+
+        current = ctx.created_at.timestamp()
+        bucket = self.cooldown.get_bucket(ctx, current)
+        retry_after = bucket.update_rate_limit(current)
+
+        if not retry_after:
+            return None  # Not rate limited, good to go
+        raise CommandOnCooldown(bucket, retry_after)
+
     async def run(
         self,
         context: "Context",
@@ -476,6 +518,9 @@ class Command:
         `BotMissingPermissions`
             Bot is missing permissions.
         """
+        # Check custom checks
+        await self._command_checks(context)
+
         # Check user permissions
         perms_user = self._has_permissions(context)
         if perms_user != Permissions(0):
@@ -486,8 +531,8 @@ class Command:
         if perms_bot != Permissions(0):
             raise BotMissingPermissions(perms_bot)
 
-        # Check custom checks
-        await self._command_checks(context)
+        # Check cooldown
+        self._cooldown_checker(context)
 
         if self.cog is not None:
             return await self.command(self.cog, context, *args, **kwargs)
@@ -1061,6 +1106,48 @@ def user_command(
             guild_install=guild_install,
             user_install=user_install
         )
+
+    return decorator
+
+
+def cooldown(
+    rate: int,
+    per: float,
+    *,
+    type: Optional[BucketType] = None
+):
+    """
+    Decorator to set a cooldown for a command.
+
+    Example usage
+
+    .. code-block:: python
+
+        @commands.command()
+        @commands.cooldown(1, 5.0)
+        async def ping(ctx):
+            await ctx.send("Pong!")
+
+    Parameters
+    ----------
+    rate: `int`
+        The number of times the command can be used within the cooldown period
+    per: `float`
+        The cooldown period in seconds
+    key: `Optional[BucketType]`
+        The bucket type to use for the cooldown
+        If not set, it will be using default, which is a global cooldown
+    """
+    if type is None:
+        type = BucketType.default
+    if not isinstance(type, BucketType):
+        raise TypeError("Key must be a BucketType")
+
+    def decorator(func):
+        func.__cooldown__ = CooldownCache(
+            Cooldown(rate, per), type
+        )
+        return func
 
     return decorator
 

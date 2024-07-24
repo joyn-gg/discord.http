@@ -1048,11 +1048,19 @@ class PartialChannel(PartialBase):
                 params=params
             )
 
-        async def _around_http(http_limit: int, around_id: int, limit: int):
+        async def _around_http(
+            http_limit: int,
+            around_id: Optional[int],
+            limit: Optional[int]
+        ):
             r = await _get_history(limit=http_limit, around=around_id)
             return r.response, None, limit
 
-        async def _after_http(http_limit: int, after_id: int, limit: int):
+        async def _after_http(
+            http_limit: int,
+            after_id: Optional[int],
+            limit: Optional[int]
+        ):
             r = await _get_history(limit=http_limit, after=after_id)
 
             if r.response:
@@ -1062,7 +1070,11 @@ class PartialChannel(PartialBase):
 
             return r.response, after_id, limit
 
-        async def _before_http(http_limit: int, before_id: int, limit: int):
+        async def _before_http(
+            http_limit: int,
+            before_id: Optional[int],
+            limit: Optional[int]
+        ):
             r = await _get_history(limit=http_limit, before=before_id)
 
             if r.response:
@@ -1091,7 +1103,7 @@ class PartialChannel(PartialBase):
         from .message import Message
 
         while True:
-            http_limit = 100 if limit is None else min(limit, 100)
+            http_limit: int = 100 if limit is None else min(limit, 100)
             if http_limit <= 0:
                 break
 

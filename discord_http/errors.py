@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from .flag import Permissions
+from .cooldowns import Cooldown
 
 if TYPE_CHECKING:
     from .http import HTTPResponse
@@ -13,6 +14,7 @@ __all__ = (
     "Forbidden",
     "HTTPException",
     "InvalidMember",
+    "CommandOnCooldown",
     "NotFound",
     "Ratelimited",
     "UserMissingPermissions",
@@ -33,6 +35,13 @@ class CheckFailed(DiscordException):
 class InvalidMember(CheckFailed):
     """ Raised whenever a user was found, but not a member of a guild """
     pass
+
+
+class CommandOnCooldown(CheckFailed):
+    def __init__(self, cooldown: Cooldown, retry_after: float):
+        self.cooldown: Cooldown = cooldown
+        self.retry_after: float = retry_after
+        super().__init__(f"Command is on cooldown for {retry_after:.2f}s")
 
 
 class UserMissingPermissions(CheckFailed):

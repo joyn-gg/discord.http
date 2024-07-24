@@ -12,6 +12,7 @@ from .channel import (
     DirectoryChannel, ForumChannel, StoreChannel,
     NewsChannel, BaseChannel
 )
+from .cooldowns import Cooldown
 from .embeds import Embed
 from .entitlements import Entitlements
 from .enums import (
@@ -35,6 +36,7 @@ from .webhook import Webhook
 
 if TYPE_CHECKING:
     from .client import Client
+    from .commands import Command
 
 _log = logging.getLogger(__name__)
 
@@ -468,6 +470,9 @@ class Context:
             data.get("data", {}).get("type", ApplicationCommandType.chat_input)
         )
 
+        # Arguments that gets parsed on runtime
+        self.command: Optional["Command"] = None
+
         self.app_permissions: Permissions = Permissions(int(data.get("app_permissions", 0)))
         self.custom_id: Optional[str] = data.get("data", {}).get("custom_id", None)
         self.select_values: SelectValues = SelectValues.none(self)
@@ -555,6 +560,18 @@ class Context:
     def created_at(self) -> datetime:
         """ `datetime` Returns the time the interaction was created """
         return utils.snowflake_time(self.id)
+
+    @property
+    def cooldown(self) -> Optional[Cooldown]:
+        """ `Optional[Cooldown]` Returns the context cooldown """
+        _cooldown = self.command.cooldown
+
+        if _cooldown is None:
+            return None
+
+        return _cooldown.get_bucket(
+            self, self.created_at.timestamp()
+        )
 
     @property
     def expires_at(self) -> datetime:
