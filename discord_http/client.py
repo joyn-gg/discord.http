@@ -11,9 +11,10 @@ from .backend import DiscordHTTP
 from .channel import PartialChannel, BaseChannel
 from .commands import Command, Interaction, Listener, Cog, SubGroup
 from .context import Context
-from .emoji import PartialEmoji
+from .emoji import PartialEmoji, Emoji
 from .entitlements import PartialSKU, SKU, PartialEntitlements, Entitlements
 from .enums import ApplicationCommandType
+from .file import File
 from .guild import PartialGuild, Guild, PartialScheduledEvent, ScheduledEvent
 from .http import DiscordAPI
 from .invite import PartialInvite, Invite
@@ -836,6 +837,7 @@ class Client:
             Emoji ID to create the partial emoji object with.
         guild_id: `Optional[int]`
             Guild ID of where the emoji comes from.
+            If None, it will get the emoji from the application.
 
         Returns
         -------
@@ -847,6 +849,35 @@ class Client:
             id=emoji_id,
             guild_id=guild_id
         )
+
+    async def fetch_emoji(
+        self,
+        emoji_id: int,
+        *,
+        guild_id: Optional[int] = None
+    ) -> Emoji:
+        """
+        Fetches an emoji object.
+
+        Parameters
+        ----------
+        emoji_id: `int`
+            The ID of the emoji in question
+        guild_id: `Optional[int]`
+            Guild ID of the emoji.
+            If None, it will fetch the emoji from the application
+
+        Returns
+        -------
+        `Emoji`
+            The emoji object
+        """
+        e = self.get_partial_emoji(
+            emoji_id,
+            guild_id=guild_id
+        )
+
+        return await e.fetch()
 
     def get_partial_sticker(
         self,
@@ -1116,6 +1147,53 @@ class Client:
         member = self.get_partial_member(user_id, guild_id)
         return await member.fetch()
 
+    async def fetch_application_emojis(self) -> list[Emoji]:
+        """ `list[Emoji]`: Fetches all emojis available to the application. """
+        r = await self.state.query(
+            "GET",
+            f"/applications/{self.application_id}/emojis"
+        )
+
+        return [
+            Emoji(state=self.state, data=g)
+            for g in r.response
+        ]
+
+    async def create_application_emoji(
+        self,
+        name: str,
+        *,
+        image: Union[File, bytes]
+    ) -> Emoji:
+        """
+        Creates an emoji for the application.
+
+        Parameters
+        ----------
+        name: `str`
+            Name of emoji
+        image: `Union[File, bytes]`
+            The image data to use for the emoji.
+
+        Returns
+        -------
+        `Emoji`
+            The created emoji object.
+        """
+        r = await self.state.query(
+            "POST",
+            f"/applications/{self.application_id}/emojis",
+            json={
+                "name": name,
+                "image": utils.bytes_to_base64(image)
+            }
+        )
+
+        return Emoji(
+            state=self.state,
+            data=r.response
+        )
+
     def get_partial_sku(
         self,
         sku_id: int
@@ -1267,7 +1345,11 @@ class Client:
                 params=params
             )
 
-        async def _after_http(http_limit: int, after_id: int, limit: int):
+        async def _after_http(
+            http_limit: int,
+            after_id: Optional[int],
+            limit: Optional[int]
+        ):
             r = await _get_history(limit=http_limit, after=after_id)
 
             if r.response:
@@ -1277,7 +1359,11 @@ class Client:
 
             return r.response, after_id, limit
 
-        async def _before_http(http_limit: int, before_id: int, limit: int):
+        async def _before_http(
+            http_limit: int,
+            before_id: Optional[int],
+            limit: Optional[int]
+        ):
             r = await _get_history(limit=http_limit, before=before_id)
 
             if r.response:
@@ -1295,7 +1381,7 @@ class Client:
             strategy, state = _before_http, None
 
         while True:
-            http_limit = 100 if limit is None else min(limit, 100)
+            http_limit: int = 100 if limit is None else min(limit, 100)
             if http_limit <= 0:
                 break
 

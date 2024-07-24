@@ -8,8 +8,9 @@ from .object import PartialBase, Snowflake
 from .role import PartialRole
 
 if TYPE_CHECKING:
-    from .guild import PartialGuild, Guild
+    from .guild import PartialGuild
     from .http import DiscordAPI
+    from .user import User
 
 MISSING = utils.MISSING
 
@@ -116,7 +117,7 @@ class PartialEmoji(PartialBase):
         *,
         state: "DiscordAPI",
         id: int,
-        guild_id: Optional[int] = None,
+        guild_id: Optional[int] = None
     ):
         super().__init__(id=int(id))
         self._state = state
@@ -129,10 +130,7 @@ class PartialEmoji(PartialBase):
 
     @property
     def guild(self) -> Optional["PartialGuild"]:
-        """
-        `PartialGuild`: The guild of the member.
-        Returns `None` if guild_id is not defined.
-        """
+        """ `PartialGuild`: The guild of the member. """
         if not self.guild_id:
             return None
 
@@ -143,32 +141,39 @@ class PartialEmoji(PartialBase):
     def url(self) -> str:
         """
         `str`: Returns the URL of the emoji.
+
         It will always be PNG as it's a partial emoji.
         """
         return f"{Asset.BASE}/emojis/{self.id}.png"
 
     async def fetch(self) -> "Emoji":
         """
-        `Emoji`: Fetches the emoji
+        `Emoji`: Fetches the emoji.
 
-        Raises
-        ------
-        ValueError
-            Whenever guild_id is not defined
+        If `guild_id` is not defined, it will fetch the emoji from the application.
         """
-        if not self.guild:
-            raise ValueError("guild_id is not defined")
+        if self.guild_id:
+            r = await self._state.query(
+                "GET",
+                f"/guilds/{self.guild_id}/emojis/{self.id}"
+            )
 
-        r = await self._state.query(
-            "GET",
-            f"/guilds/{self.guild_id}/emojis/{self.id}"
-        )
+            return Emoji(
+                state=self._state,
+                guild=self.guild,
+                data=r.response
+            )
 
-        return Emoji(
-            state=self._state,
-            guild=self.guild,
-            data=r.response
-        )
+        else:
+            r = await self._state.query(
+                "GET",
+                f"/applications/{self._state.application_id}/emojis/{self.id}"
+            )
+
+            return Emoji(
+                state=self._state,
+                data=r.response
+            )
 
     async def delete(
         self,
@@ -178,25 +183,27 @@ class PartialEmoji(PartialBase):
         """
         Deletes the emoji.
 
+        If `guild_id` is not defined, it will delete the emoji from the application.
+
         Parameters
         ----------
         reason: `Optional[str]`
             The reason for deleting the emoji.
-
-        Raises
-        ------
-        ValueError
-            Whenever guild_id is not defined
         """
-        if not self.guild:
-            raise ValueError("guild_id is not defined")
+        if self.guild_id:
+            await self._state.query(
+                "DELETE",
+                f"/guilds/{self.guild.id}/emojis/{self.id}",
+                res_method="text",
+                reason=reason
+            )
 
-        await self._state.query(
-            "DELETE",
-            f"/guilds/{self.guild.id}/emojis/{self.id}",
-            res_method="text",
-            reason=reason
-        )
+        else:
+            await self._state.query(
+                "DELETE",
+                f"/applications/{self._state.application_id}/emojis/{self.id}",
+                res_method="text"
+            )
 
     async def edit(
         self,
@@ -213,9 +220,9 @@ class PartialEmoji(PartialBase):
         name: `Optional[str]`
             The new name of the emoji.
         roles: `Optional[list[Union[PartialRole, int]]]`
-            Roles that are allowed to use the emoji.
+            Roles that are allowed to use the emoji. (Only for guilds)
         reason: `Optional[str]`
-            The reason for editing the emoji.
+            The reason for editing the emoji. (Only for guilds)
 
         Returns
         -------
@@ -227,9 +234,6 @@ class PartialEmoji(PartialBase):
         ValueError
             Whenever guild_id is not defined
         """
-        if not self.guild:
-            raise ValueError("guild_id is not defined")
-
         payload = {}
 
         if name is not MISSING:
@@ -241,18 +245,31 @@ class PartialEmoji(PartialBase):
                 if isinstance(r, Snowflake)
             ]
 
-        r = await self._state.query(
-            "PATCH",
-            f"/guilds/{self.guild.id}/emojis/{self.id}",
-            json=payload,
-            reason=reason
-        )
+        if self.guild_id:
+            r = await self._state.query(
+                "PATCH",
+                f"/guilds/{self.guild.id}/emojis/{self.id}",
+                json=payload,
+                reason=reason
+            )
 
-        return Emoji(
-            state=self._state,
-            guild=self.guild,
-            data=r.response
-        )
+            return Emoji(
+                state=self._state,
+                guild=self.guild,
+                data=r.response
+            )
+
+        else:
+            if not payload.get("name", None):
+                raise ValueError(
+                    "name is required when guild_id for emoji is not defined"
+                )
+
+            r = await self._state.query(
+                "PATCH",
+                f"/applications/{self._state.application_id}/emojis/{self.id}",
+                json={"name": payload["name"]},
+            )
 
 
 class Emoji(PartialEmoji):
@@ -260,28 +277,39 @@ class Emoji(PartialEmoji):
         self,
         *,
         state: "DiscordAPI",
-        guild: Union["PartialGuild", "Guild"],
-        data: dict
+        data: dict,
+        guild: Optional["PartialGuild"] = None,
     ):
         super().__init__(
             state=state,
             id=int(data["id"]),
-            guild_id=guild.id
+            guild_id=guild.id if guild else None
         )
 
         self.name: str = data["name"]
-        self.animated: bool = data["animated"]
-        self.available: bool = data["available"]
+        self.animated: bool = data.get("animated", False)
+        self.available: bool = data.get("available", True)
+        self.require_colons: bool = data.get("require_colons", True)
+        self.managed: bool = data.get("managed", False)
+
+        self.user: Optional["User"] = None
         self.roles: list[PartialRole] = [
             PartialRole(state=state, id=r, guild_id=guild.id)
-            for r in data["roles"]
+            for r in data.get("roles", [])
         ]
+
+        self._from_data(data)
 
     def __repr__(self) -> str:
         return f"<Emoji id={self.id} name='{self.name}' animated={self.animated}>"
 
     def __str__(self) -> str:
         return f"<{'a' if self.animated else ''}:{self.name}:{self.id}>"
+
+    def _from_data(self, data: dict):
+        if data.get("user", None):
+            from .user import User
+            self.user = User(state=self._state, data=data["user"])
 
     @property
     def url(self) -> str:
