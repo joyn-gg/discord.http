@@ -13,6 +13,7 @@ Here are all the things you can find on discord.http, packed in one page
   ../api/colour
   ../api/commands
   ../api/context
+  ../api/cooldowns
   ../api/embeds
   ../api/emoji
   ../api/entitlements

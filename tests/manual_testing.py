@@ -84,6 +84,22 @@ async def test_loop_static_before():
 
 
 @client.command()
+@commands.cooldown(2, 10.0, type=commands.BucketType.user)
+async def test_cooldown(ctx: Context):
+    print(ctx.command.cooldown._cache)
+    return ctx.response.send_message("Not on cooldown yet...")
+
+
+@client.command()
+async def test_multi_channel(
+    ctx: Context,
+    channel: Union[TextChannel, VoiceChannel]
+):
+    """ Test multiple channel types """
+    return ctx.response.send_message(f"You chose {channel}")
+
+
+@client.command()
 async def test_background_task(ctx: Context, toggle: bool):
     if toggle:
         test_loop.start()

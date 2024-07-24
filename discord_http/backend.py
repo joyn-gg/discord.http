@@ -173,6 +173,9 @@ class DiscordHTTP(Quart):
 
         cmd, _ = self._dig_subcommand(cmd, data)
 
+        # Now that the command is found, let context know about it
+        ctx.command = cmd
+
         try:
             payload = await cmd._make_context_and_run(
                 context=ctx
