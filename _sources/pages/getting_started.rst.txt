@@ -31,7 +31,7 @@ After that, you need to install the library, you can do so by using ``pip instal
 
 Discord bot
 ~~~~~~~~~~~
-If you do not have a bot already on Discord, mext step is to create one. (Can also use an existing bot if you have one)
+If you do not have a bot already on Discord, next step is to create one. (Can also use an existing bot if you have one)
 You can do so by going to the `Discord developer page <https://discord.com/developers/applications>`_.
 
 .. image:: ../_static/images/getting_started/discord_portal_intro.png

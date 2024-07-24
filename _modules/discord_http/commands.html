@@ -14,11 +14,11 @@
     </script>
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
         <title>discord_http.commands - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
     
     
 
@@ -97,19 +97,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -150,7 +137,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -230,6 +217,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/colour.html">Colour</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/commands.html">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/context.html">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/cooldowns.html">Cooldowns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/emoji.html">Emoji</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/entitlements.html">Entitlements</a></li>
@@ -308,7 +296,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_args</span> <span class="k">as</span> <span class="n">get_type_args</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span>
-    <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Coroutine</span><span class="p">,</span> <span class="n">Literal</span>
+    <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Coroutine</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Any</span>
 <span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span>
@@ -319,8 +307,12 @@
     <span class="n">DirectoryChannel</span><span class="p">,</span> <span class="n">ForumChannel</span><span class="p">,</span> <span class="n">StoreChannel</span><span class="p">,</span>
     <span class="n">NewsChannel</span><span class="p">,</span> <span class="n">BaseChannel</span><span class="p">,</span> <span class="n">Thread</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.cooldowns</span> <span class="kn">import</span> <span class="n">BucketType</span><span class="p">,</span> <span class="n">Cooldown</span><span class="p">,</span> <span class="n">CooldownCache</span>
 <span class="kn">from</span> <span class="nn">.enums</span> <span class="kn">import</span> <span class="n">ApplicationCommandType</span><span class="p">,</span> <span class="n">CommandOptionType</span><span class="p">,</span> <span class="n">ChannelType</span>
-<span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="n">UserMissingPermissions</span><span class="p">,</span> <span class="n">BotMissingPermissions</span><span class="p">,</span> <span class="n">CheckFailed</span><span class="p">,</span> <span class="n">InvalidMember</span>
+<span class="kn">from</span> <span class="nn">.errors</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">UserMissingPermissions</span><span class="p">,</span> <span class="n">BotMissingPermissions</span><span class="p">,</span> <span class="n">CheckFailed</span><span class="p">,</span>
+    <span class="n">InvalidMember</span><span class="p">,</span> <span class="n">CommandOnCooldown</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.flag</span> <span class="kn">import</span> <span class="n">Permissions</span>
 <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">Member</span>
 <span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Attachment</span>
@@ -561,20 +553,34 @@
                     <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span>
                 <span class="p">)</span>
 
-                <span class="n">option</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">option</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">_channel_options</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ChannelType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-                <span class="c1"># Check if it&#39;s an Optional[Any] type</span>
-                <span class="k">if</span> <span class="p">(</span>
-                    <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Union</span><span class="p">]</span> <span class="ow">and</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span>
-                    <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="n">_NoneType</span>
-                <span class="p">):</span>
-                    <span class="n">origin</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1"># Either there is a Union[Any, ...] or Optional[Any] type</span>
+                <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Union</span><span class="p">]:</span>
 
-                    <span class="c1"># Recreate GenericAlias if it&#39;s something like Choice[str]</span>
-                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="s2">&quot;__origin__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__args__</span>
-                        <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__origin__</span>
+                    <span class="c1"># Check if it&#39;s an Optional[Any] type</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span>
+                        <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="n">_NoneType</span>
+                    <span class="p">):</span>
+                        <span class="n">origin</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                        <span class="c1"># Recreate GenericAlias if it&#39;s something like Choice[str]</span>
+                        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="s2">&quot;__origin__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+                            <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__args__</span>
+                            <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">__origin__</span>
+
+                    <span class="c1"># If you&#39;re using Union[TextChannel, VoiceChannel, ...]</span>
+                    <span class="c1"># And also check if all the types are valid channel types</span>
+                    <span class="k">elif</span> <span class="nb">all</span><span class="p">([</span>
+                        <span class="n">g</span> <span class="ow">in</span> <span class="n">channel_types</span>
+                        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span>
+                    <span class="p">]):</span>
+                        <span class="c1"># And make sure origin triggers channel types</span>
+                        <span class="n">origin</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">parameter</span><span class="o">.</span><span class="n">annotation</span><span class="o">.</span><span class="n">__args__</span><span class="p">:</span>
+                            <span class="n">_channel_options</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">channel_types</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
                 <span class="k">match</span> <span class="n">origin</span><span class="p">:</span>
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
@@ -583,11 +589,18 @@
 
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">:</span>
                         <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">channel</span>
-                        <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                            <span class="s2">&quot;channel_types&quot;</span><span class="p">:</span> <span class="p">[</span>
-                                <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">[</span><span class="n">origin</span><span class="p">]</span>
-                            <span class="p">]</span>
-                        <span class="p">})</span>
+
+                        <span class="k">if</span> <span class="n">_channel_options</span><span class="p">:</span>
+                            <span class="c1"># Union[] was used for channels</span>
+                            <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                                <span class="s2">&quot;channel_types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_channel_options</span><span class="p">]</span>
+                            <span class="p">})</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># Just a regular channel type</span>
+                            <span class="n">option</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                                <span class="s2">&quot;channel_types&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">channel_types</span><span class="p">[</span><span class="n">origin</span><span class="p">]]</span>
+                            <span class="p">})</span>
 
                     <span class="k">case</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Attachment</span><span class="p">]:</span>
                         <span class="n">ptype</span> <span class="o">=</span> <span class="n">CommandOptionType</span><span class="o">.</span><span class="n">attachment</span>
@@ -651,6 +664,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;`/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">`&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">cooldown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CooldownCache</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; `Optional[CooldownCache]`: Returns the cooldown rule of the command if available &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">,</span> <span class="s2">&quot;__cooldown__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Command.mention_sub">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Command.mention_sub">[docs]</a>
@@ -769,6 +787,18 @@
 
         <span class="k">return</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">_cooldown_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="s2">&quot;Context&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooldown</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">current</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">created_at</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cooldown</span><span class="o">.</span><span class="n">get_bucket</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
+        <span class="n">retry_after</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">update_rate_limit</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">retry_after</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Not rate limited, good to go</span>
+        <span class="k">raise</span> <span class="n">CommandOnCooldown</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">retry_after</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Command.run">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.Command.run">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
@@ -797,6 +827,9 @@
 <span class="sd">        `BotMissingPermissions`</span>
 <span class="sd">            Bot is missing permissions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check custom checks</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command_checks</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
         <span class="c1"># Check user permissions</span>
         <span class="n">perms_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_permissions</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">perms_user</span> <span class="o">!=</span> <span class="n">Permissions</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
@@ -807,8 +840,8 @@
         <span class="k">if</span> <span class="n">perms_bot</span> <span class="o">!=</span> <span class="n">Permissions</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">BotMissingPermissions</span><span class="p">(</span><span class="n">perms_bot</span><span class="p">)</span>
 
-        <span class="c1"># Check custom checks</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command_checks</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="c1"># Check cooldown</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cooldown_checker</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cog</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cog</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1436,6 +1469,48 @@
 
 
 
+<span class="k">def</span> <span class="nf">cooldown</span><span class="p">(</span>
+    <span class="n">rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">per</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BucketType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator to set a cooldown for a command.</span>
+
+<span class="sd">    Example usage</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        @commands.command()</span>
+<span class="sd">        @commands.cooldown(1, 5.0)</span>
+<span class="sd">        async def ping(ctx):</span>
+<span class="sd">            await ctx.send(&quot;Pong!&quot;)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rate: `int`</span>
+<span class="sd">        The number of times the command can be used within the cooldown period</span>
+<span class="sd">    per: `float`</span>
+<span class="sd">        The cooldown period in seconds</span>
+<span class="sd">    key: `Optional[BucketType]`</span>
+<span class="sd">        The bucket type to use for the cooldown</span>
+<span class="sd">        If not set, it will be using default, which is a global cooldown</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">type</span> <span class="o">=</span> <span class="n">BucketType</span><span class="o">.</span><span class="n">default</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">BucketType</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Key must be a BucketType&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">func</span><span class="o">.</span><span class="n">__cooldown__</span> <span class="o">=</span> <span class="n">CooldownCache</span><span class="p">(</span>
+            <span class="n">Cooldown</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">per</span><span class="p">),</span> <span class="nb">type</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
 <div class="viewcode-block" id="message_command">
 <a class="viewcode-back" href="../../api/commands.html#discord_http.commands.message_command">[docs]</a>
 <span class="k">def</span> <span class="nf">message_command</span><span class="p">(</span>
@@ -1964,6 +2039,6 @@
 </div><script src="../../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

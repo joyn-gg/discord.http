@@ -14,11 +14,11 @@
     </script>
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
         <title>discord_http.channel - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
     
     
 
@@ -97,19 +97,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -150,7 +137,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -230,6 +217,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/colour.html">Colour</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/commands.html">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/context.html">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/cooldowns.html">Cooldowns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/emoji.html">Emoji</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/entitlements.html">Entitlements</a></li>
@@ -1411,11 +1399,19 @@
                 <span class="n">params</span><span class="o">=</span><span class="n">params</span>
             <span class="p">)</span>
 
-        <span class="k">async</span> <span class="k">def</span> <span class="nf">_around_http</span><span class="p">(</span><span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">around_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">_around_http</span><span class="p">(</span>
+            <span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">around_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+        <span class="p">):</span>
             <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_get_history</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">http_limit</span><span class="p">,</span> <span class="n">around</span><span class="o">=</span><span class="n">around_id</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">limit</span>
 
-        <span class="k">async</span> <span class="k">def</span> <span class="nf">_after_http</span><span class="p">(</span><span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">after_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">_after_http</span><span class="p">(</span>
+            <span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">after_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+        <span class="p">):</span>
             <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_get_history</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">http_limit</span><span class="p">,</span> <span class="n">after</span><span class="o">=</span><span class="n">after_id</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">:</span>
@@ -1425,7 +1421,11 @@
 
             <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">,</span> <span class="n">after_id</span><span class="p">,</span> <span class="n">limit</span>
 
-        <span class="k">async</span> <span class="k">def</span> <span class="nf">_before_http</span><span class="p">(</span><span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">before_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">_before_http</span><span class="p">(</span>
+            <span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">before_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+            <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+        <span class="p">):</span>
             <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_get_history</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">http_limit</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="n">before_id</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">:</span>
@@ -1454,7 +1454,7 @@
         <span class="kn">from</span> <span class="nn">.message</span> <span class="kn">import</span> <span class="n">Message</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">http_limit</span> <span class="o">=</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">min</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">http_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">min</span><span class="p">(</span><span class="n">limit</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">http_limit</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">break</span>
 
@@ -2242,6 +2242,6 @@
 </div><script src="../../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

@@ -15,11 +15,11 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Colour" href="colour.html" /><link rel="prev" title="Channel" href="channel.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
         <title>Client - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
 
@@ -98,19 +98,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,7 +138,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -231,6 +218,7 @@
 <li class="toctree-l2"><a class="reference internal" href="colour.html">Colour</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cooldowns.html">Cooldowns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emoji.html">Emoji</a></li>
 <li class="toctree-l2"><a class="reference internal" href="entitlements.html">Entitlements</a></li>
@@ -393,6 +381,26 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.create_application_emoji">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_application_emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="file.html#discord_http.file.File" title="discord_http.file.File"><span class="pre">File</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="emoji.html#discord_http.emoji.Emoji" title="discord_http.emoji.Emoji"><span class="pre">Emoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.create_application_emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.create_application_emoji" title="Link to this definition">¶</a></dt>
+<dd><p>Creates an emoji for the application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<cite>str</cite>) – Name of emoji</p></li>
+<li><p><strong>image</strong> (<cite>Union[File, bytes]</cite>) – The image data to use for the emoji.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created emoji object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Emoji</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.client.Client.dispatch">
 <span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/client.html#Client.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.dispatch" title="Link to this definition">¶</a></dt>
 <dd><p>Dispatches an event to all listeners of that event.</p>
@@ -405,6 +413,12 @@
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_application_emojis">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_application_emojis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="emoji.html#discord_http.emoji.Emoji" title="discord_http.emoji.Emoji"><span class="pre">Emoji</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_application_emojis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_application_emojis" title="Link to this definition">¶</a></dt>
+<dd><p><cite>list[Emoji]</cite>: Fetches all emojis available to the application.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -423,6 +437,27 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>BaseChannel</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.client.Client.fetch_emoji">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emoji_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="emoji.html#discord_http.emoji.Emoji" title="discord_http.emoji.Emoji"><span class="pre">Emoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/client.html#Client.fetch_emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.client.Client.fetch_emoji" title="Link to this definition">¶</a></dt>
+<dd><p>Fetches an emoji object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emoji_id</strong> (<cite>int</cite>) – The ID of the emoji in question</p></li>
+<li><p><strong>guild_id</strong> (<cite>Optional[int]</cite>) – Guild ID of the emoji.
+If None, it will fetch the emoji from the application</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The emoji object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Emoji</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -671,7 +706,8 @@ if some interaction Custom IDs are regex.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emoji_id</strong> (<cite>int</cite>) – Emoji ID to create the partial emoji object with.</p></li>
-<li><p><strong>guild_id</strong> (<cite>Optional[int]</cite>) – Guild ID of where the emoji comes from.</p></li>
+<li><p><strong>guild_id</strong> (<cite>Optional[int]</cite>) – Guild ID of where the emoji comes from.
+If None, it will get the emoji from the application.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1230,8 +1266,11 @@ to then sync them all to Discord API.</p>
 <li><a class="reference internal" href="#discord_http.client.Client.add_interaction"><code class="docutils literal notranslate"><span class="pre">Client.add_interaction()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.add_listener"><code class="docutils literal notranslate"><span class="pre">Client.add_listener()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.command"><code class="docutils literal notranslate"><span class="pre">Client.command()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.create_application_emoji"><code class="docutils literal notranslate"><span class="pre">Client.create_application_emoji()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.dispatch"><code class="docutils literal notranslate"><span class="pre">Client.dispatch()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_application_emojis"><code class="docutils literal notranslate"><span class="pre">Client.fetch_application_emojis()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_channel"><code class="docutils literal notranslate"><span class="pre">Client.fetch_channel()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.client.Client.fetch_emoji"><code class="docutils literal notranslate"><span class="pre">Client.fetch_emoji()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_entitlement"><code class="docutils literal notranslate"><span class="pre">Client.fetch_entitlement()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_entitlement_list"><code class="docutils literal notranslate"><span class="pre">Client.fetch_entitlement_list()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.client.Client.fetch_guild"><code class="docutils literal notranslate"><span class="pre">Client.fetch_guild()</span></code></a></li>
@@ -1295,6 +1334,6 @@ to then sync them all to Discord API.</p>
 </div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

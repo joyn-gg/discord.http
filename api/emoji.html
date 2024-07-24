@@ -15,11 +15,11 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Entitlements" href="entitlements.html" /><link rel="prev" title="Embeds" href="embeds.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
         <title>Emoji - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
 
@@ -98,19 +98,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,7 +138,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -231,6 +218,7 @@
 <li class="toctree-l2"><a class="reference internal" href="colour.html">Colour</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cooldowns.html">Cooldowns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embeds.html">Embeds</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Emoji</a></li>
 <li class="toctree-l2"><a class="reference internal" href="entitlements.html">Entitlements</a></li>
@@ -312,7 +300,7 @@
 <span id="discord-http-emoji-module"></span><h2>discord_http.emoji module<a class="headerlink" href="#module-discord_http.emoji" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="discord_http.emoji.Emoji">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.emoji.</span></span><span class="sig-name descname"><span class="pre">Emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="guild.html#discord_http.guild.PartialGuild" title="discord_http.guild.PartialGuild"><span class="pre">PartialGuild</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="guild.html#discord_http.guild.Guild" title="discord_http.guild.Guild"><span class="pre">Guild</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.emoji.</span></span><span class="sig-name descname"><span class="pre">Emoji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guild</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="guild.html#discord_http.guild.PartialGuild" title="discord_http.guild.PartialGuild"><span class="pre">PartialGuild</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/emoji.html#Emoji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.Emoji" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#discord_http.emoji.PartialEmoji" title="discord_http.emoji.PartialEmoji"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialEmoji</span></code></a></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.emoji.Emoji.url">
@@ -386,12 +374,10 @@ to either a normal emoji or a Discord emoji automatically.</p>
 <dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.delete">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.delete" title="Link to this definition">¶</a></dt>
 <dd><p>Deletes the emoji.</p>
+<p>If <cite>guild_id</cite> is not defined, it will delete the emoji from the application.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for deleting the emoji.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – Whenever guild_id is not defined</p>
 </dd>
 </dl>
 </dd></dl>
@@ -404,8 +390,8 @@ to either a normal emoji or a Discord emoji automatically.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<cite>Optional[str]</cite>) – The new name of the emoji.</p></li>
-<li><p><strong>roles</strong> (<cite>Optional[list[Union[PartialRole, int]]]</cite>) – Roles that are allowed to use the emoji.</p></li>
-<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for editing the emoji.</p></li>
+<li><p><strong>roles</strong> (<cite>Optional[list[Union[PartialRole, int]]]</cite>) – Roles that are allowed to use the emoji. (Only for guilds)</p></li>
+<li><p><strong>reason</strong> (<cite>Optional[str]</cite>) – The reason for editing the emoji. (Only for guilds)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -423,19 +409,14 @@ to either a normal emoji or a Discord emoji automatically.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.fetch">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.emoji.Emoji" title="discord_http.emoji.Emoji"><span class="pre">Emoji</span></a></span></span><a class="reference internal" href="../_modules/discord_http/emoji.html#PartialEmoji.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.emoji.PartialEmoji.fetch" title="Link to this definition">¶</a></dt>
-<dd><p><cite>Emoji</cite>: Fetches the emoji</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – Whenever guild_id is not defined</p>
-</dd>
-</dl>
+<dd><p><cite>Emoji</cite>: Fetches the emoji.</p>
+<p>If <cite>guild_id</cite> is not defined, it will fetch the emoji from the application.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.guild">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">guild</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="guild.html#discord_http.guild.PartialGuild" title="discord_http.guild.PartialGuild"><span class="pre">PartialGuild</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.emoji.PartialEmoji.guild" title="Link to this definition">¶</a></dt>
-<dd><p>The guild of the member.
-Returns <cite>None</cite> if guild_id is not defined.</p>
+<dd><p>The guild of the member.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>PartialGuild</cite></p>
@@ -446,8 +427,8 @@ Returns <cite>None</cite> if guild_id is not defined.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.emoji.PartialEmoji.url">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#discord_http.emoji.PartialEmoji.url" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the URL of the emoji.
-It will always be PNG as it’s a partial emoji.</p>
+<dd><p>Returns the URL of the emoji.</p>
+<p>It will always be PNG as it’s a partial emoji.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><cite>str</cite></p>
@@ -553,6 +534,6 @@ It will always be PNG as it’s a partial emoji.</p>
 </div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

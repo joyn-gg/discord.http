@@ -13,13 +13,13 @@
         gtag('js', new Date());
         gtag('config', 'G-HVZQ2H4TGR');
     </script>
-    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Embeds" href="embeds.html" /><link rel="prev" title="Commands" href="commands.html" />
+    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Cooldowns" href="cooldowns.html" /><link rel="prev" title="Commands" href="commands.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
         <title>Context - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
 
@@ -98,19 +98,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,7 +138,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -231,6 +218,7 @@
 <li class="toctree-l2"><a class="reference internal" href="colour.html">Colour</a></li>
 <li class="toctree-l2"><a class="reference internal" href="commands.html">Commands</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cooldowns.html">Cooldowns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emoji.html">Emoji</a></li>
 <li class="toctree-l2"><a class="reference internal" href="entitlements.html">Entitlements</a></li>
@@ -314,6 +302,12 @@
 <dt class="sig sig-object py" id="discord_http.context.Context">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.context.</span></span><span class="sig-name descname"><span class="pre">Context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#discord_http.client.Client" title="discord_http.client.Client"><span class="pre">Client</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/context.html#Context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.context.Context" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.context.Context.cooldown">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cooldown</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="cooldowns.html#discord_http.cooldowns.Cooldown" title="discord_http.cooldowns.Cooldown"><span class="pre">Cooldown</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.context.Context.cooldown" title="Link to this definition">¶</a></dt>
+<dd><p><cite>Optional[Cooldown]</cite> Returns the context cooldown</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="discord_http.context.Context.created_at">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">created_at</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#discord_http.context.Context.created_at" title="Link to this definition">¶</a></dt>
@@ -535,12 +529,12 @@ Discord Developer portal Interaction URL</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="embeds.html">
+          <a class="next-page" href="cooldowns.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Embeds</div>
+                <div class="title">Cooldowns</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -588,6 +582,7 @@ Discord Developer portal Interaction URL</p>
 <li><a class="reference internal" href="#">Context</a><ul>
 <li><a class="reference internal" href="#module-discord_http.context">discord_http.context module</a><ul>
 <li><a class="reference internal" href="#discord_http.context.Context"><code class="docutils literal notranslate"><span class="pre">Context</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.context.Context.cooldown"><code class="docutils literal notranslate"><span class="pre">Context.cooldown</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.context.Context.created_at"><code class="docutils literal notranslate"><span class="pre">Context.created_at</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.context.Context.delete_original_response"><code class="docutils literal notranslate"><span class="pre">Context.delete_original_response()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.context.Context.edit_original_response"><code class="docutils literal notranslate"><span class="pre">Context.edit_original_response()</span></code></a></li>
@@ -623,6 +618,6 @@ Discord Developer portal Interaction URL</p>
 </div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>

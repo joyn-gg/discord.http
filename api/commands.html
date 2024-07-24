@@ -15,11 +15,11 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Context" href="context.html" /><link rel="prev" title="Colour" href="colour.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
         <title>Commands - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
 
@@ -98,19 +98,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,7 +138,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -231,6 +218,7 @@
 <li class="toctree-l2"><a class="reference internal" href="colour.html">Colour</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="context.html">Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cooldowns.html">Cooldowns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="embeds.html">Embeds</a></li>
 <li class="toctree-l2"><a class="reference internal" href="emoji.html">Emoji</a></li>
 <li class="toctree-l2"><a class="reference internal" href="entitlements.html">Entitlements</a></li>
@@ -370,6 +358,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<cite>str</cite>) – Name of the option to set as an autocomplete.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="discord_http.commands.Command.cooldown">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cooldown</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="cooldowns.html#discord_http.cooldowns.CooldownCache" title="discord_http.cooldowns.CooldownCache"><span class="pre">CooldownCache</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#discord_http.commands.Command.cooldown" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the cooldown rule of the command if available</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>Optional[CooldownCache]</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -928,6 +927,7 @@ Can only be used if the Command has user_install set to True.</p>
 </li>
 <li><a class="reference internal" href="#discord_http.commands.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a><ul>
 <li><a class="reference internal" href="#discord_http.commands.Command.autocomplete"><code class="docutils literal notranslate"><span class="pre">Command.autocomplete()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.commands.Command.cooldown"><code class="docutils literal notranslate"><span class="pre">Command.cooldown</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.Command.mention"><code class="docutils literal notranslate"><span class="pre">Command.mention</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.Command.mention_sub"><code class="docutils literal notranslate"><span class="pre">Command.mention_sub()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.Command.run"><code class="docutils literal notranslate"><span class="pre">Command.run()</span></code></a></li>
@@ -988,6 +988,6 @@ Can only be used if the Command has user_install set to True.</p>
 </div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
     </body>
 </html>
