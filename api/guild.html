@@ -15,10 +15,10 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Http" href="http.html" /><link rel="prev" title="Flag" href="flag.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Guild - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -949,6 +949,30 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.guild.PartialGuild.fetch_voice_state">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_voice_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="object.html#discord_http.object.Snowflake" title="discord_http.object.Snowflake"><span class="pre">Snowflake</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="member.html#discord_http.member.VoiceState" title="discord_http.member.VoiceState"><span class="pre">VoiceState</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.fetch_voice_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.fetch_voice_state" title="Link to this definition">¶</a></dt>
+<dd><p>Fetches the voice state of the member</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>member</strong> (<cite>Snowflake</cite>) – The member to fetch the voice state from</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The voice state of the member</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>VoiceState</cite></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="errors.html#discord_http.errors.NotFound" title="discord_http.errors.NotFound"><strong>NotFound</strong></a> – <ul class="simple">
+<li><p>If the member is not in the guild
+    - If the member is not in a voice channel</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.guild.PartialGuild.get_partial_channel">
 <span class="sig-name descname"><span class="pre">get_partial_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="channel.html#discord_http.channel.PartialChannel" title="discord_http.channel.PartialChannel"><span class="pre">PartialChannel</span></a></span></span><a class="reference internal" href="../_modules/discord_http/guild.html#PartialGuild.get_partial_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.guild.PartialGuild.get_partial_channel" title="Link to this definition">¶</a></dt>
 <dd><p>Get a partial channel object</p>
@@ -1280,6 +1304,7 @@
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_scheduled_events_list"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_scheduled_events_list()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_sticker()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_stickers"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_stickers()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.guild.PartialGuild.fetch_voice_state"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_voice_state()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_channel()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_emoji()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.guild.PartialGuild.get_partial_member"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_member()</span></code></a></li>

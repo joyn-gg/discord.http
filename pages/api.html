@@ -15,10 +15,10 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Asset" href="../api/asset.html" /><link rel="prev" title="Getting started" href="getting_started.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>API components - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -565,6 +565,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.locales"><code class="docutils literal notranslate"><span class="pre">locales()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.allow_contexts"><code class="docutils literal notranslate"><span class="pre">allow_contexts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.cooldown"><code class="docutils literal notranslate"><span class="pre">cooldown()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.choices"><code class="docutils literal notranslate"><span class="pre">choices()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.guild_only"><code class="docutils literal notranslate"><span class="pre">guild_only()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/commands.html#discord_http.commands.is_nsfw"><code class="docutils literal notranslate"><span class="pre">is_nsfw()</span></code></a></li>
@@ -1171,6 +1172,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_scheduled_events_list"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_scheduled_events_list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_sticker"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_sticker()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_stickers"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_stickers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.fetch_voice_state"><code class="docutils literal notranslate"><span class="pre">PartialGuild.fetch_voice_state()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_channel"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_channel()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_emoji"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_emoji()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/guild.html#discord_http.guild.PartialGuild.get_partial_member"><code class="docutils literal notranslate"><span class="pre">PartialGuild.get_partial_member()</span></code></a></li>
@@ -1252,7 +1254,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.ban"><code class="docutils literal notranslate"><span class="pre">PartialMember.ban()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.create_dm"><code class="docutils literal notranslate"><span class="pre">PartialMember.create_dm()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.edit"><code class="docutils literal notranslate"><span class="pre">PartialMember.edit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.edit_voice_state"><code class="docutils literal notranslate"><span class="pre">PartialMember.edit_voice_state()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.fetch"><code class="docutils literal notranslate"><span class="pre">PartialMember.fetch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.fetch_voice_state"><code class="docutils literal notranslate"><span class="pre">PartialMember.fetch_voice_state()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.guild"><code class="docutils literal notranslate"><span class="pre">PartialMember.guild</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.kick"><code class="docutils literal notranslate"><span class="pre">PartialMember.kick()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.PartialMember.mention"><code class="docutils literal notranslate"><span class="pre">PartialMember.mention</span></code></a></li>
@@ -1262,6 +1266,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api/member.html#discord_http.member.ThreadMember"><code class="docutils literal notranslate"><span class="pre">ThreadMember</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/member.html#discord_http.member.VoiceState"><code class="docutils literal notranslate"><span class="pre">VoiceState</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/member.html#discord_http.member.VoiceState.edit"><code class="docutils literal notranslate"><span class="pre">VoiceState.edit()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

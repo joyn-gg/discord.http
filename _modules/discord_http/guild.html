@@ -14,10 +14,10 @@
     </script>
     <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>discord_http.guild - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -318,7 +318,7 @@
     <span class="p">)</span>
     <span class="kn">from</span> <span class="nn">.http</span> <span class="kn">import</span> <span class="n">DiscordAPI</span>
     <span class="kn">from</span> <span class="nn">.invite</span> <span class="kn">import</span> <span class="n">Invite</span>
-    <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span>
+    <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">PartialMember</span><span class="p">,</span> <span class="n">Member</span><span class="p">,</span> <span class="n">VoiceState</span>
     <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
 
 <span class="n">MISSING</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">MISSING</span>
@@ -1874,6 +1874,37 @@
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span>
         <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PartialGuild.fetch_voice_state">
+<a class="viewcode-back" href="../../api/guild.html#discord_http.guild.PartialGuild.fetch_voice_state">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_voice_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Snowflake</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;VoiceState&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the voice state of the member</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        member: `Snowflake`</span>
+<span class="sd">            The member to fetch the voice state from</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        `VoiceState`</span>
+<span class="sd">            The voice state of the member</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        `NotFound`</span>
+<span class="sd">            - If the member is not in the guild</span>
+<span class="sd">            - If the member is not in a voice channel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;/guilds/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/voice-states/</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">member</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">.member</span> <span class="kn">import</span> <span class="n">VoiceState</span>
+        <span class="k">return</span> <span class="n">VoiceState</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PartialGuild.search_members">

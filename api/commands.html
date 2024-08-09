@@ -15,10 +15,10 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Context" href="context.html" /><link rel="prev" title="Colour" href="colour.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Commands - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -747,6 +747,29 @@ Can only be used if the Command has user_install set to True.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="discord_http.commands.cooldown">
+<span class="sig-prename descclassname"><span class="pre">discord_http.commands.</span></span><span class="sig-name descname"><span class="pre">cooldown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">per</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="cooldowns.html#discord_http.cooldowns.BucketType" title="discord_http.cooldowns.BucketType"><span class="pre">BucketType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/commands.html#cooldown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.commands.cooldown" title="Link to this definition">¶</a></dt>
+<dd><p>Decorator to set a cooldown for a command.</p>
+<p>Example usage</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@commands</span><span class="o">.</span><span class="n">cooldown</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Pong!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rate</strong> (<cite>int</cite>) – The number of times the command can be used within the cooldown period</p></li>
+<li><p><strong>per</strong> (<cite>float</cite>) – The cooldown period in seconds</p></li>
+<li><p><strong>key</strong> (<cite>Optional[BucketType]</cite>) – The bucket type to use for the cooldown
+If not set, it will be using default, which is a global cooldown</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="discord_http.commands.choices">
 <span class="sig-prename descclassname"><span class="pre">discord_http.commands.</span></span><span class="sig-name descname"><span class="pre">choices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/commands.html#choices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.commands.choices" title="Link to this definition">¶</a></dt>
 <dd><p>Decorator to set choices for a command.</p>
@@ -963,6 +986,7 @@ Can only be used if the Command has user_install set to True.</p>
 <li><a class="reference internal" href="#discord_http.commands.locales"><code class="docutils literal notranslate"><span class="pre">locales()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.describe"><code class="docutils literal notranslate"><span class="pre">describe()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.allow_contexts"><code class="docutils literal notranslate"><span class="pre">allow_contexts()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.commands.cooldown"><code class="docutils literal notranslate"><span class="pre">cooldown()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.choices"><code class="docutils literal notranslate"><span class="pre">choices()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.guild_only"><code class="docutils literal notranslate"><span class="pre">guild_only()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.commands.is_nsfw"><code class="docutils literal notranslate"><span class="pre">is_nsfw()</span></code></a></li>

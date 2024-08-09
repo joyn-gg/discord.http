@@ -15,10 +15,10 @@
     </script>
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Mentions" href="mentions.html" /><link rel="prev" title="Invite" href="invite.html" />
 
-    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.4.7 and Furo 2024.07.18 -->
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Member - discord.http docs</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=613ab9ff" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -562,9 +562,44 @@ If the user has converted to the new username, this will return None</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="discord_http.member.PartialMember.edit_voice_state">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit_voice_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel:</span> <span class="pre">~discord_http.object.Snowflake</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/member.html#PartialMember.edit_voice_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.PartialMember.edit_voice_state" title="Link to this definition">¶</a></dt>
+<dd><p>Updates another user’s voice state in a stage channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<cite>Snowflake</cite>) – The channel that the member is in (it must be the same channel as the current one)</p></li>
+<li><p><strong>suppress</strong> (<cite>bool</cite>) – Whether to suppress the user</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="discord_http.member.PartialMember.fetch">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.member.Member" title="discord_http.member.Member"><span class="pre">Member</span></a></span></span><a class="reference internal" href="../_modules/discord_http/member.html#PartialMember.fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.PartialMember.fetch" title="Link to this definition">¶</a></dt>
 <dd><p><cite>Fetch</cite>: Fetches the member from the API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.member.PartialMember.fetch_voice_state">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_voice_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#discord_http.member.VoiceState" title="discord_http.member.VoiceState"><span class="pre">VoiceState</span></a></span></span><a class="reference internal" href="../_modules/discord_http/member.html#PartialMember.fetch_voice_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.PartialMember.fetch_voice_state" title="Link to this definition">¶</a></dt>
+<dd><p>Fetches the voice state of the member</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The voice state of the member</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>VoiceState</cite></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="errors.html#discord_http.errors.NotFound" title="discord_http.errors.NotFound"><strong>NotFound</strong></a> – <ul class="simple">
+<li><p>If the member is not in the guild
+    - If the member is not in a voice channel</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -658,6 +693,23 @@ If the user has converted to the new username, this will return None</p>
 <dd><p>Bases: <a class="reference internal" href="object.html#discord_http.object.PartialBase" title="discord_http.object.PartialBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartialBase</span></code></a></p>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="discord_http.member.VoiceState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">discord_http.member.</span></span><span class="sig-name descname"><span class="pre">VoiceState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="http.html#discord_http.http.DiscordAPI" title="discord_http.http.DiscordAPI"><span class="pre">DiscordAPI</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/discord_http/member.html#VoiceState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.VoiceState" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="discord_http.member.VoiceState.edit">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">&lt;MISSING&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/discord_http/member.html#VoiceState.edit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#discord_http.member.VoiceState.edit" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the voice state of the member</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>suppress</strong> (<cite>bool</cite>) – Whether to suppress the user</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -741,7 +793,9 @@ If the user has converted to the new username, this will return None</p>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.ban"><code class="docutils literal notranslate"><span class="pre">PartialMember.ban()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.create_dm"><code class="docutils literal notranslate"><span class="pre">PartialMember.create_dm()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.edit"><code class="docutils literal notranslate"><span class="pre">PartialMember.edit()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.PartialMember.edit_voice_state"><code class="docutils literal notranslate"><span class="pre">PartialMember.edit_voice_state()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.fetch"><code class="docutils literal notranslate"><span class="pre">PartialMember.fetch()</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.PartialMember.fetch_voice_state"><code class="docutils literal notranslate"><span class="pre">PartialMember.fetch_voice_state()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.guild"><code class="docutils literal notranslate"><span class="pre">PartialMember.guild</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.kick"><code class="docutils literal notranslate"><span class="pre">PartialMember.kick()</span></code></a></li>
 <li><a class="reference internal" href="#discord_http.member.PartialMember.mention"><code class="docutils literal notranslate"><span class="pre">PartialMember.mention</span></code></a></li>
@@ -751,6 +805,10 @@ If the user has converted to the new username, this will return None</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#discord_http.member.ThreadMember"><code class="docutils literal notranslate"><span class="pre">ThreadMember</span></code></a></li>
+<li><a class="reference internal" href="#discord_http.member.VoiceState"><code class="docutils literal notranslate"><span class="pre">VoiceState</span></code></a><ul>
+<li><a class="reference internal" href="#discord_http.member.VoiceState.edit"><code class="docutils literal notranslate"><span class="pre">VoiceState.edit()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
