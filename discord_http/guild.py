@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     )
     from .http import DiscordAPI
     from .invite import Invite
-    from .member import PartialMember, Member
+    from .member import PartialMember, Member, VoiceState
     from .user import User
 
 MISSING = utils.MISSING
@@ -1463,6 +1463,34 @@ class PartialGuild(PartialBase):
             )
             for data in r.response
         ]
+
+    async def fetch_voice_state(self, member: Snowflake) -> "VoiceState":
+        """
+        Fetches the voice state of the member
+
+        Parameters
+        ----------
+        member: `Snowflake`
+            The member to fetch the voice state from
+
+        Returns
+        -------
+        `VoiceState`
+            The voice state of the member
+
+        Raises
+        ------
+        `NotFound`
+            - If the member is not in the guild
+            - If the member is not in a voice channel
+        """
+        r = await self._state.query(
+            "GET",
+            f"/guilds/{self.id}/voice-states/{int(member)}"
+        )
+
+        from .member import VoiceState
+        return VoiceState(state=self._state, data=r.response)
 
     async def search_members(
         self,

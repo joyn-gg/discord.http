@@ -460,7 +460,7 @@ class DiscordAPI:
                 raise RuntimeError("Unreachable code, reached max tries (5)")
 
     async def me(self) -> "User":
-        """ `User`: Returns the bot's user information """
+        """ `User`: Fetches the bot's user information """
         r = await self.query("GET", "/users/@me")
 
         from .user import User
@@ -475,6 +475,22 @@ class DiscordAPI:
         guild_id: Optional[int] = None,
         **kwargs
     ) -> HTTPResponse:
+        """
+        Used to query the application commands
+        Mostly used internally by the library
+
+        Parameters
+        ----------
+        method: `MethodTypes`
+            The HTTP method to use
+        guild_id: `Optional[int]`
+            The guild ID to query the commands for
+
+        Returns
+        -------
+        `HTTPResponse`
+            The response from the request
+        """
         if not self.application_id:
             raise ValueError("application_id is required to sync commands")
 
