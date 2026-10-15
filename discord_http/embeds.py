@@ -73,9 +73,9 @@ class Embed:
             Returns the embed you are editing
         """
         if value is None:
-            self._colour = None
+            self.colour = None
         else:
-            self._colour = Colour(int(value))
+            self.colour = Colour(int(value))
 
         return self
 
