@@ -327,7 +327,10 @@ class PartialChannel(PartialBase):
             tts=tts,
             type=type,
             poll=poll,
-            allowed_mentions=allowed_mentions,
+            allowed_mentions=(
+                allowed_mentions or
+                self._state._default_allowed_mentions
+            ),
         )
 
         r = await self._state.query(

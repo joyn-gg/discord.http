@@ -127,6 +127,7 @@ class Client:
 
         self._view_storage: dict[int, InteractionStorage] = {}
         self._default_allowed_mentions = allowed_mentions
+        self.state._default_allowed_mentions = allowed_mentions
 
         self._cogs: dict[str, list[Cog]] = {}
 

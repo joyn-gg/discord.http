@@ -242,7 +242,10 @@ class PartialMember(PartialBase):
             view=view,
             tts=tts,
             type=type,
-            allowed_mentions=allowed_mentions
+            allowed_mentions=(
+                allowed_mentions or
+                self._state._default_allowed_mentions
+            )
         )
 
     async def create_dm(self) -> "DMChannel":

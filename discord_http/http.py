@@ -24,6 +24,7 @@ from .errors import (
 )
 
 if TYPE_CHECKING:
+    from .mentions import AllowedMentions
     from .user import User
 
 MethodTypes = Literal["GET", "POST", "DELETE", "PUT", "HEAD", "PATCH", "OPTIONS"]
@@ -423,6 +424,9 @@ class DiscordAPI:
         )
         self._last_cleanup: float = time.monotonic()
         self._session: Optional[aiohttp.ClientSession] = None
+
+        # Set by Client, used when sending messages without allowed_mentions
+        self._default_allowed_mentions: Optional["AllowedMentions"] = None
 
     def _get_session(self) -> aiohttp.ClientSession:
         """
