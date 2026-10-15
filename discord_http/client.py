@@ -386,6 +386,7 @@ class Client:
             )
 
         self.backend.before_serving(self._prepare_bot)
+        self.backend.after_serving(self.state.close)
         self.backend.start(host=host, port=port)
 
     async def wait_until_ready(self) -> None:

@@ -94,6 +94,7 @@ async def query(
     url: str,
     *,
     res_method: ResMethodTypes = "text",
+    session: Optional[aiohttp.ClientSession] = None,
     **kwargs
 ) -> HTTPResponse:
     """
@@ -107,26 +108,42 @@ async def query(
         The URL to make the request to
     res_method: `Optional[str]`
         The method to use to get the response, defaults to text
+    session: `Optional[aiohttp.ClientSession]`
+        Session to make the request with, it is not closed afterwards.
+        If not provided, a temporary session is used for this request only.
 
     Returns
     -------
     `HTTPResponse`
         The response from the request
     """
-    session = aiohttp.ClientSession()
-
     if not res_method:
         res_method = "text"
-
-    session_method = getattr(session, str(method).lower(), None)
-    if not session_method:
-        raise ValueError(f"Invalid HTTP method: {method}")
 
     if res_method not in ("text", "read", "json"):
         raise ValueError(
             f"Invalid res_method: {res_method}, "
             "must be either text, read or json"
         )
+
+    if session is not None:
+        return await _request(session, method, url, res_method=res_method, **kwargs)
+
+    async with aiohttp.ClientSession() as temp_session:
+        return await _request(temp_session, method, url, res_method=res_method, **kwargs)
+
+
+async def _request(
+    session: aiohttp.ClientSession,
+    method: MethodTypes,
+    url: str,
+    *,
+    res_method: ResMethodTypes,
+    **kwargs
+) -> HTTPResponse:
+    session_method = getattr(session, str(method).lower(), None)
+    if not session_method:
+        raise ValueError(f"Invalid HTTP method: {method}")
 
     async with session_method(str(url), **kwargs) as res:
         try:
@@ -143,16 +160,13 @@ async def query(
                 r = await res.text()
                 res_method = "text"
 
-        output = HTTPResponse(
+        return HTTPResponse(
             status=res.status,
             response=r,
             res_method=res_method,
             reason=res.reason,
             headers=res.headers
         )
-
-    await session.close()
-    return output
 
 
 class Ratelimit:
@@ -278,6 +292,33 @@ class DiscordAPI:
         self.api_url: str = f"{self.base_url}/v{self.api_version}"
 
         self._buckets: dict[str, Ratelimit] = {}
+        self._session: Optional[aiohttp.ClientSession] = None
+
+    def _get_session(self) -> aiohttp.ClientSession:
+        """
+        Get the session used for Discord API requests.
+        It is created on first use, since it needs a running event loop.
+        """
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(
+                    limit=0,  # Ratelimits already limit the amount of requests
+                    keepalive_timeout=15
+                ),
+                timeout=aiohttp.ClientTimeout(
+                    total=60,
+                    sock_connect=10,
+                    sock_read=30
+                )
+            )
+
+        return self._session
+
+    async def close(self) -> None:
+        """ Close the session used for Discord API requests """
+        if self._session is not None and not self._session.closed:
+            await self._session.close()
+        self._session = None
 
     def _clear_old_ratelimits(self) -> None:
         if len(self._buckets) <= 256:
@@ -408,6 +449,7 @@ class DiscordAPI:
                         method,
                         f"{_api_url}{path}",
                         res_method=res_method,
+                        session=self._get_session(),
                         **kwargs
                     )
 
