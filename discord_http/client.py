@@ -50,7 +50,8 @@ class Client:
         logging_level: int = logging.INFO,
         disable_default_get_path: bool = False,
         disable_oauth_hint: bool = False,
-        debug_events: bool = False
+        debug_events: bool = False,
+        global_ratelimit: int = 50
     ):
         """
         The main client class for discord.http
@@ -84,6 +85,10 @@ class Client:
         disable_oauth_hint: `bool`
             Whether to disable the OAuth2 hint or not on boot.
             If not provided, it will use `False`.
+        global_ratelimit: `int`
+            How many requests per second the bot token is allowed to make.
+            Only change this if Discord has given your bot a higher global ratelimit.
+            If not provided, it will use `50`.
         """
         self.application_id: Optional[int] = application_id
         self.public_key: Optional[str] = public_key
@@ -105,7 +110,8 @@ class Client:
         self.state: DiscordAPI = DiscordAPI(
             application_id=application_id,
             token=token,
-            api_version=api_version
+            api_version=api_version,
+            global_ratelimit=global_ratelimit
         )
 
         self.commands: Dict[str, Command] = {}

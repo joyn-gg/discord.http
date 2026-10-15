@@ -1,8 +1,12 @@
 import aiohttp
 import asyncio
+import errno
 import json
 import logging
+import random
+import re
 import sys
+import time
 
 from aiohttp.client_exceptions import ContentTypeError
 from collections import deque
@@ -31,6 +35,51 @@ __all__ = (
     "DiscordAPI",
     "HTTPResponse",
 )
+
+_http_400_error_table: dict[int, type[HTTPException]] = {
+    200000: AutomodBlock,
+    200001: AutomodBlock,
+}
+
+_major_param_re = re.compile(r"^/(guilds|channels|webhooks|stage-instances)/(\d+)(?=/|$)")
+_id_segment_re = re.compile(r"(?<=/)\d+(?=/|$)")
+_token_route_re = re.compile(r"^/(interactions|webhooks)/(\d+)/([^/]+)")
+
+# Only available in aiohttp 3.10 and newer
+_connection_timeout_error: Optional[type[Exception]] = getattr(aiohttp, "ConnectionTimeoutError", None)
+
+
+def _try_json(data: Any) -> Any:
+    """ Try to parse the response as JSON, if it was not already """
+    if isinstance(data, bytes):
+        try:
+            data = data.decode("utf-8")
+        except UnicodeDecodeError:
+            return data
+
+    if isinstance(data, str):
+        try:
+            return json.loads(data)
+        except json.JSONDecodeError:
+            pass
+
+    return data
+
+
+def _is_retryable_error(method: str, error: OSError) -> bool:
+    """ Whether a failed request can safely be sent again """
+    if error.errno in (errno.ECONNRESET, errno.ECONNABORTED, 54, 10054):
+        return True
+
+    if (
+        _connection_timeout_error is not None and
+        isinstance(error, _connection_timeout_error)
+    ):
+        # Never connected, so Discord never got the request
+        return True
+
+    # Only retry read timeouts when sending the request twice is harmless
+    return isinstance(error, TimeoutError) and method.upper() in ("GET", "HEAD")
 
 
 class HTTPResponse(Generic[ResponseT]):
@@ -171,106 +220,180 @@ async def _request(
 
 class Ratelimit:
     def __init__(self, key: str):
-        self._key: str = key
+        self.key: str = key
+        self.bucket_hash: Optional[str] = None
 
         self.limit: int = 1
-        self.outgoing: int = 0
-        self.remaining = self.limit
+        self.remaining: int = 1
         self.reset_after: float = 0.0
         self.expires: Optional[float] = None
+        self.bucket_reset_epoch: float = 0.0
+        self.in_flight: int = 0
 
         self._loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
-
-        self._lock = asyncio.Lock()
         self._last_request: float = self._loop.time()
-        self._pending_requests: deque[asyncio.Future[Any]] = deque()
+        self._pending: int = 0
+        self._waiters: deque[asyncio.Future[None]] = deque()
 
-    def reset(self) -> None:
-        """ Reset the ratelimit """
-        self.remaining = self.limit - self.outgoing
-        self.expires = None
-        self.reset_after = 0.0
-
-    def update(self, response: HTTPResponse) -> None:
-        """ Update the ratelimit with the response headers """
-        self.remaining = int(response.headers.get("x-ratelimit-remaining", 0))
-        self.reset_after = float(response.headers.get("x-ratelimit-reset-after", 0))
-        self.expires = self._loop.time() + self.reset_after
-
-    def _wake_next(self) -> None:
-        while self._pending_requests:
-            future = self._pending_requests.popleft()
-            if not future.done():
-                future.set_result(None)
-                break
-
-    def _wake(self, count: int = 1) -> None:
-        awaken = 0
-        while self._pending_requests:
-            future = self._pending_requests.popleft()
-            if not future.done():
-                future.set_result(None)
-                awaken += 1
-
-            if awaken >= count:
-                break
-
-    async def _refresh(self):
-        async with self._lock:
-            _log.debug(
-                f"Ratelimit bucket hit ({self._key}), "
-                f"waiting {self.reset_after}s..."
-            )
-            await asyncio.sleep(self.reset_after)
-            _log.debug(f"Ratelimit bucket released ({self._key})")
-
-        self.reset()
-        self._wake(self.remaining)
-
-    def is_expired(self) -> bool:
+    def __repr__(self) -> str:
         return (
-            self.expires is not None and
-            self._loop.time() > self.expires
+            f"<Ratelimit key='{self.key}' limit={self.limit} "
+            f"remaining={self.remaining} reset_after={self.reset_after:.2f} "
+            f"bucket_hash={self.bucket_hash!r}>"
         )
 
     def is_inactive(self) -> bool:
-        return (
-            (self._loop.time() - self._last_request) >= 300 and
-            len(self._pending_requests) == 0
-        )
+        """ `bool`: Whether the bucket is unused and safe to remove """
+        if self.in_flight > 0 or self._pending > 0:
+            return False
 
-    async def _queue_up(self) -> None:
+        now = self._loop.time()
+        if self.expires is not None and now < self.expires:
+            # Still cooling down, removing it would let the next request
+            # start from a fresh bucket and hit the ratelimit again
+            return False
+
+        return (now - self._last_request) >= 60
+
+    def update(self, response: HTTPResponse) -> None:
+        """ Update the ratelimit with the response headers """
         self._last_request = self._loop.time()
-        if self.is_expired():
-            self.reset()
+        headers = response.headers
 
-        while self.remaining <= 0:
-            future = self._loop.create_future()
-            self._pending_requests.append(future)
-            try:
-                await future
-            except Exception:
-                future.cancel()
-                if self.remaining > 0 and not future.cancelled():
-                    self._wake_next()
-                raise
+        new_bucket_hash = headers.get("X-RateLimit-Bucket", None)
+        if new_bucket_hash:
+            self.bucket_hash = new_bucket_hash
 
-        self.remaining -= 1
-        self.outgoing += 1
+        reset_epoch_str = headers.get("X-RateLimit-Reset", None)
+        if not reset_epoch_str:
+            return
+
+        try:
+            reset_epoch = float(reset_epoch_str)
+            limit = int(headers.get("X-RateLimit-Limit", 1))
+            remaining = int(headers.get("X-RateLimit-Remaining", 0))
+            reset_after = float(headers.get("X-RateLimit-Reset-After", 0.0))
+        except ValueError:
+            return
+
+        # Requests still in flight have taken a token locally,
+        # but Discord has not counted them in this response yet
+        unaccounted_in_flight = max(0, self.in_flight - 1)
+        calculated_remaining = max(0, remaining - unaccounted_in_flight)
+
+        if reset_epoch > self.bucket_reset_epoch + 0.5:
+            # New bucket window
+            self.bucket_reset_epoch = reset_epoch
+            self.limit = max(1, limit)
+            self.reset_after = reset_after
+            # Never shorten a cooldown already set by a longer 429
+            self.expires = max(self.expires or 0.0, self._loop.time() + reset_after)
+            self.remaining = calculated_remaining
+
+        elif abs(reset_epoch - self.bucket_reset_epoch) <= 0.5:
+            # Same bucket window
+            self.remaining = min(self.remaining, calculated_remaining)
+
+    def _wake_waiters(self) -> None:
+        while self._waiters:
+            future = self._waiters.popleft()
+            if not future.done():
+                future.set_result(None)
 
     async def __aenter__(self) -> Self:
-        await self._queue_up()
-        return self
+        self._pending += 1
+
+        try:
+            while True:
+                now = self._loop.time()
+                self._last_request = now
+
+                if self.expires is not None and now >= self.expires:
+                    self.remaining = self.limit
+                    self.expires = None
+
+                if self.remaining > 0:
+                    self.remaining -= 1
+                    self.in_flight += 1
+                    return self
+
+                if self.expires is not None:
+                    wait_time = self.expires - now
+                    _log.debug(f"Ratelimit bucket hit ({self.key}), waiting {wait_time:.2f}s...")
+                    await asyncio.sleep(wait_time + 0.1)
+
+                elif self.in_flight > 0:
+                    # Bucket state is unknown until an in-flight request
+                    # reports back, so wait for it instead of guessing
+                    future = self._loop.create_future()
+                    self._waiters.append(future)
+                    try:
+                        await future
+                    finally:
+                        if not future.done():
+                            future.cancel()
+                        try:
+                            self._waiters.remove(future)
+                        except ValueError:
+                            pass
+
+                else:
+                    # No ratelimit info and nothing in flight to learn it from
+                    # (e.g. last response had no ratelimit headers),
+                    # let exactly one request through to find out
+                    self.in_flight += 1
+                    return self
+
+        finally:
+            self._pending -= 1
 
     async def __aexit__(self, type, value, traceback) -> None:
-        self.outgoing -= 1
-        tokens = self.remaining - self.outgoing
+        self.in_flight -= 1
+        self._wake_waiters()
 
-        if not self._lock.locked():
-            if tokens <= 0:
-                await self._refresh()
-            elif self._pending_requests:
-                self._wake(tokens)
+
+class GlobalRatelimit:
+    """
+    Discord's global ratelimit, shared by all requests made with the same bot token.
+    Interaction and webhook token routes are not part of it.
+    """
+    def __init__(self, *, max_requests: int = 50, per: float = 1.0):
+        if max_requests < 1:
+            raise ValueError("global_ratelimit must be 1 or higher")
+
+        self.max: int = max_requests
+        self.per: float = per
+        self.locked_until: Optional[float] = None
+
+        self._timestamps: deque[float] = deque()
+
+    async def acquire(self) -> None:
+        """ Wait until a request is allowed by the global ratelimit """
+        loop = asyncio.get_running_loop()
+
+        while True:
+            now = loop.time()
+
+            if self.locked_until is not None and now < self.locked_until:
+                wait_time = self.locked_until - now
+            else:
+                self.locked_until = None
+
+                while self._timestamps and now - self._timestamps[0] >= self.per:
+                    self._timestamps.popleft()
+
+                if len(self._timestamps) < self.max:
+                    self._timestamps.append(now)
+                    return
+
+                wait_time = self.per - (now - self._timestamps[0])
+
+            await asyncio.sleep(max(wait_time, 0.01))
+
+    def lock_for(self, retry_after: float) -> None:
+        """ Pause all requests, used when Discord reports a global ratelimit """
+        locked_until = asyncio.get_running_loop().time() + retry_after
+        self.locked_until = max(self.locked_until or 0.0, locked_until)
 
 
 class DiscordAPI:
@@ -279,7 +402,8 @@ class DiscordAPI:
         *,
         token: str,
         application_id: Optional[int],
-        api_version: Optional[int] = None
+        api_version: Optional[int] = None,
+        global_ratelimit: int = 50
     ):
         self.token: str = token
         self.application_id: Optional[int] = application_id
@@ -292,6 +416,11 @@ class DiscordAPI:
         self.api_url: str = f"{self.base_url}/v{self.api_version}"
 
         self._buckets: dict[str, Ratelimit] = {}
+        self._bucket_hashes: dict[str, tuple[str, float]] = {}
+        self._global_ratelimit: GlobalRatelimit = GlobalRatelimit(
+            max_requests=global_ratelimit
+        )
+        self._last_cleanup: float = time.monotonic()
         self._session: Optional[aiohttp.ClientSession] = None
 
     def _get_session(self) -> aiohttp.ClientSession:
@@ -321,8 +450,7 @@ class DiscordAPI:
         self._session = None
 
     def _clear_old_ratelimits(self) -> None:
-        if len(self._buckets) <= 256:
-            return
+        self._last_cleanup = time.monotonic()
 
         for key in [k for k, v in self._buckets.items() if v.is_inactive()]:
             try:
@@ -330,14 +458,139 @@ class DiscordAPI:
             except KeyError:
                 pass
 
-    def get_ratelimit(self, key: str) -> Ratelimit:
-        try:
-            value = self._buckets[key]
-        except KeyError:
-            self._buckets[key] = value = Ratelimit(key)
+        # A bucket still in use must stay reachable through its hash
+        live_hashes = {v.bucket_hash for v in self._buckets.values()}
+        stale_routes = [
+            route for route, (bucket_hash, last_seen) in self._bucket_hashes.items()
+            if self._last_cleanup - last_seen >= 60 and bucket_hash not in live_hashes
+        ]
+
+        for route in stale_routes:
+            self._bucket_hashes.pop(route, None)
+
+    @staticmethod
+    def _apply_bucket_quirks(method: str, normalized: str) -> str:
+        # Deleting messages has its own bucket on Discord's side
+        if method == "DELETE" and normalized.endswith("/messages/:id"):
+            return normalized + "-delete"
+        return normalized
+
+    def _get_bucket_key(self, method: str, path: str) -> str:
+        """
+        Get the bucket key guessed from the path.
+        The major parameter (guild/channel/webhook ID) and
+        interaction/webhook tokens are kept, every other ID is collapsed.
+        """
+        base_path = path.partition("?")[0]
+
+        if token_match := _token_route_re.match(base_path):
+            prefix = token_match.group(0)
+            remainder = base_path[token_match.end():]
+        elif major_match := _major_param_re.match(base_path):
+            prefix = major_match.group(0)
+            remainder = base_path[major_match.end():]
+        else:
+            prefix = ""
+            remainder = base_path
+
+        normalized = self._apply_bucket_quirks(
+            method, prefix + _id_segment_re.sub(":id", remainder)
+        )
+
+        return f"{method} {normalized}"
+
+    def _route_template(self, method: str, path: str) -> str:
+        """ Get the route with every ID and token collapsed """
+        base_path = path.partition("?")[0]
+        base_path = _token_route_re.sub(r"/\1/\2/:token", base_path, count=1)
+        normalized = self._apply_bucket_quirks(
+            method, _id_segment_re.sub(":id", base_path)
+        )
+        return f"{method} {normalized}"
+
+    @staticmethod
+    def _major_param_value(path: str) -> str:
+        """
+        Get the major parameter of the path, or an empty string if there is none.
+        Interaction/webhook tokens are included, since every token has its own bucket.
+        """
+        base_path = path.partition("?")[0]
+
+        if token_match := _token_route_re.match(base_path):
+            return f"{token_match.group(2)}:{token_match.group(3)}"
+
+        if major_match := _major_param_re.match(base_path):
+            return major_match.group(2)
+
+        return ""
+
+    def _resolve_bucket_key(self, method: str, path: str) -> tuple[str, str, str]:
+        """
+        Resolve which bucket a request should use.
+        Once Discord has told us the bucket hash of a route, routes sharing
+        that hash (and major parameter) also share the same bucket.
+
+        Returns
+        -------
+        `tuple[str, str, str]`
+            The route template, the bucket key and the path-guessed fallback key
+        """
+        route_template = self._route_template(method, path)
+        fallback_key = self._get_bucket_key(method, path)
+
+        cached = self._bucket_hashes.get(route_template, None)
+        if cached:
+            major_param = self._major_param_value(path)
+            key = f"{method} #{cached[0]}"
+            if major_param:
+                key += f":{major_param}"
+        else:
+            key = fallback_key
+
+        return route_template, key, fallback_key
+
+    def get_ratelimit(
+        self,
+        key: str,
+        *,
+        migrate_from: Optional[str] = None
+    ) -> Ratelimit:
+        """
+        Get the ratelimit bucket for the given key
+
+        Parameters
+        ----------
+        key: `str`
+            The bucket key
+        migrate_from: `Optional[str]`
+            Previous key of the bucket, its state is moved over to the new key
+
+        Returns
+        -------
+        `Ratelimit`
+            The ratelimit bucket
+        """
+        if time.monotonic() - self._last_cleanup >= 60:
             self._clear_old_ratelimits()
 
+        try:
+            return self._buckets[key]
+        except KeyError:
+            pass
+
+        if migrate_from and migrate_from != key:
+            old = self._buckets.pop(migrate_from, None)
+            if old is not None:
+                old.key = key
+                self._buckets[key] = old
+                return old
+
+        self._buckets[key] = value = Ratelimit(key)
         return value
+
+    @staticmethod
+    def _retry_delay(error_tries: int) -> float:
+        return 1 + (error_tries - 1) * 2 + random.random()
 
     @overload
     async def query(
@@ -407,10 +660,10 @@ class DiscordAPI:
             You are not allowed to do this
         `NotFound`
             The resource was not found
+        `Ratelimited`
+            Ratelimited by CloudFlare, or by Discord too many times in a row
         `HTTPException`
             Something went wrong
-        `RuntimeError`
-            Unreachable code, reached max tries (5)
         """
         if "headers" not in kwargs:
             kwargs["headers"] = {}
@@ -435,15 +688,24 @@ class DiscordAPI:
         if kwargs.pop("webhook", False):
             _api_url = self.base_url
 
-        ratelimit = self.get_ratelimit(f"{method} {path}")
+        # Interaction and webhook token routes are not part of the global ratelimit
+        exempt_from_global = bool(_token_route_re.match(path.partition("?")[0]))
 
-        _http_400_error_table: dict[int, type[HTTPException]] = {
-            200000: AutomodBlock,
-            200001: AutomodBlock,
-        }
+        route_template, bucket_key, fallback_key = self._resolve_bucket_key(method, path)
+        ratelimit = self.get_ratelimit(bucket_key, migrate_from=fallback_key)
 
-        async with ratelimit:
-            for tries in range(5):
+        error_tries = 0
+        ratelimit_tries = 0
+
+        while True:
+            retry_delay = 0.0
+
+            async with ratelimit:
+                if not exempt_from_global:
+                    # Acquired right before sending, so the global window
+                    # counts requests when they are actually sent
+                    await self._global_ratelimit.acquire()
+
                 try:
                     r: HTTPResponse = await query(
                         method,
@@ -453,36 +715,73 @@ class DiscordAPI:
                         **kwargs
                     )
 
+                except OSError as e:
+                    # Note: TimeoutError is also an OSError
+                    if error_tries >= 4 or not _is_retryable_error(method, e):
+                        raise
+
+                    error_tries += 1
+                    retry_delay = self._retry_delay(error_tries)
+                    _log.debug(
+                        f"HTTP {method.upper()} {path} failed with {e!r}, "
+                        f"retrying in {retry_delay:.2f}s (attempt {error_tries + 1}/5)"
+                    )
+
+                else:
+                    ratelimit.update(r)
+
+                    new_bucket_hash = r.headers.get("X-RateLimit-Bucket", None)
+                    if new_bucket_hash:
+                        self._bucket_hashes[route_template] = (new_bucket_hash, time.monotonic())
+
                     _log.debug(f"HTTP {method.upper()} ({r.status}): {path}")
 
                     match r.status:
                         case x if x >= 200 and x <= 299:
-                            ratelimit.update(r)
                             return r
 
                         case 429:
-                            if not isinstance(r.response, dict):
+                            response = _try_json(r.response)
+                            if not isinstance(response, dict):
                                 # For cases where you're ratelimited by CloudFlare
                                 raise Ratelimited(r)
 
-                            retry_after: float = r.response["retry_after"]
-                            _log.warning(f"Ratelimit hit ({path}), waiting {retry_after}s...")
-                            await asyncio.sleep(retry_after)
-                            continue
+                            ratelimit_tries += 1
+                            if ratelimit_tries > 10:
+                                _log.error(f"Ratelimit hit ({fallback_key}) 10 times in a row, giving up")
+                                raise Ratelimited(r)
+
+                            try:
+                                retry_after = float(response.get("retry_after", 1.0))
+                            except (TypeError, ValueError):
+                                retry_after = 1.0
+
+                            if response.get("global", False):
+                                _log.warning(f"Global ratelimit hit, pausing all requests for {retry_after:.2f}s...")
+                                self._global_ratelimit.lock_for(retry_after)
+                                if exempt_from_global:
+                                    retry_delay = retry_after
+                            else:
+                                _log.warning(f"Ratelimit hit ({fallback_key}), waiting {retry_after:.2f}s...")
+                                # The longest wait must win, if several 429s arrive at once
+                                ratelimit.remaining = 0
+                                ratelimit.expires = max(
+                                    ratelimit.expires or 0.0,
+                                    ratelimit._loop.time() + retry_after
+                                )
 
                         case x if x in (500, 502, 503, 504):
-                            if tries > 4:  # Give up after 5 tries
+                            if error_tries >= 4:  # Give up after 5 tries
                                 raise DiscordServerError(r)
 
                             # Try again, maybe it will work next time, surely...
-                            await asyncio.sleep(1 + tries * 2)
-                            continue
+                            error_tries += 1
+                            retry_delay = self._retry_delay(error_tries)
 
                         case 400:
-                            raise _http_400_error_table.get(
-                                r.response.get("code", 0),
-                                HTTPException
-                            )(r)
+                            response = _try_json(r.response)
+                            code = response.get("code", 0) if isinstance(response, dict) else 0
+                            raise _http_400_error_table.get(code, HTTPException)(r)
 
                         case 403:
                             raise Forbidden(r)
@@ -493,13 +792,9 @@ class DiscordAPI:
                         case _:
                             raise HTTPException(r)
 
-                except OSError as e:
-                    if tries < 4 and e.errno in (54, 10054):
-                        await asyncio.sleep(1 + tries * 2)
-                        continue
-                    raise
-            else:
-                raise RuntimeError("Unreachable code, reached max tries (5)")
+            # Wait outside the bucket, so other requests are not held up
+            if retry_delay > 0:
+                await asyncio.sleep(retry_delay)
 
     async def me(self) -> "User":
         """ `User`: Fetches the bot's user information """
