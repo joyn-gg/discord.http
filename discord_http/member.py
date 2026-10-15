@@ -510,7 +510,10 @@ class Member(PartialMember):
         self.pending: bool = data.get("pending", False)
         self._raw_permissions: Optional[int] = utils.get_int(data, "permissions")
         self.nick: Optional[str] = data.get("nick", None)
-        self.joined_at: datetime = utils.parse_time(data["joined_at"])
+        self.joined_at: Optional[datetime] = (
+            utils.parse_time(data["joined_at"])
+            if data.get("joined_at", None) else None
+        )
         self.roles: list[PartialRole] = [
             PartialRole(state=state, id=int(r), guild_id=self.guild.id)
             for r in data["roles"]

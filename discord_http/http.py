@@ -10,6 +10,7 @@ import time
 
 from aiohttp.client_exceptions import ContentTypeError
 from collections import deque
+from urllib.parse import quote as url_quote
 from typing import (
     Optional, Any, Union, Self, overload,
     Literal, TypeVar, Generic, TYPE_CHECKING
@@ -19,7 +20,7 @@ from . import __version__
 from .errors import (
     NotFound, DiscordServerError,
     Forbidden, HTTPException, Ratelimited,
-    AutomodBlock
+    AutomodBlock, Unauthorized
 )
 
 if TYPE_CHECKING:
@@ -660,6 +661,8 @@ class DiscordAPI:
             You are not allowed to do this
         `NotFound`
             The resource was not found
+        `Unauthorized`
+            The bot token is invalid or was revoked
         `Ratelimited`
             Ratelimited by CloudFlare, or by Discord too many times in a row
         `HTTPException`
@@ -682,7 +685,7 @@ class DiscordAPI:
 
         reason = kwargs.pop("reason", None)
         if reason:
-            kwargs["headers"]["X-Audit-Log-Reason"] = reason
+            kwargs["headers"]["X-Audit-Log-Reason"] = url_quote(str(reason))
 
         _api_url = self.api_url
         if kwargs.pop("webhook", False):
@@ -782,6 +785,10 @@ class DiscordAPI:
                             response = _try_json(r.response)
                             code = response.get("code", 0) if isinstance(response, dict) else 0
                             raise _http_400_error_table.get(code, HTTPException)(r)
+
+                        case 401:
+                            _log.error("HTTP 401: The bot token is invalid or was revoked")
+                            raise Unauthorized(r)
 
                         case 403:
                             raise Forbidden(r)

@@ -1163,7 +1163,7 @@ class Client:
 
         return [
             Emoji(state=self.state, data=g)
-            for g in r.response
+            for g in r.response.get("items", [])
         ]
 
     async def create_application_emoji(

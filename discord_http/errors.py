@@ -17,6 +17,7 @@ __all__ = (
     "CommandOnCooldown",
     "NotFound",
     "Ratelimited",
+    "Unauthorized",
     "UserMissingPermissions",
     "AutomodBlock",
 )
@@ -85,6 +86,11 @@ class HTTPException(DiscordException):
 
 class NotFound(HTTPException):
     """ Raised whenever a HTTP request returns 404 """
+    pass
+
+
+class Unauthorized(HTTPException):
+    """ Raised whenever a HTTP request returns 401 """
     pass
 
 
